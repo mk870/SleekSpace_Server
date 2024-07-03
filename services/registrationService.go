@@ -3,6 +3,7 @@ package services
 import (
 	"net/http"
 
+	"SleekSpace/dtos"
 	"SleekSpace/models"
 	"SleekSpace/repositories"
 	"SleekSpace/utilities"
@@ -13,27 +14,28 @@ import (
 )
 
 func Registration(c *gin.Context) {
-	var user models.User
+	var userRegistartionDTO dtos.NativeUserRegistrationDTO
 	validateModelFields := validator.New()
-	c.BindJSON(&user)
+	c.BindJSON(&userRegistartionDTO)
 
-	modelFieldsValidationError := validateModelFields.Struct(user)
+	modelFieldsValidationError := validateModelFields.Struct(userRegistartionDTO)
 	if modelFieldsValidationError != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": modelFieldsValidationError.Error()})
 		return
 	}
 
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), 10)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(userRegistartionDTO.Password), 10)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to hash password"})
 		return
 	}
 
 	newUser := models.User{
-		GivenName:  user.GivenName,
-		FamilyName: user.FamilyName,
-		Password:   string(hashedPassword),
-		Email:      user.Email,
+		GivenName:              userRegistartionDTO.GivenName,
+		FamilyName:             userRegistartionDTO.FamilyName,
+		Password:               string(hashedPassword),
+		Email:                  userRegistartionDTO.Email,
+		IsSocialsAuthenticated: false,
 		RegistrationCode: models.VerificationCode{
 			Code:       utilities.GenerateVerificationCode(),
 			ExpiryDate: utilities.GenerateVerificationGracePeriod(),
@@ -46,12 +48,12 @@ func Registration(c *gin.Context) {
 		return
 	}
 
-	isVerificationEmailSent := SendVerificationCodeEmail(user.Email, user.GivenName, utilities.ConvertIntToString(newUser.RegistrationCode.Code))
+	isVerificationEmailSent := SendVerificationCodeEmail(userRegistartionDTO.Email, userRegistartionDTO.GivenName, utilities.ConvertIntToString(newUser.RegistrationCode.Code))
 	if !isVerificationEmailSent {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to send verification email"})
 		return
 	}
-	createdUser := repositories.GetUserByEmail(user.Email)
+	createdUser := repositories.GetUserByEmail(userRegistartionDTO.Email)
 	c.JSON(http.StatusOK, gin.H{
 		"message": "please check your email for verification",
 		"userId":  createdUser.Id,

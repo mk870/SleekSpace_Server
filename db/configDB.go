@@ -2,10 +2,8 @@ package db
 
 import (
 	"SleekSpace/models"
-	"log"
-	"os"
+	"SleekSpace/utilities"
 
-	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -13,13 +11,8 @@ import (
 var DB *gorm.DB
 
 func Connect() {
-	err := godotenv.Load()
-	// Alternatively, load a specific file: godotenv.Load(".env")
-	if err != nil {
-		log.Fatalf("Error loading .env file: %s", err)
-	}
-	dns := os.Getenv("DATABASE_DETAILS")
-	db, err := gorm.Open(postgres.Open(dns), &gorm.Config{})
+	databaseDetails := utilities.GetEnvVariables().DatabaseDetails
+	db, err := gorm.Open(postgres.Open(databaseDetails), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}

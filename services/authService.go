@@ -9,6 +9,7 @@ import (
 	"SleekSpace/tokens"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -30,17 +31,20 @@ func Logout(c *gin.Context) {
 
 func Login(c *gin.Context) {
 	var loginData = dtos.LoginDTO{}
+	validateModelFields := validator.New()
 	c.BindJSON(&loginData)
-	if loginData.Email == "" || loginData.Password == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "please enter both email and password"})
+	modelFieldsValidationError := validateModelFields.Struct(loginData)
+	if modelFieldsValidationError != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": modelFieldsValidationError.Error()})
 		return
 	}
+
 	user := repositories.GetUserByEmail(loginData.Email)
 	if user == nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "this account does not exist"})
 		return
 	}
-	if user.Password == "" {
+	if user.IsSocialsAuthenticated {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "please login using socials since you signed up with it"})
 		return
 	}
@@ -61,6 +65,9 @@ func Login(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"accessToken": accessToken,
-		"response":    "logged in successfully",
+		"id":          user.Id,
+		"email":       user.Email,
+		"givenName":   user.GivenName,
+		"familyName":  user.FamilyName,
 	})
 }

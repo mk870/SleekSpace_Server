@@ -1,6 +1,7 @@
 package tokens
 
 import (
+	"SleekSpace/utilities"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -19,12 +20,12 @@ func GenerateAccessToken(givenName string, email string, id int) string {
 		Email:     email,
 		Id:        string(rune(id)),
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Local().Add(time.Minute * time.Duration(60)).Unix(),
+			ExpiresAt: time.Now().Local().AddDate(10, 0, 0).Unix(),
 			Id:        string(rune(id)),
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString([]byte(GetAccessTokenSecret()))
+	tokenString, err := token.SignedString([]byte(utilities.GetEnvVariables().TokenSecret))
 	if err != nil {
 		println("error", err.Error())
 		return "failed"

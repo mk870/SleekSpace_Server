@@ -25,5 +25,7 @@ func main() {
 	controllers.LoginOut(router)
 	controllers.VerificationCodeValidation(router)
 	controllers.ResendVerificationCode(router)
+	controllers.ChangePassword(router)
+	controllers.PasswordChangeAndVerification(router)
 	router.Run()
 }

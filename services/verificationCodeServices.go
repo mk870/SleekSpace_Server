@@ -5,12 +5,14 @@ import (
 	"strconv"
 	"time"
 
+	"SleekSpace/dtos"
 	"SleekSpace/models"
 	"SleekSpace/repositories"
 	"SleekSpace/tokens"
 	"SleekSpace/utilities"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 )
 
 func CreateVerificationCode() models.VerificationCode {
@@ -22,13 +24,15 @@ func CreateVerificationCode() models.VerificationCode {
 }
 
 func VerifyCode(c *gin.Context) {
-	type RegistrationCodeDTO struct {
-		Id               int
-		VerificationCode int
+	var verificationInfo = dtos.VerificationDTO{}
+	validateModelFields := validator.New()
+	c.BindJSON(&verificationInfo)
+	modelFieldsValidationError := validateModelFields.Struct(verificationInfo)
+	if modelFieldsValidationError != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": modelFieldsValidationError.Error()})
+		return
 	}
-	var registrationData = RegistrationCodeDTO{}
-	c.BindJSON(&registrationData)
-	storedVerificationCode := repositories.GetVerificationCodeById(utilities.ConvertIntToString(registrationData.Id))
+	storedVerificationCode := repositories.GetVerificationCodeById(utilities.ConvertIntToString(verificationInfo.UserId))
 
 	if storedVerificationCode.ExpiryDate.Unix() < time.Now().Local().Unix() {
 		isUserDeleted := repositories.DeleteUserById(strconv.Itoa(storedVerificationCode.UserId))
@@ -44,7 +48,7 @@ func VerifyCode(c *gin.Context) {
 			return
 		}
 	}
-	if registrationData.VerificationCode != storedVerificationCode.Code {
+	if verificationInfo.VerificationCode != storedVerificationCode.Code {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "wrong verification code, please try again",
 		})
@@ -67,6 +71,10 @@ func VerifyCode(c *gin.Context) {
 		}
 		c.JSON(http.StatusOK, gin.H{
 			"accessToken": accessToken,
+			"id":          user.Id,
+			"email":       user.Email,
+			"givenName":   user.GivenName,
+			"familyName":  user.FamilyName,
 		})
 		return
 	}
@@ -102,5 +110,7 @@ func ResendVerificationCode(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to send verification email"})
 		return
 	}
-	c.String(http.StatusOK, "please check your email for verification code")
+	c.JSON(http.StatusOK, gin.H{
+		"response": "please check your email for verification code",
+	})
 }
