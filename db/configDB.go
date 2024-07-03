@@ -1,7 +1,7 @@
 package db
 
 import (
-	models "SleekSpace/models"
+	"SleekSpace/models"
 	"SleekSpace/utilities"
 
 	"gorm.io/driver/postgres"
