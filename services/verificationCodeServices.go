@@ -91,7 +91,7 @@ func CreateVerificationCode(c *gin.Context) {
 	isVerificationCodeUpdated := repositories.UpdateVerificationCode(&verificationCode)
 	if !isVerificationCodeUpdated {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "could not generate another code",
+			"error": "could not generate verification code",
 		})
 		return
 	}
@@ -118,7 +118,7 @@ func VerifyCodeForSecurity(c *gin.Context) {
 
 	if storedVerificationCode.ExpiryDate.Unix() < time.Now().Local().Unix() {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "this verification code has expired please signup again",
+			"error": "this verification code has expired please resend code again",
 		})
 		return
 	}
