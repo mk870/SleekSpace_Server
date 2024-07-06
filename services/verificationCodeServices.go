@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"SleekSpace/dtos"
-	"SleekSpace/models"
 	"SleekSpace/repositories"
 	"SleekSpace/tokens"
 	"SleekSpace/utilities"
@@ -15,15 +14,7 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-func CreateVerificationCode() models.VerificationCode {
-	var verificationCode models.VerificationCode
-	code := utilities.GenerateVerificationCode()
-	verificationCode.ExpiryDate = time.Now().Add(time.Minute * 30)
-	verificationCode.Code = code
-	return verificationCode
-}
-
-func VerifyCode(c *gin.Context) {
+func VerifyCodeForRegistration(c *gin.Context) {
 	var verificationInfo = dtos.VerificationDTO{}
 	validateModelFields := validator.New()
 	c.BindJSON(&verificationInfo)
@@ -80,11 +71,65 @@ func VerifyCode(c *gin.Context) {
 	}
 }
 
-func GetVerificationCode(c *gin.Context) {
-	userId := c.Param("id")
-	verificationCode := repositories.GetVerificationCodeById(userId)
+func CreateVerificationCode(c *gin.Context) {
+	userEmail := dtos.CreateVerificationCodeDTO{}
+	validateModelFields := validator.New()
+	c.BindJSON(&userEmail)
+	modelFieldsValidationError := validateModelFields.Struct(userEmail)
+	if modelFieldsValidationError != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": modelFieldsValidationError.Error()})
+		return
+	}
+	user := repositories.GetUserByEmail(userEmail.Email)
+	if user == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
+		return
+	}
+	verificationCode := repositories.GetVerificationCodeById(utilities.ConvertIntToString(user.Id))
+	verificationCode.Code = utilities.GenerateVerificationCode()
+	verificationCode.ExpiryDate = time.Now().Add(time.Minute * 15)
+	isVerificationCodeUpdated := repositories.UpdateVerificationCode(&verificationCode)
+	if !isVerificationCodeUpdated {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "could not generate another code",
+		})
+		return
+	}
+	isEmailSent := SendVerificationCodeEmail(user.Email, user.GivenName, utilities.ConvertIntToString(verificationCode.Code))
+	if !isEmailSent {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to send verification email"})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{
-		"verificationCode": verificationCode,
+		"userId": user.Id,
+	})
+}
+
+func VerifyCodeForSecurity(c *gin.Context) {
+	var verificationInfo = dtos.VerificationDTO{}
+	validateModelFields := validator.New()
+	c.BindJSON(&verificationInfo)
+	modelFieldsValidationError := validateModelFields.Struct(verificationInfo)
+	if modelFieldsValidationError != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": modelFieldsValidationError.Error()})
+		return
+	}
+	storedVerificationCode := repositories.GetVerificationCodeById(utilities.ConvertIntToString(verificationInfo.UserId))
+
+	if storedVerificationCode.ExpiryDate.Unix() < time.Now().Local().Unix() {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "this verification code has expired please signup again",
+		})
+		return
+	}
+	if verificationInfo.VerificationCode != storedVerificationCode.Code {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "wrong verification code, please try again",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"userId": storedVerificationCode.UserId,
 	})
 }
 

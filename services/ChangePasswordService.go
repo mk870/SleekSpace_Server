@@ -2,7 +2,6 @@ package services
 
 import (
 	"net/http"
-	"time"
 
 	"SleekSpace/dtos"
 	"SleekSpace/repositories"
@@ -13,62 +12,13 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func ChangePassword(c *gin.Context) {
-	userEmail := dtos.ChangePasswordDTO{}
-	validateModelFields := validator.New()
-	c.BindJSON(&userEmail)
-	modelFieldsValidationError := validateModelFields.Struct(userEmail)
-	if modelFieldsValidationError != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": modelFieldsValidationError.Error()})
-		return
-	}
-	user := repositories.GetUserByEmail(userEmail.Email)
-	if user == nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
-		return
-	}
-	verificationCode := repositories.GetVerificationCodeById(utilities.ConvertIntToString(user.Id))
-	verificationCode.Code = utilities.GenerateVerificationCode()
-	verificationCode.ExpiryDate = time.Now().Add(time.Minute * 15)
-	isVerificationCodeUpdated := repositories.UpdateVerificationCode(&verificationCode)
-	if !isVerificationCodeUpdated {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "could not generate another code",
-		})
-		return
-	}
-	isEmailSent := SendVerificationCodeEmail(user.Email, user.GivenName, utilities.ConvertIntToString(verificationCode.Code))
-	if !isEmailSent {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to send verification email"})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{
-		"userId": user.Id,
-	})
-}
-
-func UpdatePasswordAndCodeVerification(c *gin.Context) {
+func UpdatePassword(c *gin.Context) {
 	var newPasswordData = dtos.NewPasswordDTO{}
 	validateModelFields := validator.New()
 	c.BindJSON(&newPasswordData)
 	modelFieldsValidationError := validateModelFields.Struct(newPasswordData)
 	if modelFieldsValidationError != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": modelFieldsValidationError.Error()})
-		return
-	}
-	storedVerificationCode := repositories.GetVerificationCodeById(utilities.ConvertIntToString(newPasswordData.UserId))
-
-	if storedVerificationCode.ExpiryDate.Unix() < time.Now().Local().Unix() {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "this verification code has expired try again",
-		})
-		return
-	}
-
-	if newPasswordData.VerificationCode != storedVerificationCode.Code {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "wrong verification code, try again",
-		})
 		return
 	}
 
