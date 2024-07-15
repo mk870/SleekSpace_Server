@@ -19,6 +19,10 @@ func GetUser(router *gin.Engine) {
 	router.GET("/user/:id", middleware.AuthValidator, services.GetUser)
 }
 
+func GetUserByEmail(router *gin.Engine) {
+	router.GET("/user", middleware.AuthValidator, services.GetUserByEmail)
+}
+
 func DeleteUser(router *gin.Engine) {
 	router.DELETE("/user/:id", services.DeleteUser)
 }

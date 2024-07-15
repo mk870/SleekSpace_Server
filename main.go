@@ -19,6 +19,7 @@ func main() {
 	controllers.GetUsers(router)
 	controllers.UpdateUser(router)
 	controllers.GetUser(router)
+	controllers.GetUserByEmail(router)
 	controllers.DeleteUser(router)
 	controllers.Registration(router)
 	controllers.Login(router)

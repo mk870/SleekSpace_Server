@@ -1,6 +1,9 @@
 package utilities
 
 import (
+	"SleekSpace/dtos"
+	"SleekSpace/models"
+
 	// "log"
 	"math/rand"
 	"os"
@@ -46,5 +49,19 @@ func GetEnvVariables() EnvVariables {
 		Email:           email,
 		EmailPassword:   emailPassword,
 		TokenSecret:     tokenSecret,
+	}
+}
+
+func UserResponseMapper(user *models.User, accessToken string) dtos.UserResponseDTO {
+	return dtos.UserResponseDTO{
+		Id:             user.Id,
+		Email:          user.Email,
+		WhatsAppNumber: user.WhatsAppNumber,
+		ContactNumber:  user.ContactNumber,
+		Avatar:         user.Avatar,
+		FamilyName:     user.FamilyName,
+		GivenName:      user.GivenName,
+		AccessToken:    user.AccessToken,
+		Location:       user.Location,
 	}
 }

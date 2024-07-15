@@ -7,6 +7,7 @@ import (
 	"SleekSpace/models"
 	"SleekSpace/repositories"
 	"SleekSpace/tokens"
+	"SleekSpace/utilities"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -54,7 +55,6 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	repositories.SaveUserUpdate(user)
 	accessToken := tokens.GenerateAccessToken(user.GivenName, user.Email, user.Id)
 	if accessToken == "failed" {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -62,12 +62,14 @@ func Login(c *gin.Context) {
 		})
 		return
 	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"accessToken": accessToken,
-		"id":          user.Id,
-		"email":       user.Email,
-		"givenName":   user.GivenName,
-		"familyName":  user.FamilyName,
-	})
+	user.AccessToken = accessToken
+	isUpdated := repositories.SaveUserUpdate(user)
+	if !isUpdated {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "failed to update the accessToken",
+		})
+		return
+	}
+	response := utilities.UserResponseMapper(user, accessToken)
+	c.JSON(http.StatusOK, gin.H{"response": response})
 }

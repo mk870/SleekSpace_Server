@@ -5,6 +5,7 @@ import (
 
 	"SleekSpace/models"
 	"SleekSpace/repositories"
+	"SleekSpace/utilities"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,7 +23,18 @@ func GetUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, user)
+	c.JSON(http.StatusOK, gin.H{"response": utilities.UserResponseMapper(user, user.AccessToken)})
+}
+
+func GetUserByEmail(c *gin.Context) {
+	client := c.MustGet("user").(*models.User)
+	user := repositories.GetUserByEmail(client.Email)
+	if user == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"response": utilities.UserResponseMapper(user, user.AccessToken)})
 }
 
 func UpdateUser(c *gin.Context) {
@@ -33,12 +45,10 @@ func UpdateUser(c *gin.Context) {
 		c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
 		return
 	}
-	if update.GivenName != "" {
-		oldData.GivenName = update.GivenName
-	}
-	if update.FamilyName != "" {
-		oldData.FamilyName = update.FamilyName
-	}
+	oldData.Location = update.Location
+	oldData.ContactNumber = update.ContactNumber
+	oldData.WhatsAppNumber = update.WhatsAppNumber
+	oldData.Avatar = update.Avatar
 	updateResult := repositories.SaveUserUpdate(oldData)
 	if updateResult {
 		c.String(http.StatusOK, "user data updated successfully")
