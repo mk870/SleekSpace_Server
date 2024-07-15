@@ -51,24 +51,22 @@ func VerifyCodeForRegistration(c *gin.Context) {
 		return
 	}
 	user.IsActive = true
-	isUpdated := repositories.SaveUserUpdate(user)
-	if isUpdated {
-		accessToken := tokens.GenerateAccessToken(user.GivenName, user.Email, user.Id)
-		if accessToken == "failed" {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": "could not generate your access token",
-			})
-			return
-		}
-		c.JSON(http.StatusOK, gin.H{
-			"accessToken": accessToken,
-			"id":          user.Id,
-			"email":       user.Email,
-			"givenName":   user.GivenName,
-			"familyName":  user.FamilyName,
+	accessToken := tokens.GenerateAccessToken(user.GivenName, user.Email, user.Id)
+	if accessToken == "failed" {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "could not generate your access token",
 		})
 		return
 	}
+	user.AccessToken = accessToken
+	isUpdated := repositories.SaveUserUpdate(user)
+	if !isUpdated {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "failed to update the accessToken",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"response": utilities.UserResponseMapper(user, accessToken)})
 }
 
 func CreateVerificationCode(c *gin.Context) {
