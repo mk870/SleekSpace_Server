@@ -50,8 +50,17 @@ func UpdateUser(c *gin.Context) {
 	oldData.WhatsAppNumber = update.WhatsAppNumber
 	oldData.Avatar = update.Avatar
 	updateResult := repositories.SaveUserUpdate(oldData)
+	if !updateResult {
+		c.JSON(http.StatusForbidden, gin.H{"error": "could not update the user data"})
+		return
+	}
+	result := repositories.GetUserById(c.Param("id"))
+	if result == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
+		return
+	}
 	if updateResult {
-		c.String(http.StatusOK, "user data updated successfully")
+		c.JSON(http.StatusOK, gin.H{"response": utilities.UserResponseMapper(result, result.AccessToken)})
 	}
 }
 
