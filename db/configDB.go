@@ -16,6 +16,6 @@ func Connect() {
 	if err != nil {
 		panic(err)
 	}
-	db.AutoMigrate(&models.User{}, &models.VerificationCode{})
+	db.AutoMigrate(&models.User{}, &models.VerificationCode{}, &models.ContactNumber{}, &models.Location{})
 	DB = db
 }

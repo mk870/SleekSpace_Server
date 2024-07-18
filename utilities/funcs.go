@@ -33,6 +33,7 @@ type EnvVariables struct {
 	Email           string
 	EmailPassword   string
 	TokenSecret     string
+	LocationIQToken string
 }
 
 func GetEnvVariables() EnvVariables {
@@ -44,24 +45,51 @@ func GetEnvVariables() EnvVariables {
 	email := os.Getenv("EMAIL")
 	emailPassword := os.Getenv("EMAIL_PASSWORD")
 	tokenSecret := os.Getenv("ACCESS_TOKEN_SECRET")
+	locationIQToken := os.Getenv("LOCATION_IQ_ACCESS_TOKEN")
 	return EnvVariables{
 		DatabaseDetails: databaseDetails,
 		Email:           email,
 		EmailPassword:   emailPassword,
 		TokenSecret:     tokenSecret,
+		LocationIQToken: locationIQToken,
 	}
+}
+
+func processedContactNumbers(contactNumber []models.ContactNumber) []dtos.ContactNumberDTO {
+	contacts := []dtos.ContactNumberDTO{}
+	for _, value := range contacts {
+		contact := dtos.ContactNumberDTO{
+			Id:           value.Id,
+			UserId:       value.UserId,
+			Type:         value.Type,
+			CountryCode:  value.CountryCode,
+			CountryAbbrv: value.CountryAbbrv,
+			Number:       value.Number,
+		}
+		contacts = append(contacts, contact)
+	}
+	return contacts
 }
 
 func UserResponseMapper(user *models.User, accessToken string) dtos.UserResponseDTO {
 	return dtos.UserResponseDTO{
-		Id:             user.Id,
-		Email:          user.Email,
-		WhatsAppNumber: user.WhatsAppNumber,
-		ContactNumber:  user.ContactNumber,
-		Avatar:         user.Avatar,
-		FamilyName:     user.FamilyName,
-		GivenName:      user.GivenName,
-		AccessToken:    user.AccessToken,
-		Location:       user.Location,
+		Id:            user.Id,
+		Email:         user.Email,
+		ContactNumber: processedContactNumbers(user.ContactNumber),
+		Avatar:        user.Avatar,
+		FamilyName:    user.FamilyName,
+		GivenName:     user.GivenName,
+		AccessToken:   user.AccessToken,
+		Location: dtos.LocationDTO{
+			UserId:      user.Location.UserId,
+			Lat:         user.Location.Lat,
+			Lon:         user.Location.Lon,
+			City:        user.Location.City,
+			County:      user.Location.County,
+			Country:     user.Location.Country,
+			CountryCode: user.Location.CountryCode,
+			Surburb:     user.Location.Surburb,
+			Id:          user.Location.Id,
+		},
 	}
 }
