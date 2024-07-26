@@ -4,13 +4,12 @@ import (
 	"SleekSpace/dtos"
 	"SleekSpace/models"
 
-	"log"
+	// "log"
 	"math/rand"
 	"os"
 	"strconv"
 	"time"
-
-	"github.com/joho/godotenv"
+	// "github.com/joho/godotenv"
 )
 
 func GenerateVerificationCode() int {
@@ -38,10 +37,10 @@ type EnvVariables struct {
 }
 
 func GetEnvVariables() EnvVariables {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatalf("Error loading .env file: %s", err)
-	}
+	// err := godotenv.Load()
+	// if err != nil {
+	// 	log.Fatalf("Error loading .env file: %s", err)
+	// }
 	databaseDetails := os.Getenv("DATABASE_DETAILS")
 	email := os.Getenv("EMAIL")
 	emailPassword := os.Getenv("EMAIL_PASSWORD")
@@ -91,6 +90,9 @@ func UserResponseMapper(user *models.User, accessToken string) dtos.UserResponse
 			CountryCode: user.Location.CountryCode,
 			Surburb:     user.Location.Surburb,
 			Id:          user.Location.Id,
+			Boundingbox: user.Location.Boundingbox,
+			DisplayName: user.Location.DisplayName,
+			Province:    user.Location.Province,
 		},
 	}
 }
