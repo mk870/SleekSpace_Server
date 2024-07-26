@@ -33,5 +33,7 @@ func main() {
 	controllers.ResendVerificationCode(router)
 	controllers.CreateVerificationCode(router)
 	controllers.PasswordUpdate(router)
+	controllers.LocationAutoComplete(router)
+	controllers.LocationReverseGeoCoding(router)
 	router.Run()
 }

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"SleekSpace/httpServices/location"
 	"SleekSpace/middleware"
 	"SleekSpace/services"
 
@@ -13,4 +14,12 @@ func CreateLocation(router *gin.Engine) {
 
 func UpdateLocation(router *gin.Engine) {
 	router.PUT("/location", middleware.AuthValidator, services.UpdateLocation)
+}
+
+func LocationAutoComplete(router *gin.Engine) {
+	router.POST("/location/autocomplete", location.LocationAutoComplete)
+}
+
+func LocationReverseGeoCoding(router *gin.Engine) {
+	router.POST("/location/reverse-geocoding", location.LocationReverseGeoCoding)
 }
