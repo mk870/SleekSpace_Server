@@ -46,7 +46,7 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 	oldData.Location = update.Location
-	oldData.ContactNumber = update.ContactNumber
+	oldData.ContactNumbers = update.ContactNumbers
 	oldData.Avatar = update.Avatar
 	updateResult := repositories.SaveUserUpdate(oldData)
 	if !updateResult {

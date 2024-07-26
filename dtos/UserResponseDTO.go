@@ -1,14 +1,14 @@
 package dtos
 
 type UserResponseDTO struct {
-	Email         string             `json:"email"`
-	Id            int                `json:"id"`
-	ContactNumber []ContactNumberDTO `json:"contactNumber"`
-	Avatar        string             `json:"avatar"`
-	Location      LocationDTO        `json:"location"`
-	GivenName     string             `json:"givenName"`
-	FamilyName    string             `json:"familyName"`
-	AccessToken   string             `json:"accessToken"`
+	Email          string             `json:"email"`
+	Id             int                `json:"id"`
+	ContactNumbers []ContactNumberDTO `json:"contactNumbers"`
+	Avatar         string             `json:"avatar"`
+	Location       LocationDTO        `json:"location"`
+	GivenName      string             `json:"givenName"`
+	FamilyName     string             `json:"familyName"`
+	AccessToken    string             `json:"accessToken"`
 }
 
 type ContactNumberDTO struct {

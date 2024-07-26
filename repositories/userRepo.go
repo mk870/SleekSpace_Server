@@ -32,7 +32,7 @@ func GetUsers() []models.User {
 
 func GetUserById(id string) *models.User {
 	var user models.User
-	result := db.DB.Where("id = ?", id).First(&user)
+	result := db.DB.Preload("ContactNumbers").Preload("Location").First(&user, id)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil
 	}
@@ -55,7 +55,7 @@ func DeleteUserById(id string) bool {
 
 func GetUserByEmail(email string) *models.User {
 	var user models.User
-	result := db.DB.Where("email =?", email).First(&user)
+	result := db.DB.Where("email =?", email).Preload("ContactNumbers").Preload("Location").First(&user)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil
 	} else {

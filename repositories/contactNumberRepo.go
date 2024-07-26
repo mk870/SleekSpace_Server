@@ -7,8 +7,8 @@ import (
 	"gorm.io/gorm"
 )
 
-func CreateContactNumber(user *models.User, contactNumber models.ContactNumber) bool {
-	err := db.DB.Model(user).Association("ContactNumber").Append(contactNumber)
+func CreateContactNumber(user *models.User, contactNumber *models.ContactNumber) bool {
+	err := db.DB.Model(user).Association("ContactNumbers").Append(contactNumber)
 	if err != nil {
 		println(err.Error())
 	}
@@ -17,15 +17,15 @@ func CreateContactNumber(user *models.User, contactNumber models.ContactNumber) 
 
 func GetContactNumbers(id int) []models.ContactNumber {
 	var user = models.User{}
-	err := db.DB.Preload("ContactNumber").First(&user, id)
+	err := db.DB.Preload("ContactNumbers").First(&user, id)
 	if err != nil {
 		println(err.Name(), err.Statement)
 	}
-	return user.ContactNumber
+	return user.ContactNumbers
 }
 
-func UpdateProperty(user *models.User, updateContactNumbersList []models.ContactNumber) bool {
-	user.ContactNumber = updateContactNumbersList
+func UpdateContactNumbers(user *models.User, updateContactNumbersList []models.ContactNumber) bool {
+	user.ContactNumbers = updateContactNumbersList
 	db.DB.Session(&gorm.Session{FullSaveAssociations: true}).Updates(&user)
 	return true
 }
