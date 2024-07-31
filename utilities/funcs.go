@@ -4,13 +4,12 @@ import (
 	"SleekSpace/dtos"
 	"SleekSpace/models"
 
-	"log"
+	// "log"
 	"math/rand"
 	"os"
 	"strconv"
 	"time"
-
-	"github.com/joho/godotenv"
+	// "github.com/joho/godotenv"
 )
 
 func GenerateVerificationCode() int {
@@ -38,10 +37,10 @@ type EnvVariables struct {
 }
 
 func GetEnvVariables() EnvVariables {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatalf("Error loading .env file: %s", err)
-	}
+	// err := godotenv.Load()
+	// if err != nil {
+	// 	log.Fatalf("Error loading .env file: %s", err)
+	// }
 	databaseDetails := os.Getenv("DATABASE_DETAILS")
 	email := os.Getenv("EMAIL")
 	emailPassword := os.Getenv("EMAIL_PASSWORD")
@@ -72,6 +71,22 @@ func processedContactNumbers(contactNumbers []models.ContactNumber) []dtos.Conta
 	return contacts
 }
 
+func processedManagerContactNumbers(contactNumbers []models.ManagerContactNumber) []dtos.ManagerContactNumberDTO {
+	contacts := []dtos.ManagerContactNumberDTO{}
+	for i := 0; i < len(contactNumbers); i++ {
+		contact := dtos.ManagerContactNumberDTO{
+			Id:           contactNumbers[i].Id,
+			CountryAbbrv: contactNumbers[i].CountryAbbrv,
+			CountryCode:  contactNumbers[i].CountryCode,
+			Number:       contactNumbers[i].Number,
+			Type:         contactNumbers[i].Type,
+			ManagerId:    contactNumbers[i].ManagerId,
+		}
+		contacts = append(contacts, contact)
+	}
+	return contacts
+}
+
 func UserResponseMapper(user *models.User, accessToken string) dtos.UserResponseDTO {
 	return dtos.UserResponseDTO{
 		Id:             user.Id,
@@ -96,4 +111,29 @@ func UserResponseMapper(user *models.User, accessToken string) dtos.UserResponse
 			Province:    user.Location.Province,
 		},
 	}
+}
+func ManagerResponse(manager *models.Manager) dtos.ManagerResponseDTO {
+	return dtos.ManagerResponseDTO{
+		Id:       manager.Id,
+		UserId:   manager.UserId,
+		Email:    manager.Email,
+		Name:     manager.Name,
+		Contacts: processedManagerContactNumbers(manager.ManagerContactNumbers),
+	}
+}
+
+func AddManagerIdToContacts(contacts []models.ManagerContactNumber, managerId int) []models.ManagerContactNumber {
+	newContacts := []models.ManagerContactNumber{}
+	for i := 0; i < len(contacts); i++ {
+		contact := models.ManagerContactNumber{
+			Id:           contacts[i].Id,
+			CountryAbbrv: contacts[i].CountryAbbrv,
+			CountryCode:  contacts[i].CountryCode,
+			Number:       contacts[i].Number,
+			Type:         contacts[i].Type,
+			ManagerId:    managerId,
+		}
+		newContacts = append(newContacts, contact)
+	}
+	return newContacts
 }

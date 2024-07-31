@@ -27,4 +27,5 @@ type User struct {
 	Location               Location         `gorm:"ForeignKey:UserId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CACADE"`
 	ContactNumbers         []ContactNumber  `gorm:"ForeignKey:UserId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CACADE"`
 	RegistrationCode       VerificationCode `gorm:"ForeignKey:UserId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CACADE"`
+	Manager                Manager          `gorm:"ForeignKey:UserId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CACADE"`
 }
