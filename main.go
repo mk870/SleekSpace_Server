@@ -35,5 +35,10 @@ func main() {
 	controllers.PasswordUpdate(router)
 	controllers.LocationAutoComplete(router)
 	controllers.LocationReverseGeoCoding(router)
+	controllers.CreateManager(router)
+	controllers.GetManagerById(router)
+	controllers.GetManagerByUserId(router)
+	controllers.DeleteManager(router)
+	controllers.UpdateManager(router)
 	router.Run()
 }

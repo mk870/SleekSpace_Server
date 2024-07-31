@@ -22,7 +22,7 @@ func CreateContactNumber(c *gin.Context) {
 	if result {
 		c.String(http.StatusOK, "contact added")
 	} else {
-		c.JSON(http.StatusForbidden, gin.H{"error": "eeroror"})
+		c.JSON(http.StatusForbidden, gin.H{"error": "an error occured"})
 	}
 }
 
@@ -40,6 +40,7 @@ func UpdateContactNumbers(c *gin.Context) {
 	isContactsUpdated := repositories.UpdateContactNumbers(user, contacts.Contacts)
 	if !isContactsUpdated {
 		c.JSON(http.StatusForbidden, gin.H{"error": "contacts update failed"})
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{"response": "contacts were updated succesfully"})
 }

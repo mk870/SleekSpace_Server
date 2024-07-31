@@ -39,6 +39,15 @@ func GetUserById(id string) *models.User {
 	return &user
 }
 
+func GetUserByIdWithManager(id string) *models.User {
+	var user models.User
+	result := db.DB.Preload("Manager").First(&user, id)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return nil
+	}
+	return &user
+}
+
 func SaveUserUpdate(update *models.User) bool {
 	db.DB.Save(update)
 	return true

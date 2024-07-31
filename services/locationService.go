@@ -48,6 +48,7 @@ func UpdateLocation(c *gin.Context) {
 	isLocationUpdated := repositories.UpdateLocation(&location)
 	if !isLocationUpdated {
 		c.JSON(http.StatusForbidden, gin.H{"error": "location update failed"})
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{"response": "location was updated succesfully"})
 }
