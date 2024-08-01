@@ -31,6 +31,7 @@ func CreateManager(c *gin.Context) {
 		UserId: manager.UserId,
 		Name:   manager.Name,
 		Email:  manager.Email,
+		Avatar: manager.Avatar,
 	}
 	isManagerCreated := repositories.CreateManager(user, &newManager)
 	if isManagerCreated {
@@ -95,6 +96,7 @@ func UpdateManager(c *gin.Context) {
 		UserId   int                           `json:"userId"`
 		Name     string                        `json:"name" validate:"required,min=2,max=50"`
 		Email    string                        `json:"email"`
+		Avatar   string                        `json:"avatar"`
 		Contacts []models.ManagerContactNumber `json:"contacts"`
 	}
 	var managerUpdate ManagerUpdate
@@ -114,6 +116,7 @@ func UpdateManager(c *gin.Context) {
 		c.JSON(http.StatusForbidden, gin.H{"error": "property management account contact numbers do not exist"})
 		return
 	}
+	manager.Avatar = managerUpdate.Avatar
 	manager.Email = managerUpdate.Email
 	manager.Name = managerUpdate.Name
 	manager.ManagerContactNumbers = updatedManagerContacts

@@ -6,6 +6,7 @@ type ManagerDTO struct {
 	UserId   int                           `json:"userId"`
 	Name     string                        `json:"name" validate:"required,min=2,max=50"`
 	Email    string                        `json:"email"`
+	Avatar   string                        `json:"avatar"`
 	Contacts []models.ManagerContactNumber `json:"contacts"`
 }
 
@@ -14,6 +15,7 @@ type ManagerResponseDTO struct {
 	UserId   int                       `json:"userId"`
 	Name     string                    `json:"name" validate:"required,min=2,max=50"`
 	Email    string                    `json:"email"`
+	Avatar   string                    `json:"avatar"`
 	Contacts []ManagerContactNumberDTO `json:"contacts"`
 }
 
