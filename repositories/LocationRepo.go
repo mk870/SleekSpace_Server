@@ -27,3 +27,8 @@ func UpdateLocation(locationUpdate *models.Location) bool {
 	db.DB.Save(locationUpdate)
 	return true
 }
+
+func DeleteLocation(userId int) bool {
+	db.DB.Unscoped().Delete(&models.Location{}, userId)
+	return true
+}

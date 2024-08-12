@@ -157,3 +157,20 @@ func ResendVerificationCode(c *gin.Context) {
 		"response": "please check your email for verification code",
 	})
 }
+
+func GetAllCodes(c *gin.Context) {
+	codes := repositories.AllVerificationCodes()
+	c.JSON(http.StatusOK, gin.H{
+		"response": codes,
+	})
+}
+
+func DeleteVerificationCode(c *gin.Context) {
+	id := c.Param("id")
+	isDeleted := repositories.DeleteVerficationCode(utilities.ConvertStringToInt(id))
+	if isDeleted {
+		c.JSON(http.StatusOK, gin.H{
+			"response": "code deleted",
+		})
+	}
+}

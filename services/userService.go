@@ -65,10 +65,42 @@ func UpdateUser(c *gin.Context) {
 
 func DeleteUser(c *gin.Context) {
 	id := c.Param("id")
-	result := repositories.DeleteUserById(id)
-	if result {
-		c.String(http.StatusOK, "user successfully deleted")
-	} else {
+	user := repositories.GetUserById(c.Param("id"))
+	if user == nil {
 		c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
+		return
 	}
+	if repositories.DeleteLocation(user.Location.Id) {
+		if repositories.DeleteVerficationCode(user.RegistrationCode.Id) {
+			if repositories.DeleteAllManagerContactNumbers(user.Manager.Id) {
+				if repositories.DeleteManagerById(utilities.ConvertIntToString(user.Manager.Id)) {
+					if repositories.DeleteAllUserContactNumbers(utilities.ConvertStringToInt(id)) {
+						if repositories.DeleteUserById(id) {
+							c.String(http.StatusOK, "user successfully deleted")
+							return
+						} else {
+							c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
+							return
+						}
+					} else {
+						c.JSON(http.StatusForbidden, gin.H{"error": "failed to delete contact details"})
+						return
+					}
+				} else {
+					c.JSON(http.StatusForbidden, gin.H{"error": "failed to delete manager account details"})
+					return
+				}
+			} else {
+				c.JSON(http.StatusForbidden, gin.H{"error": "failed to delete manager account contact details"})
+				return
+			}
+		} else {
+			c.JSON(http.StatusForbidden, gin.H{"error": "failed to delete verification code details"})
+			return
+		}
+	} else {
+		c.JSON(http.StatusForbidden, gin.H{"error": "failed to delete your location details"})
+		return
+	}
+
 }

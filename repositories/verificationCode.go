@@ -23,3 +23,17 @@ func UpdateVerificationCode(verificationCodeUpdate *models.VerificationCode) boo
 	db.DB.Save(verificationCodeUpdate)
 	return true
 }
+
+func AllVerificationCodes() []models.VerificationCode {
+	var codes []models.VerificationCode
+	err := db.DB.Find(&codes)
+	if err != nil {
+		println(err.Name(), err.Statement)
+	}
+	return codes
+}
+
+func DeleteVerficationCode(userId int) bool {
+	db.DB.Unscoped().Delete(&models.VerificationCode{}, userId)
+	return true
+}

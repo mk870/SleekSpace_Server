@@ -4,12 +4,12 @@ import (
 	"SleekSpace/dtos"
 	"SleekSpace/models"
 
-	// "log"
+	//	"log"
 	"math/rand"
 	"os"
 	"strconv"
 	"time"
-	// "github.com/joho/godotenv"
+	//"github.com/joho/godotenv"
 )
 
 func GenerateVerificationCode() int {
@@ -22,6 +22,11 @@ func GenerateVerificationCode() int {
 
 func ConvertIntToString(number int) string {
 	return strconv.Itoa(number)
+}
+
+func ConvertStringToInt(number string) int {
+	i, _ := strconv.Atoi(number)
+	return i
 }
 
 func GenerateVerificationGracePeriod() time.Time {
