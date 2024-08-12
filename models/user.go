@@ -24,8 +24,8 @@ type User struct {
 	Avatar                 string           `json:"avatar" gorm:"nullable"`
 	IsActive               bool             `json:"isActive"`
 	IsSocialsAuthenticated bool             `json:"isSocialsAuthenticated"`
-	Location               Location         `gorm:"ForeignKey:UserId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CACADE"`
-	ContactNumbers         []ContactNumber  `gorm:"ForeignKey:UserId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CACADE"`
-	RegistrationCode       VerificationCode `gorm:"ForeignKey:UserId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CACADE"`
-	Manager                Manager          `gorm:"ForeignKey:UserId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CACADE"`
+	Location               Location         `gorm:"ForeignKey:UserId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	ContactNumbers         []ContactNumber  `gorm:"ForeignKey:UserId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	RegistrationCode       VerificationCode `gorm:"ForeignKey:UserId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	Manager                Manager          `gorm:"ForeignKey:UserId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 }

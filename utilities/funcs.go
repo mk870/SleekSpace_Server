@@ -30,11 +30,13 @@ func GenerateVerificationGracePeriod() time.Time {
 }
 
 type EnvVariables struct {
-	DatabaseDetails string
-	Email           string
-	EmailPassword   string
-	TokenSecret     string
-	LocationIQToken string
+	DatabaseDetails     string
+	Email               string
+	EmailPassword       string
+	TokenSecret         string
+	LocationIQToken     string
+	SupabaseApiKey      string
+	SupabaseReferenceId string
 }
 
 func GetEnvVariables() EnvVariables {
@@ -47,12 +49,16 @@ func GetEnvVariables() EnvVariables {
 	emailPassword := os.Getenv("EMAIL_PASSWORD")
 	tokenSecret := os.Getenv("ACCESS_TOKEN_SECRET")
 	locationIQToken := os.Getenv("LOCATION_IQ_ACCESS_TOKEN")
+	supabaseApiKey := os.Getenv("SUPABASE_REF_ID")
+	supabaseReferenceId := os.Getenv("SUPABASE_APIKEY")
 	return EnvVariables{
-		DatabaseDetails: databaseDetails,
-		Email:           email,
-		EmailPassword:   emailPassword,
-		TokenSecret:     tokenSecret,
-		LocationIQToken: locationIQToken,
+		DatabaseDetails:     databaseDetails,
+		Email:               email,
+		EmailPassword:       emailPassword,
+		TokenSecret:         tokenSecret,
+		LocationIQToken:     locationIQToken,
+		SupabaseApiKey:      supabaseApiKey,
+		SupabaseReferenceId: supabaseReferenceId,
 	}
 }
 
