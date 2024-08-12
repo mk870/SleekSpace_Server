@@ -40,5 +40,7 @@ func main() {
 	controllers.GetManagerByUserId(router)
 	controllers.DeleteManager(router)
 	controllers.UpdateManager(router)
+	controllers.AllVerificationCodes(router)
+	controllers.DeleteVerificationCode(router)
 	router.Run()
 }

@@ -29,3 +29,11 @@ func UpdateContactNumbers(user *models.User, updateContactNumbersList []models.C
 	db.DB.Session(&gorm.Session{FullSaveAssociations: true}).Updates(&user)
 	return true
 }
+
+func DeleteAllUserContactNumbers(userId int) bool {
+	err := db.DB.Where("userId = ?", userId).Unscoped().Delete(&models.ContactNumber{})
+	if err != nil {
+		println(err.Name(), err.Statement)
+	}
+	return true
+}

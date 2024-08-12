@@ -46,6 +46,14 @@ func UpdateManagerContactNumbers(manager *models.Manager, updateManagerContactNu
 	return true
 }
 
+func DeleteAllManagerContactNumbers(managerId int) bool {
+	err := db.DB.Where("managerId = ?", managerId).Unscoped().Delete(&models.ManagerContactNumber{})
+	if err != nil {
+		println(err.Name(), err.Statement)
+	}
+	return true
+}
+
 func DeleteManagerById(id string) bool {
 	manager := GetManagerByManagerId(id)
 	if manager == nil {
