@@ -70,37 +70,44 @@ func DeleteUser(c *gin.Context) {
 		c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
 		return
 	}
-	if repositories.DeleteLocation(user.Location.Id) {
-		if repositories.DeleteVerficationCode(user.RegistrationCode.Id) {
-			if repositories.DeleteAllManagerContactNumbers(user.Manager.Id) {
-				if repositories.DeleteManagerById(utilities.ConvertIntToString(user.Manager.Id)) {
-					if repositories.DeleteAllUserContactNumbers(utilities.ConvertStringToInt(id)) {
-						if repositories.DeleteUserById(id) {
-							c.String(http.StatusOK, "user successfully deleted")
-							return
-						} else {
-							c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
-							return
-						}
-					} else {
-						c.JSON(http.StatusForbidden, gin.H{"error": "failed to delete contact details"})
-						return
-					}
-				} else {
-					c.JSON(http.StatusForbidden, gin.H{"error": "failed to delete manager account details"})
-					return
-				}
-			} else {
-				c.JSON(http.StatusForbidden, gin.H{"error": "failed to delete manager account contact details"})
-				return
-			}
-		} else {
-			c.JSON(http.StatusForbidden, gin.H{"error": "failed to delete verification code details"})
-			return
-		}
+	if repositories.DeleteUserById(id) {
+		c.String(http.StatusOK, "user successfully deleted")
+		return
 	} else {
-		c.JSON(http.StatusForbidden, gin.H{"error": "failed to delete your location details"})
+		c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
 		return
 	}
+	// if repositories.DeleteLocation(user.Location.Id) {
+	// 	if repositories.DeleteVerficationCode(user.RegistrationCode.Id) {
+	// 		if repositories.DeleteAllManagerContactNumbers(user.Manager.Id) {
+	// 			if repositories.DeleteManagerById(utilities.ConvertIntToString(user.Manager.Id)) {
+	// 				if repositories.DeleteAllUserContactNumbers(utilities.ConvertStringToInt(id)) {
+	// 					if repositories.DeleteUserById(id) {
+	// 						c.String(http.StatusOK, "user successfully deleted")
+	// 						return
+	// 					} else {
+	// 						c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
+	// 						return
+	// 					}
+	// 				} else {
+	// 					c.JSON(http.StatusForbidden, gin.H{"error": "failed to delete contact details"})
+	// 					return
+	// 				}
+	// 			} else {
+	// 				c.JSON(http.StatusForbidden, gin.H{"error": "failed to delete manager account details"})
+	// 				return
+	// 			}
+	// 		} else {
+	// 			c.JSON(http.StatusForbidden, gin.H{"error": "failed to delete manager account contact details"})
+	// 			return
+	// 		}
+	// 	} else {
+	// 		c.JSON(http.StatusForbidden, gin.H{"error": "failed to delete verification code details"})
+	// 		return
+	// 	}
+	// } else {
+	// 	c.JSON(http.StatusForbidden, gin.H{"error": "failed to delete your location details"})
+	// 	return
+	// }
 
 }
