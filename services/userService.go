@@ -65,7 +65,7 @@ func UpdateUser(c *gin.Context) {
 
 func DeleteUser(c *gin.Context) {
 	id := c.Param("id")
-	user := repositories.GetUserById(c.Param("id"))
+	user := repositories.GetUserAndAllAssociationsById(c.Param("id"))
 	if user == nil {
 		c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
 		return
