@@ -14,13 +14,28 @@ func CreateLocation(user *models.User, location *models.Location) bool {
 
 }
 
-func GetLocationById(userId string) models.Location {
+func GetAllUsersLocations() []models.Location {
+	var locations = []models.Location{}
+	err := db.DB.Find(&locations)
+	if err != nil {
+		println(err.Error, err.Name())
+	}
+	return locations
+}
+
+func GetLocationByUserId(userId string) models.Location {
 	var user models.User
 	err := db.DB.Preload("Location").First(&user, userId)
 	if err != nil {
 		println(err.Name(), err.Statement)
 	}
 	return user.Location
+}
+
+func GetLocationById(locationId int) models.Location {
+	var location = models.Location{}
+	db.DB.First(&location, locationId)
+	return location
 }
 
 func UpdateLocation(locationUpdate *models.Location) bool {

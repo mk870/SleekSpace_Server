@@ -37,7 +37,7 @@ func UpdateContactNumbers(c *gin.Context) {
 		c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
 		return
 	}
-	isContactsUpdated := repositories.UpdateContactNumbers(user, contacts.Contacts)
+	isContactsUpdated := repositories.UpdateUserContactNumbers(user, contacts.Contacts)
 	if !isContactsUpdated {
 		c.JSON(http.StatusForbidden, gin.H{"error": "contacts update failed"})
 		return

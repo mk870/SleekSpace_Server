@@ -69,6 +69,7 @@ func DeleteUserById(id string) bool {
 		return false
 	}
 	db.DB.Unscoped().Delete(&models.User{}, id)
+	//db.DB.Select(clause.Associations).Unscoped().Delete(&models.User{}, id)
 	return true
 }
 

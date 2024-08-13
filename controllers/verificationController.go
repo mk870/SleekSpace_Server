@@ -19,11 +19,3 @@ func ResendVerificationCode(router *gin.Engine) {
 func CreateVerificationCode(router *gin.Engine) {
 	router.POST("/verification-code", services.CreateVerificationCode)
 }
-
-func AllVerificationCodes(router *gin.Engine) {
-	router.GET("/verification-codes", services.GetAllCodes)
-}
-
-func DeleteVerificationCode(router *gin.Engine) {
-	router.DELETE("/verification-code/:id", services.DeleteVerificationCode)
-}

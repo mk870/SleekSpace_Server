@@ -23,7 +23,7 @@ func VerifyCodeForRegistration(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": modelFieldsValidationError.Error()})
 		return
 	}
-	storedVerificationCode := repositories.GetVerificationCodeById(utilities.ConvertIntToString(verificationInfo.UserId))
+	storedVerificationCode := repositories.GetVerificationCodeByUserId(utilities.ConvertIntToString(verificationInfo.UserId))
 
 	if storedVerificationCode.ExpiryDate.Unix() < time.Now().Local().Unix() {
 		isUserDeleted := repositories.DeleteUserById(strconv.Itoa(storedVerificationCode.UserId))
@@ -83,7 +83,7 @@ func CreateVerificationCode(c *gin.Context) {
 		c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
 		return
 	}
-	verificationCode := repositories.GetVerificationCodeById(utilities.ConvertIntToString(user.Id))
+	verificationCode := repositories.GetVerificationCodeByUserId(utilities.ConvertIntToString(user.Id))
 	verificationCode.Code = utilities.GenerateVerificationCode()
 	verificationCode.ExpiryDate = time.Now().Add(time.Minute * 15)
 	isVerificationCodeUpdated := repositories.UpdateVerificationCode(&verificationCode)
@@ -112,7 +112,7 @@ func VerifyCodeForSecurity(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": modelFieldsValidationError.Error()})
 		return
 	}
-	storedVerificationCode := repositories.GetVerificationCodeById(utilities.ConvertIntToString(verificationInfo.UserId))
+	storedVerificationCode := repositories.GetVerificationCodeByUserId(utilities.ConvertIntToString(verificationInfo.UserId))
 
 	if storedVerificationCode.ExpiryDate.Unix() < time.Now().Local().Unix() {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -138,7 +138,7 @@ func ResendVerificationCode(c *gin.Context) {
 		c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
 		return
 	}
-	verificationCode := repositories.GetVerificationCodeById(userId)
+	verificationCode := repositories.GetVerificationCodeByUserId(userId)
 	verificationCode.Code = utilities.GenerateVerificationCode()
 	verificationCode.ExpiryDate = time.Now().Add(time.Minute * 15)
 	isVerificationCodeUpdated := repositories.UpdateVerificationCode(&verificationCode)
@@ -156,21 +156,4 @@ func ResendVerificationCode(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"response": "please check your email for verification code",
 	})
-}
-
-func GetAllCodes(c *gin.Context) {
-	codes := repositories.AllVerificationCodes()
-	c.JSON(http.StatusOK, gin.H{
-		"response": codes,
-	})
-}
-
-func DeleteVerificationCode(c *gin.Context) {
-	id := c.Param("id")
-	isDeleted := repositories.DeleteVerficationCode(utilities.ConvertStringToInt(id))
-	if isDeleted {
-		c.JSON(http.StatusOK, gin.H{
-			"response": "code deleted",
-		})
-	}
 }
