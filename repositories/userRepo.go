@@ -68,8 +68,7 @@ func DeleteUserById(id string) bool {
 	if user == nil {
 		return false
 	}
-	//db.DB.Unscoped().Delete(&models.User{}, id)
-	db.DB.Select("ContactNumbers", "Location", "RegistrationCode", "Manager").Unscoped().Delete(&models.User{}, id)
+	db.DB.Unscoped().Delete(&models.User{}, id)
 	return true
 }
 
