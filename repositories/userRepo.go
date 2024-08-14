@@ -5,6 +5,7 @@ import (
 
 	"SleekSpace/db"
 	"SleekSpace/models"
+	"SleekSpace/utilities"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -64,8 +65,12 @@ func SaveUserUpdate(update *models.User) bool {
 }
 
 func DeleteUserById(id string) bool {
-	user := GetUserById(id)
+	user := GetUserByIdWithManager(id)
 	if user == nil {
+		return false
+	}
+	isManagerDeleted := DeleteManagerById(utilities.ConvertIntToString(user.Manager.Id))
+	if !isManagerDeleted {
 		return false
 	}
 	db.DB.Select(clause.Associations).Unscoped().Delete(&user)
