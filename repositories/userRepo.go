@@ -70,10 +70,10 @@ func DeleteUserById(id string) bool {
 		return false
 	}
 	isManagerDeleted := DeleteManagerById(utilities.ConvertIntToString(user.Manager.Id))
-	if !isManagerDeleted {
-		return false
+	if !isManagerDeleted || isManagerDeleted {
+		db.DB.Select(clause.Associations).Unscoped().Delete(&user)
+		return true
 	}
-	db.DB.Select(clause.Associations).Unscoped().Delete(&user)
 	return true
 }
 
