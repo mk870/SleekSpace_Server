@@ -8,6 +8,7 @@ import (
 )
 
 func CreateContactNumber(user *models.User, contactNumber *models.ContactNumber) bool {
+	println("number: ", contactNumber.Number)
 	err := db.DB.Model(user).Association("ContactNumbers").Append(contactNumber)
 	if err != nil {
 		println(err.Error())
@@ -36,13 +37,5 @@ func GetUserContactNumbersByUserId(userId int) []models.ContactNumber {
 func UpdateUserContactNumbers(user *models.User, updateContactNumbersList []models.ContactNumber) bool {
 	user.ContactNumbers = updateContactNumbersList
 	db.DB.Session(&gorm.Session{FullSaveAssociations: true}).Updates(&user)
-	return true
-}
-
-func DeleteAllUserContactNumbers(userId int) bool {
-	err := db.DB.Where("userId = ?", userId).Unscoped().Delete(&models.ContactNumber{})
-	if err != nil {
-		println(err.Name(), err.Statement)
-	}
 	return true
 }

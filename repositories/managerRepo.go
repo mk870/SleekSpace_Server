@@ -6,6 +6,7 @@ import (
 	"errors"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 func CreateManager(user *models.User, manager *models.Manager) bool {
@@ -64,15 +65,11 @@ func UpdateManagerContactNumbers(manager *models.Manager, updateManagerContactNu
 	return true
 }
 
-func DeleteAllManagerContactNumbers(managerId int) bool {
-	err := db.DB.Where("managerId = ?", managerId).Unscoped().Delete(&models.ManagerContactNumber{})
-	if err != nil {
-		println(err.Name(), err.Statement)
-	}
-	return true
-}
-
 func DeleteManagerById(id string) bool {
-	db.DB.Unscoped().Delete(&models.Manager{}, id)
+	manager := GetManagerByManagerId(id)
+	if manager == nil {
+		return false
+	}
+	db.DB.Select(clause.Associations).Unscoped().Delete(&manager)
 	return true
 }

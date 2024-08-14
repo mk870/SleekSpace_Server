@@ -123,30 +123,14 @@ func UpdateManager(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"response": " this property management account failed to update"})
 }
 
-func DeleteAllManagerContactNumbers(c *gin.Context) {
-	id := c.Param("id")
-	result := repositories.DeleteAllManagerContactNumbers(utilities.ConvertStringToInt(id))
-	if result {
-		c.String(http.StatusOK, "your property management account was successfully deleted")
-	} else {
-		c.JSON(http.StatusForbidden, gin.H{"error": "this property management account does not exist"})
-	}
-}
-
 func DeleteManager(c *gin.Context) {
 	id := c.Param("id")
-	areManagerContactsDeleted := repositories.DeleteAllManagerContactNumbers(utilities.ConvertStringToInt(id))
-	if areManagerContactsDeleted {
-		result := repositories.DeleteManagerById(id)
-		if result {
-			c.String(http.StatusOK, "your property management account was successfully deleted")
-			return
-		} else {
-			c.JSON(http.StatusForbidden, gin.H{"error": "this property management account does not exist"})
-			return
-		}
+	isManagerDeleted := repositories.DeleteManagerById(id)
+	if isManagerDeleted {
+		c.String(http.StatusOK, "your property management account was successfully deleted")
+		return
 	} else {
-		c.JSON(http.StatusForbidden, gin.H{"error": "failed to delete manager account details, please try again later"})
+		c.JSON(http.StatusForbidden, gin.H{"error": "this property management account does not exist"})
 		return
 	}
 }

@@ -1,9 +1,9 @@
 package models
 
-type Location struct {
+type PropertyLocation struct {
 	MyModel
 	Id          int      `json:"id" gorm:"primary_key"`
-	UserId      int      `json:"userId"`
+	PropertyId  int      `json:"propertyId" gorm:"column:propertyId"`
 	DisplayName string   `json:"displayName"`
 	Boundingbox []string `json:"boundingbox" gorm:"serializer:json"`
 	Lat         string   `json:"lat"`

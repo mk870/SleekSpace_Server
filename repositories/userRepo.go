@@ -7,7 +7,7 @@ import (
 	"SleekSpace/models"
 
 	"gorm.io/gorm"
-	//"gorm.io/gorm/clause"
+	"gorm.io/gorm/clause"
 )
 
 func CreateUser(user *models.User) bool {
@@ -42,7 +42,7 @@ func GetUserById(id string) *models.User {
 
 func GetUserAndAllAssociationsById(id string) *models.User {
 	var user models.User
-	result := db.DB.Preload("ContactNumbers").Preload("Location").Preload("RegistrationCode").Preload("Manager").First(&user, id)
+	result := db.DB.Preload(clause.Associations).First(&user, id)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil
 	}
@@ -68,8 +68,7 @@ func DeleteUserById(id string) bool {
 	if user == nil {
 		return false
 	}
-	db.DB.Unscoped().Delete(&models.User{}, id)
-	//db.DB.Select(clause.Associations).Unscoped().Delete(&models.User{}, id)
+	db.DB.Select(clause.Associations).Unscoped().Delete(&user)
 	return true
 }
 
