@@ -1,9 +1,12 @@
 package models
 
-import "time"
+import (
+	baseModel "SleekSpace/models"
+	"time"
+)
 
 type VerificationCode struct {
-	MyModel
+	baseModel.MyModel
 	Id         int       `json:"id" gorm:"primary_key"`
 	UserId     int       `json:"userId"`
 	Code       int       `json:"code"`

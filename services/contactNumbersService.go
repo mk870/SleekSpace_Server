@@ -3,7 +3,7 @@ package services
 import (
 	"net/http"
 
-	"SleekSpace/models"
+	userModels "SleekSpace/models/user"
 	"SleekSpace/repositories"
 	"SleekSpace/utilities"
 
@@ -11,7 +11,7 @@ import (
 )
 
 func CreateContactNumber(c *gin.Context) {
-	var contact models.ContactNumber
+	var contact userModels.ContactNumber
 	c.BindJSON(&contact)
 	user := repositories.GetUserById(utilities.ConvertIntToString(contact.UserId))
 	if user == nil {
@@ -28,7 +28,7 @@ func CreateContactNumber(c *gin.Context) {
 
 func UpdateContactNumbers(c *gin.Context) {
 	type ContactNumbers struct {
-		Contacts []models.ContactNumber `json:"contacts"`
+		Contacts []userModels.ContactNumber `json:"contacts"`
 	}
 	var contacts ContactNumbers
 	c.BindJSON(&contacts)

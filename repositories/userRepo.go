@@ -4,15 +4,15 @@ import (
 	"errors"
 
 	"SleekSpace/db"
-	"SleekSpace/models"
+	userModels "SleekSpace/models/user"
 	"SleekSpace/utilities"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
-func CreateUser(user *models.User) bool {
-	var existingUser models.User
+func CreateUser(user *userModels.User) bool {
+	var existingUser userModels.User
 	email := user.Email
 	result := db.DB.Where("email =?", email).First(&existingUser)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
@@ -23,8 +23,8 @@ func CreateUser(user *models.User) bool {
 	}
 }
 
-func GetUsers() []models.User {
-	var users = []models.User{}
+func GetUsers() []userModels.User {
+	var users = []userModels.User{}
 	err := db.DB.Find(&users)
 	if err != nil {
 		println(err.Error, err.Name())
@@ -32,8 +32,8 @@ func GetUsers() []models.User {
 	return users
 }
 
-func GetUserById(id string) *models.User {
-	var user models.User
+func GetUserById(id string) *userModels.User {
+	var user userModels.User
 	result := db.DB.Preload("ContactNumbers").Preload("Location").First(&user, id)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil
@@ -41,8 +41,8 @@ func GetUserById(id string) *models.User {
 	return &user
 }
 
-func GetUserAndAllAssociationsById(id string) *models.User {
-	var user models.User
+func GetUserAndAllAssociationsById(id string) *userModels.User {
+	var user userModels.User
 	result := db.DB.Preload(clause.Associations).First(&user, id)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil
@@ -50,8 +50,8 @@ func GetUserAndAllAssociationsById(id string) *models.User {
 	return &user
 }
 
-func GetUserByIdWithManager(id string) *models.User {
-	var user models.User
+func GetUserByIdWithManager(id string) *userModels.User {
+	var user userModels.User
 	result := db.DB.Preload("Manager").First(&user, id)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil
@@ -59,7 +59,7 @@ func GetUserByIdWithManager(id string) *models.User {
 	return &user
 }
 
-func SaveUserUpdate(update *models.User) bool {
+func SaveUserUpdate(update *userModels.User) bool {
 	db.DB.Save(update)
 	return true
 }
@@ -77,8 +77,8 @@ func DeleteUserById(id string) bool {
 	return true
 }
 
-func GetUserByEmail(email string) *models.User {
-	var user models.User
+func GetUserByEmail(email string) *userModels.User {
+	var user userModels.User
 	result := db.DB.Where("email =?", email).Preload("ContactNumbers").Preload("Location").First(&user)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil
@@ -87,8 +87,8 @@ func GetUserByEmail(email string) *models.User {
 	}
 }
 
-func GetUserWithRegistrationCodeById(id string) models.User {
-	var user models.User
+func GetUserWithRegistrationCodeById(id string) userModels.User {
+	var user userModels.User
 	err := db.DB.Preload("RegistrationCode").First(&user, id)
 	if err != nil {
 		println(err.Name(), err.Statement)

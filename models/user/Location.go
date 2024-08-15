@@ -1,7 +1,9 @@
 package models
 
+import baseModel "SleekSpace/models"
+
 type Location struct {
-	MyModel
+	baseModel.MyModel
 	Id          int      `json:"id" gorm:"primary_key"`
 	UserId      int      `json:"userId"`
 	DisplayName string   `json:"displayName"`

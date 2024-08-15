@@ -1,7 +1,9 @@
-package models
+package manager
+
+import baseModel "SleekSpace/models"
 
 type ManagerContactNumber struct {
-	MyModel
+	baseModel.MyModel
 	Id           int    `json:"id" gorm:"primary_key"`
 	ManagerId    int    `json:"managerId"`
 	Type         string `json:"type"`

@@ -3,7 +3,7 @@ package services
 import (
 	"net/http"
 
-	"SleekSpace/models"
+	userModels "SleekSpace/models/user"
 	"SleekSpace/repositories"
 	"SleekSpace/utilities"
 
@@ -27,7 +27,7 @@ func GetUser(c *gin.Context) {
 }
 
 func GetUserByEmail(c *gin.Context) {
-	client := c.MustGet("user").(*models.User)
+	client := c.MustGet("user").(*userModels.User)
 	user := repositories.GetUserByEmail(client.Email)
 	if user == nil {
 		c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
@@ -38,7 +38,7 @@ func GetUserByEmail(c *gin.Context) {
 }
 
 func UpdateUser(c *gin.Context) {
-	var update models.User
+	var update userModels.User
 	c.BindJSON(&update)
 	oldData := repositories.GetUserById(c.Param("id"))
 	if oldData == nil {

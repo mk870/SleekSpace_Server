@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"SleekSpace/dtos"
-	"SleekSpace/models"
+	managerModels "SleekSpace/models/manager"
 	"SleekSpace/repositories"
 	"SleekSpace/utilities"
 
@@ -27,7 +27,7 @@ func CreateManager(c *gin.Context) {
 		c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
 		return
 	}
-	newManager := models.Manager{
+	newManager := managerModels.Manager{
 		UserId: manager.UserId,
 		Name:   manager.Name,
 		Email:  manager.Email,
@@ -82,12 +82,12 @@ func GetManagerByManagerId(c *gin.Context) {
 
 func UpdateManager(c *gin.Context) {
 	type ManagerUpdate struct {
-		Id       int                           `json:"id"`
-		UserId   int                           `json:"userId"`
-		Name     string                        `json:"name" validate:"required,min=2,max=50"`
-		Email    string                        `json:"email"`
-		Avatar   string                        `json:"avatar"`
-		Contacts []models.ManagerContactNumber `json:"contacts"`
+		Id       int                                  `json:"id"`
+		UserId   int                                  `json:"userId"`
+		Name     string                               `json:"name" validate:"required,min=2,max=50"`
+		Email    string                               `json:"email"`
+		Avatar   string                               `json:"avatar"`
+		Contacts []managerModels.ManagerContactNumber `json:"contacts"`
 	}
 	var managerUpdate ManagerUpdate
 	c.BindJSON(&managerUpdate)

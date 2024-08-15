@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"SleekSpace/dtos"
-	"SleekSpace/models"
+	userModels "SleekSpace/models/user"
 	"SleekSpace/repositories"
 	"SleekSpace/utilities"
 
@@ -30,13 +30,13 @@ func Registration(c *gin.Context) {
 		return
 	}
 
-	newUser := models.User{
+	newUser := userModels.User{
 		GivenName:              userRegistartionDTO.GivenName,
 		FamilyName:             userRegistartionDTO.FamilyName,
 		Password:               string(hashedPassword),
 		Email:                  userRegistartionDTO.Email,
 		IsSocialsAuthenticated: false,
-		RegistrationCode: models.VerificationCode{
+		RegistrationCode: userModels.VerificationCode{
 			Code:       utilities.GenerateVerificationCode(),
 			ExpiryDate: utilities.GenerateVerificationGracePeriod(),
 		},

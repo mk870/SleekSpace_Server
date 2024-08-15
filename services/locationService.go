@@ -3,7 +3,7 @@ package services
 import (
 	"net/http"
 
-	"SleekSpace/models"
+	userModels "SleekSpace/models/user"
 	"SleekSpace/repositories"
 	"SleekSpace/utilities"
 
@@ -12,7 +12,7 @@ import (
 )
 
 func CreateLocation(c *gin.Context) {
-	var location models.Location
+	var location userModels.Location
 	validateModelFields := validator.New()
 	c.BindJSON(&location)
 
@@ -36,7 +36,7 @@ func CreateLocation(c *gin.Context) {
 }
 
 func UpdateLocation(c *gin.Context) {
-	var location models.Location
+	var location userModels.Location
 	validateModelFields := validator.New()
 	c.BindJSON(&location)
 	modelFieldsValidationError := validateModelFields.Struct(location)

@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"SleekSpace/dtos"
-	"SleekSpace/models"
+	userModels "SleekSpace/models/user"
 	"SleekSpace/repositories"
 	"SleekSpace/tokens"
 	"SleekSpace/utilities"
@@ -15,7 +15,7 @@ import (
 )
 
 func Logout(c *gin.Context) {
-	user := c.MustGet("user").(*models.User)
+	user := c.MustGet("user").(*userModels.User)
 	loggedInUser := repositories.GetUserByEmail(user.Email)
 	if loggedInUser == nil {
 		c.JSON(http.StatusInternalServerError, gin.H{

@@ -2,7 +2,8 @@ package utilities
 
 import (
 	"SleekSpace/dtos"
-	"SleekSpace/models"
+	managerModels "SleekSpace/models/manager"
+	userModels "SleekSpace/models/user"
 
 	//"log"
 	"math/rand"
@@ -53,20 +54,16 @@ func GetEnvVariables() EnvVariables {
 	emailPassword := os.Getenv("EMAIL_PASSWORD")
 	tokenSecret := os.Getenv("ACCESS_TOKEN_SECRET")
 	locationIQToken := os.Getenv("LOCATION_IQ_ACCESS_TOKEN")
-	supabaseApiKey := os.Getenv("SUPABASE_REF_ID")
-	supabaseReferenceId := os.Getenv("SUPABASE_APIKEY")
 	return EnvVariables{
-		DatabaseDetails:     databaseDetails,
-		Email:               email,
-		EmailPassword:       emailPassword,
-		TokenSecret:         tokenSecret,
-		LocationIQToken:     locationIQToken,
-		SupabaseApiKey:      supabaseApiKey,
-		SupabaseReferenceId: supabaseReferenceId,
+		DatabaseDetails: databaseDetails,
+		Email:           email,
+		EmailPassword:   emailPassword,
+		TokenSecret:     tokenSecret,
+		LocationIQToken: locationIQToken,
 	}
 }
 
-func processedContactNumbers(contactNumbers []models.ContactNumber) []dtos.ContactNumberDTO {
+func processedContactNumbers(contactNumbers []userModels.ContactNumber) []dtos.ContactNumberDTO {
 	contacts := []dtos.ContactNumberDTO{}
 	for i := 0; i < len(contactNumbers); i++ {
 		contact := dtos.ContactNumberDTO{
@@ -82,7 +79,7 @@ func processedContactNumbers(contactNumbers []models.ContactNumber) []dtos.Conta
 	return contacts
 }
 
-func processedManagerContactNumbers(contactNumbers []models.ManagerContactNumber) []dtos.ManagerContactNumberDTO {
+func processedManagerContactNumbers(contactNumbers []managerModels.ManagerContactNumber) []dtos.ManagerContactNumberDTO {
 	contacts := []dtos.ManagerContactNumberDTO{}
 	for i := 0; i < len(contactNumbers); i++ {
 		contact := dtos.ManagerContactNumberDTO{
@@ -98,7 +95,7 @@ func processedManagerContactNumbers(contactNumbers []models.ManagerContactNumber
 	return contacts
 }
 
-func UserResponseMapper(user *models.User, accessToken string) dtos.UserResponseDTO {
+func UserResponseMapper(user *userModels.User, accessToken string) dtos.UserResponseDTO {
 	return dtos.UserResponseDTO{
 		Id:             user.Id,
 		Email:          user.Email,
@@ -123,7 +120,7 @@ func UserResponseMapper(user *models.User, accessToken string) dtos.UserResponse
 		},
 	}
 }
-func ManagerResponse(manager *models.Manager) dtos.ManagerResponseDTO {
+func ManagerResponse(manager *managerModels.Manager) dtos.ManagerResponseDTO {
 	return dtos.ManagerResponseDTO{
 		Id:       manager.Id,
 		UserId:   manager.UserId,
@@ -133,10 +130,10 @@ func ManagerResponse(manager *models.Manager) dtos.ManagerResponseDTO {
 	}
 }
 
-func AddManagerIdToContacts(contacts []models.ManagerContactNumber, managerId int) []models.ManagerContactNumber {
-	newContacts := []models.ManagerContactNumber{}
+func AddManagerIdToContacts(contacts []managerModels.ManagerContactNumber, managerId int) []managerModels.ManagerContactNumber {
+	newContacts := []managerModels.ManagerContactNumber{}
 	for i := 0; i < len(contacts); i++ {
-		contact := models.ManagerContactNumber{
+		contact := managerModels.ManagerContactNumber{
 			Id:           contacts[i].Id,
 			CountryAbbrv: contacts[i].CountryAbbrv,
 			CountryCode:  contacts[i].CountryCode,

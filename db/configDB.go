@@ -1,7 +1,8 @@
 package db
 
 import (
-	"SleekSpace/models"
+	managerModels "SleekSpace/models/manager"
+	userModels "SleekSpace/models/user"
 	"SleekSpace/utilities"
 
 	"gorm.io/driver/postgres"
@@ -16,8 +17,8 @@ func Connect() {
 	if err != nil {
 		panic(err)
 	}
-	db.AutoMigrate(&models.ManagerContactNumber{})
-	db.AutoMigrate(&models.VerificationCode{}, &models.ContactNumber{}, &models.Location{}, &models.Manager{})
-	db.AutoMigrate(&models.User{})
+	db.AutoMigrate(&managerModels.ManagerContactNumber{})
+	db.AutoMigrate(&userModels.VerificationCode{}, &userModels.ContactNumber{}, &userModels.Location{}, &managerModels.Manager{})
+	db.AutoMigrate(&userModels.User{})
 	DB = db
 }

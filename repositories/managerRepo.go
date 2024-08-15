@@ -2,14 +2,15 @@ package repositories
 
 import (
 	"SleekSpace/db"
-	"SleekSpace/models"
+	managerModels "SleekSpace/models/manager"
+	userModels "SleekSpace/models/user"
 	"errors"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
-func CreateManager(user *models.User, manager *models.Manager) bool {
+func CreateManager(user *userModels.User, manager *managerModels.Manager) bool {
 	err := db.DB.Model(user).Association("Manager").Append(manager)
 	if err != nil {
 		println(err.Error())
@@ -18,8 +19,8 @@ func CreateManager(user *models.User, manager *models.Manager) bool {
 
 }
 
-func GetManagerByManagerId(managerId string) *models.Manager {
-	var manager models.Manager
+func GetManagerByManagerId(managerId string) *managerModels.Manager {
+	var manager managerModels.Manager
 	result := db.DB.Preload("ManagerContactNumbers").First(&manager, managerId)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil
@@ -27,13 +28,13 @@ func GetManagerByManagerId(managerId string) *models.Manager {
 	return &manager
 }
 
-func UpdateManager(managerUpdate *models.Manager) bool {
+func UpdateManager(managerUpdate *managerModels.Manager) bool {
 	db.DB.Save(managerUpdate)
 	return true
 }
 
-func GetAllManagersContacts() []models.ManagerContactNumber {
-	var contacts = []models.ManagerContactNumber{}
+func GetAllManagersContacts() []managerModels.ManagerContactNumber {
+	var contacts = []managerModels.ManagerContactNumber{}
 	err := db.DB.Find(&contacts)
 	if err != nil {
 		println(err.Error, err.Name())
@@ -41,8 +42,8 @@ func GetAllManagersContacts() []models.ManagerContactNumber {
 	return contacts
 }
 
-func GetAllManagers() []models.Manager {
-	var managers = []models.Manager{}
+func GetAllManagers() []managerModels.Manager {
+	var managers = []managerModels.Manager{}
 	err := db.DB.Find(&managers)
 	if err != nil {
 		println(err.Error, err.Name())
@@ -50,8 +51,8 @@ func GetAllManagers() []models.Manager {
 	return managers
 }
 
-func GetManagerContactNumbersByManagerId(managerId int) []models.ManagerContactNumber {
-	var manager = models.Manager{}
+func GetManagerContactNumbersByManagerId(managerId int) []managerModels.ManagerContactNumber {
+	var manager = managerModels.Manager{}
 	result := db.DB.Preload("ManagerContactNumbers").First(&manager, managerId)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil
@@ -59,7 +60,7 @@ func GetManagerContactNumbersByManagerId(managerId int) []models.ManagerContactN
 	return manager.ManagerContactNumbers
 }
 
-func UpdateManagerContactNumbers(manager *models.Manager, updateManagerContactNumbersList []models.ManagerContactNumber) bool {
+func UpdateManagerContactNumbers(manager *managerModels.Manager, updateManagerContactNumbersList []managerModels.ManagerContactNumber) bool {
 	manager.ManagerContactNumbers = updateManagerContactNumbersList
 	db.DB.Session(&gorm.Session{FullSaveAssociations: true}).Updates(&manager)
 	return true

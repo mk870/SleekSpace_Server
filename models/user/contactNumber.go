@@ -1,7 +1,9 @@
 package models
 
+import baseModel "SleekSpace/models"
+
 type ContactNumber struct {
-	MyModel
+	baseModel.MyModel
 	Id           int    `json:"id" gorm:"primary_key"`
 	UserId       int    `json:"userId" gorm:"column:user_id"`
 	Type         string `json:"type"`

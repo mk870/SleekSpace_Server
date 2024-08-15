@@ -2,10 +2,10 @@ package repositories
 
 import (
 	"SleekSpace/db"
-	"SleekSpace/models"
+	userModels "SleekSpace/models/user"
 )
 
-func CreateLocation(user *models.User, location *models.Location) bool {
+func CreateLocation(user *userModels.User, location *userModels.Location) bool {
 	err := db.DB.Model(user).Association("Location").Append(location)
 	if err != nil {
 		println(err.Error())
@@ -14,8 +14,8 @@ func CreateLocation(user *models.User, location *models.Location) bool {
 
 }
 
-func GetAllUsersLocations() []models.Location {
-	var locations = []models.Location{}
+func GetAllUsersLocations() []userModels.Location {
+	var locations = []userModels.Location{}
 	err := db.DB.Find(&locations)
 	if err != nil {
 		println(err.Error, err.Name())
@@ -23,8 +23,8 @@ func GetAllUsersLocations() []models.Location {
 	return locations
 }
 
-func GetLocationByUserId(userId string) models.Location {
-	var user models.User
+func GetLocationByUserId(userId string) userModels.Location {
+	var user userModels.User
 	err := db.DB.Preload("Location").First(&user, userId)
 	if err != nil {
 		println(err.Name(), err.Statement)
@@ -32,18 +32,18 @@ func GetLocationByUserId(userId string) models.Location {
 	return user.Location
 }
 
-func GetLocationById(locationId int) models.Location {
-	var location = models.Location{}
+func GetLocationById(locationId int) userModels.Location {
+	var location = userModels.Location{}
 	db.DB.First(&location, locationId)
 	return location
 }
 
-func UpdateLocation(locationUpdate *models.Location) bool {
+func UpdateLocation(locationUpdate *userModels.Location) bool {
 	db.DB.Save(locationUpdate)
 	return true
 }
 
 func DeleteLocation(userId int) bool {
-	db.DB.Unscoped().Delete(&models.Location{}, userId)
+	db.DB.Unscoped().Delete(&userModels.Location{}, userId)
 	return true
 }

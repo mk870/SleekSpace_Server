@@ -2,12 +2,12 @@ package repositories
 
 import (
 	"SleekSpace/db"
-	"SleekSpace/models"
+	userModels "SleekSpace/models/user"
 
 	"gorm.io/gorm"
 )
 
-func CreateContactNumber(user *models.User, contactNumber *models.ContactNumber) bool {
+func CreateContactNumber(user *userModels.User, contactNumber *userModels.ContactNumber) bool {
 	println("number: ", contactNumber.Number)
 	err := db.DB.Model(user).Association("ContactNumbers").Append(contactNumber)
 	if err != nil {
@@ -16,8 +16,8 @@ func CreateContactNumber(user *models.User, contactNumber *models.ContactNumber)
 	return true
 }
 
-func GetAllUsersContactNumbers() []models.ContactNumber {
-	var numbers = []models.ContactNumber{}
+func GetAllUsersContactNumbers() []userModels.ContactNumber {
+	var numbers = []userModels.ContactNumber{}
 	err := db.DB.Find(&numbers)
 	if err != nil {
 		println(err.Error, err.Name())
@@ -25,8 +25,8 @@ func GetAllUsersContactNumbers() []models.ContactNumber {
 	return numbers
 }
 
-func GetUserContactNumbersByUserId(userId int) []models.ContactNumber {
-	var user = models.User{}
+func GetUserContactNumbersByUserId(userId int) []userModels.ContactNumber {
+	var user = userModels.User{}
 	err := db.DB.Preload("ContactNumbers").First(&user, userId)
 	if err != nil {
 		println(err.Name(), err.Statement)
@@ -34,7 +34,7 @@ func GetUserContactNumbersByUserId(userId int) []models.ContactNumber {
 	return user.ContactNumbers
 }
 
-func UpdateUserContactNumbers(user *models.User, updateContactNumbersList []models.ContactNumber) bool {
+func UpdateUserContactNumbers(user *userModels.User, updateContactNumbersList []userModels.ContactNumber) bool {
 	user.ContactNumbers = updateContactNumbersList
 	db.DB.Session(&gorm.Session{FullSaveAssociations: true}).Updates(&user)
 	return true

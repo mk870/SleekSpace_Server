@@ -1,7 +1,9 @@
 package models
 
+import baseModel "SleekSpace/models"
+
 type RentalProperty struct {
-	MyModel
+	baseModel.MyModel
 	Id              int              `json:"id" gorm:"primary_key"`
 	ManagerId       int              `json:"managerId" gorm:"column:managerId"`
 	NumberOfRooms   int              `json:"numberOfRooms"`
