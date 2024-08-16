@@ -14,10 +14,10 @@ type User struct {
 	Password               string                `json:"password"`
 	AccessToken            string                `json:"accessToken"`
 	SocialMediaProvider    string                `json:"socialMediaProvider"`
-	Avatar                 string                `json:"avatar" gorm:"nullable"`
 	IsActive               bool                  `json:"isActive"`
 	IsSocialsAuthenticated bool                  `json:"isSocialsAuthenticated"`
 	Location               Location              `gorm:"ForeignKey:UserId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	ProfilePicture         UserProfilePicture    `gorm:"ForeignKey:UserId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	ContactNumbers         []ContactNumber       `gorm:"ForeignKey:UserId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	RegistrationCode       VerificationCode      `gorm:"ForeignKey:UserId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	Manager                managerModels.Manager `gorm:"ForeignKey:UserId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`

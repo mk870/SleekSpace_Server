@@ -1,7 +1,11 @@
 package main
 
 import (
-	"SleekSpace/controllers"
+	adminController "SleekSpace/controllers/admin"
+	authController "SleekSpace/controllers/auth"
+	externalApiCallsController "SleekSpace/controllers/externalApiCalls"
+	managerController "SleekSpace/controllers/manager"
+	userController "SleekSpace/controllers/user"
 	"SleekSpace/db"
 
 	"github.com/gin-contrib/cors"
@@ -16,37 +20,49 @@ func main() {
 	config.AddAllowHeaders("Authorization", "token", "User-Agent", "Accept")
 	router.Use(cors.New(config))
 	db.Connect()
-	controllers.UpdateContactNumbers(router)
-	controllers.CreateContact(router)
-	controllers.CreateLocation(router)
-	controllers.UpdateLocation(router)
-	controllers.GetUsers(router)
-	controllers.UpdateUser(router)
-	controllers.GetUser(router)
-	controllers.GetUserByEmail(router)
-	controllers.DeleteUser(router)
-	controllers.Registration(router)
-	controllers.Login(router)
-	controllers.LoginOut(router)
-	controllers.RegistrationVerificationCodeValidation(router)
-	controllers.SecurityVerificationCodeValidation(router)
-	controllers.ResendVerificationCode(router)
-	controllers.CreateVerificationCode(router)
-	controllers.PasswordUpdate(router)
-	controllers.LocationAutoComplete(router)
-	controllers.LocationReverseGeoCoding(router)
-	controllers.CreateManager(router)
-	controllers.GetManagerById(router)
-	controllers.GetManagerByUserId(router)
-	controllers.DeleteManager(router)
-	controllers.UpdateManager(router)
-	controllers.GetVerificationCodeById(router)
-	controllers.DeleteVerificationCode(router)
-	controllers.GetAllManagers(router)
-	controllers.GetAllManagersContacts(router)
-	controllers.GetAllUsersLocations(router)
-	controllers.GetLocationById(router)
-	controllers.GetUserContacts(router)
-	controllers.GetAllVerificationCodes(router)
+
+	userController.UpdateContactNumbers(router)
+	userController.CreateContact(router)
+	userController.CreateLocation(router)
+	userController.UpdateLocation(router)
+	userController.GetUsers(router)
+	userController.UpdateUser(router)
+	userController.GetUser(router)
+	userController.GetUserByEmail(router)
+	userController.DeleteUser(router)
+	userController.CreateUserProfilePicture(router)
+	userController.UpdateUserProfilePicture(router)
+
+	authController.Registration(router)
+	authController.Login(router)
+	authController.LoginOut(router)
+	authController.RegistrationVerificationCodeValidation(router)
+	authController.SecurityVerificationCodeValidation(router)
+	authController.ResendVerificationCode(router)
+	authController.CreateVerificationCode(router)
+	authController.PasswordUpdate(router)
+
+	externalApiCallsController.LocationAutoComplete(router)
+	externalApiCallsController.LocationReverseGeoCoding(router)
+
+	managerController.CreateManager(router)
+	managerController.GetManagerById(router)
+	managerController.GetManagerByUserId(router)
+	managerController.DeleteManager(router)
+	managerController.UpdateManager(router)
+	managerController.CreateManagerProfilePicture(router)
+	managerController.UpdateManagerProfilePicture(router)
+	managerController.CreateManagerContactNumbers(router)
+	managerController.UpdateManagerContactNumbers(router)
+
+	adminController.GetVerificationCodeById(router)
+	adminController.DeleteVerificationCode(router)
+	adminController.GetAllManagers(router)
+	adminController.GetAllManagersContacts(router)
+	adminController.GetAllUsersLocations(router)
+	adminController.GetLocationById(router)
+	adminController.GetUserContacts(router)
+	adminController.GetAllVerificationCodes(router)
+
 	router.Run()
 }

@@ -1,16 +1,18 @@
 package utilities
 
 import (
-	"SleekSpace/dtos"
+	managerDtos "SleekSpace/dtos/manager"
+	userDtos "SleekSpace/dtos/user"
 	managerModels "SleekSpace/models/manager"
 	userModels "SleekSpace/models/user"
 
-	//"log"
+	// "log"
+
 	"math/rand"
 	"os"
 	"strconv"
 	"time"
-	//"github.com/joho/godotenv"
+	// "github.com/joho/godotenv"
 )
 
 func GenerateVerificationCode() int {
@@ -63,10 +65,10 @@ func GetEnvVariables() EnvVariables {
 	}
 }
 
-func processedContactNumbers(contactNumbers []userModels.ContactNumber) []dtos.ContactNumberDTO {
-	contacts := []dtos.ContactNumberDTO{}
+func processedContactNumbers(contactNumbers []userModels.ContactNumber) []userDtos.ContactNumberDTO {
+	contacts := []userDtos.ContactNumberDTO{}
 	for i := 0; i < len(contactNumbers); i++ {
-		contact := dtos.ContactNumberDTO{
+		contact := userDtos.ContactNumberDTO{
 			Id:           contactNumbers[i].Id,
 			CountryAbbrv: contactNumbers[i].CountryAbbrv,
 			CountryCode:  contactNumbers[i].CountryCode,
@@ -79,10 +81,10 @@ func processedContactNumbers(contactNumbers []userModels.ContactNumber) []dtos.C
 	return contacts
 }
 
-func processedManagerContactNumbers(contactNumbers []managerModels.ManagerContactNumber) []dtos.ManagerContactNumberDTO {
-	contacts := []dtos.ManagerContactNumberDTO{}
+func processedManagerContactNumbers(contactNumbers []managerModels.ManagerContactNumber) []managerDtos.ManagerContactNumberDTO {
+	contacts := []managerDtos.ManagerContactNumberDTO{}
 	for i := 0; i < len(contactNumbers); i++ {
-		contact := dtos.ManagerContactNumberDTO{
+		contact := managerDtos.ManagerContactNumberDTO{
 			Id:           contactNumbers[i].Id,
 			CountryAbbrv: contactNumbers[i].CountryAbbrv,
 			CountryCode:  contactNumbers[i].CountryCode,
@@ -95,16 +97,25 @@ func processedManagerContactNumbers(contactNumbers []managerModels.ManagerContac
 	return contacts
 }
 
-func UserResponseMapper(user *userModels.User, accessToken string) dtos.UserResponseDTO {
-	return dtos.UserResponseDTO{
+func UserResponseMapper(user *userModels.User, accessToken string) userDtos.UserResponseDTO {
+	return userDtos.UserResponseDTO{
 		Id:             user.Id,
 		Email:          user.Email,
 		ContactNumbers: processedContactNumbers(user.ContactNumbers),
-		Avatar:         user.Avatar,
 		FamilyName:     user.FamilyName,
 		GivenName:      user.GivenName,
 		AccessToken:    user.AccessToken,
-		Location: dtos.LocationDTO{
+		ProfilePicture: userDtos.UserProfilePictureResponseAndUpdateDTO{
+			Id:          user.ProfilePicture.Id,
+			UserId:      user.ProfilePicture.UserId,
+			Uri:         user.ProfilePicture.Uri,
+			Name:        user.ProfilePicture.Name,
+			FullPath:    user.ProfilePicture.FullPath,
+			FileType:    user.ProfilePicture.FileType,
+			Size:        user.ProfilePicture.Size,
+			ContentType: user.ProfilePicture.ContentType,
+		},
+		Location: userDtos.LocationDTO{
 			UserId:      user.Location.UserId,
 			Lat:         user.Location.Lat,
 			Lon:         user.Location.Lon,
@@ -120,12 +131,22 @@ func UserResponseMapper(user *userModels.User, accessToken string) dtos.UserResp
 		},
 	}
 }
-func ManagerResponse(manager *managerModels.Manager) dtos.ManagerResponseDTO {
-	return dtos.ManagerResponseDTO{
-		Id:       manager.Id,
-		UserId:   manager.UserId,
-		Email:    manager.Email,
-		Name:     manager.Name,
+func ManagerResponse(manager *managerModels.Manager) managerDtos.ManagerResponseDTO {
+	return managerDtos.ManagerResponseDTO{
+		Id:     manager.Id,
+		UserId: manager.UserId,
+		Email:  manager.Email,
+		Name:   manager.Name,
+		ProfilePicture: managerDtos.ManagerProfilePictureResponseAndUpdateDTO{
+			Id:          manager.ProfilePicture.Id,
+			ManagerId:   manager.ProfilePicture.ManagerId,
+			Uri:         manager.ProfilePicture.Uri,
+			Name:        manager.ProfilePicture.Name,
+			FullPath:    manager.ProfilePicture.FullPath,
+			FileType:    manager.ProfilePicture.FileType,
+			Size:        manager.ProfilePicture.Size,
+			ContentType: manager.ProfilePicture.ContentType,
+		},
 		Contacts: processedManagerContactNumbers(manager.ManagerContactNumbers),
 	}
 }

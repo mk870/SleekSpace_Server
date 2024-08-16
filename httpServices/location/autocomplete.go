@@ -1,7 +1,7 @@
 package location
 
 import (
-	"SleekSpace/dtos"
+	httpDtos "SleekSpace/dtos/HttpServices"
 	"SleekSpace/utilities"
 	"encoding/json"
 	"io/ioutil"
@@ -12,7 +12,7 @@ import (
 )
 
 func LocationAutoComplete(c *gin.Context) {
-	var location dtos.LocationQueryDTO
+	var location httpDtos.LocationQueryDTO
 	validateModelFields := validator.New()
 	c.BindJSON(&location)
 	modelFieldsValidationError := validateModelFields.Struct(location)
@@ -33,7 +33,7 @@ func LocationAutoComplete(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not convert response body"})
 		return
 	}
-	var responseObject []dtos.ISearchLocation
+	var responseObject []httpDtos.ISearchLocation
 	json.Unmarshal(body, &responseObject)
 	c.JSON(http.StatusOK, gin.H{"response": responseObject})
 }

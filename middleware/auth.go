@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strings"
 
-	"SleekSpace/repositories"
+	userRepo "SleekSpace/repositories/user"
 	"SleekSpace/tokens"
 
 	"github.com/gin-gonic/gin"
@@ -28,7 +28,7 @@ func AuthValidator(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	user := repositories.GetUserByEmail(claims.Email)
+	user := userRepo.GetUserByEmail(claims.Email)
 	if user == nil {
 		c.JSON(http.StatusForbidden, gin.H{
 			"error": "invalid token",
