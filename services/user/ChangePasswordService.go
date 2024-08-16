@@ -24,7 +24,7 @@ func UpdatePassword(c *gin.Context) {
 
 	user := userRepo.GetUserById(utilities.ConvertIntToString(newPasswordData.UserId))
 	if user == nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
+		c.JSON(http.StatusForbidden, gin.H{"error": utilities.NoUserError})
 		return
 	}
 	if user.IsSocialsAuthenticated {

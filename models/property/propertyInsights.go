@@ -2,7 +2,7 @@ package models
 
 import baseModel "SleekSpace/models"
 
-type PropertyMetrics struct {
+type PropertyInsights struct {
 	baseModel.MyModel
 	Id         int `json:"id" gorm:"primary_key"`
 	PropertyId int `json:"propertyId" gorm:"column:propertyId"`

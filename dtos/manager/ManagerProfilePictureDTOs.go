@@ -1,7 +1,6 @@
 package dtos
 
 type ManagerProfilePictureCreationDTO struct {
-	ManagerId   int    `json:"managerId"`
 	Uri         string `json:"uri"`
 	Name        string `json:"name"`
 	FullPath    string `json:"fullPath"`

@@ -3,18 +3,14 @@ package repositories
 import (
 	"SleekSpace/db"
 	managerModels "SleekSpace/models/manager"
-	userModels "SleekSpace/models/user"
 	"errors"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
-func CreateManager(user *userModels.User, manager *managerModels.Manager) bool {
-	err := db.DB.Model(user).Association("Manager").Append(manager)
-	if err != nil {
-		println(err.Error())
-	}
+func CreateManager(manager *managerModels.Manager) bool {
+	db.DB.Create(&manager)
 	return true
 
 }

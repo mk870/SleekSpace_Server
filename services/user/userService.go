@@ -19,7 +19,7 @@ func GetUser(c *gin.Context) {
 	id := c.Param("id")
 	user := userRepo.GetUserById(id)
 	if user == nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
+		c.JSON(http.StatusForbidden, gin.H{"error": utilities.NoUserError})
 		return
 	}
 
@@ -30,7 +30,7 @@ func GetUserByEmail(c *gin.Context) {
 	client := c.MustGet("user").(*userModels.User)
 	user := userRepo.GetUserByEmail(client.Email)
 	if user == nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
+		c.JSON(http.StatusForbidden, gin.H{"error": utilities.NoUserError})
 		return
 	}
 
@@ -42,7 +42,7 @@ func UpdateUser(c *gin.Context) {
 	c.BindJSON(&update)
 	oldData := userRepo.GetUserById(c.Param("id"))
 	if oldData == nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
+		c.JSON(http.StatusForbidden, gin.H{"error": utilities.NoUserError})
 		return
 	}
 	oldData.Location = update.Location
@@ -50,12 +50,12 @@ func UpdateUser(c *gin.Context) {
 	oldData.ProfilePicture = update.ProfilePicture
 	updateResult := userRepo.SaveUserUpdate(oldData)
 	if !updateResult {
-		c.JSON(http.StatusForbidden, gin.H{"error": "could not update the user data"})
+		c.JSON(http.StatusForbidden, gin.H{"error": utilities.UserUpdateError})
 		return
 	}
 	result := userRepo.GetUserById(c.Param("id"))
 	if result == nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
+		c.JSON(http.StatusForbidden, gin.H{"error": utilities.NoUserError})
 		return
 	}
 	if updateResult {
@@ -67,10 +67,10 @@ func DeleteUser(c *gin.Context) {
 	id := c.Param("id")
 	isDeleted := userRepo.DeleteUserById(id)
 	if isDeleted {
-		c.String(http.StatusOK, "user successfully deleted")
+		c.String(http.StatusOK, utilities.UserDeletedSuccess)
 		return
 	} else {
-		c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
+		c.JSON(http.StatusForbidden, gin.H{"error": utilities.NoUserError})
 		return
 	}
 

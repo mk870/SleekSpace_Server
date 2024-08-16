@@ -15,7 +15,7 @@ func CreateContactNumber(c *gin.Context) {
 	c.BindJSON(&contact)
 	user := userRepo.GetUserById(utilities.ConvertIntToString(contact.UserId))
 	if user == nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
+		c.JSON(http.StatusForbidden, gin.H{"error": utilities.NoUserError})
 		return
 	}
 	result := userRepo.CreateContactNumber(user, &contact)
@@ -34,7 +34,7 @@ func UpdateContactNumbers(c *gin.Context) {
 	c.BindJSON(&contacts)
 	user := userRepo.GetUserById(c.Param("id"))
 	if user == nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
+		c.JSON(http.StatusForbidden, gin.H{"error": utilities.NoUserError})
 		return
 	}
 	isContactsUpdated := userRepo.UpdateUserContactNumbers(user, contacts.Contacts)

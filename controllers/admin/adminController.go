@@ -10,6 +10,10 @@ func GetAllUsersLocations(router *gin.Engine) {
 	router.GET("/admin/users/location", adminService.GetAllUsersLocations)
 }
 
+func GetAllManagersProfilePictures(router *gin.Engine) {
+	router.GET("/admin/managers/profile-pictures", adminService.GetAllManagersProfilePictures)
+}
+
 func GetLocationById(router *gin.Engine) {
 	router.GET("/admin/location/:id", adminService.GetLocationById)
 }

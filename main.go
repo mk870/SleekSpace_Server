@@ -50,9 +50,7 @@ func main() {
 	managerController.GetManagerByUserId(router)
 	managerController.DeleteManager(router)
 	managerController.UpdateManager(router)
-	managerController.CreateManagerProfilePicture(router)
 	managerController.UpdateManagerProfilePicture(router)
-	managerController.CreateManagerContactNumbers(router)
 	managerController.UpdateManagerContactNumbers(router)
 
 	adminController.GetVerificationCodeById(router)
@@ -63,6 +61,7 @@ func main() {
 	adminController.GetLocationById(router)
 	adminController.GetUserContacts(router)
 	adminController.GetAllVerificationCodes(router)
+	adminController.GetAllManagersProfilePictures(router)
 
 	router.Run()
 }

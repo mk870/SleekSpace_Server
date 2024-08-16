@@ -34,6 +34,7 @@ func Login(c *gin.Context) {
 	var loginData = userDtos.LoginDTO{}
 	validateModelFields := validator.New()
 	c.BindJSON(&loginData)
+
 	modelFieldsValidationError := validateModelFields.Struct(loginData)
 	if modelFieldsValidationError != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": modelFieldsValidationError.Error()})
@@ -42,23 +43,23 @@ func Login(c *gin.Context) {
 
 	user := userRepo.GetUserByEmail(loginData.Email)
 	if user == nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "this account does not exist"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": utilities.NoUserError})
 		return
 	}
 	if user.IsSocialsAuthenticated {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "please login using socials since you signed up with it"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": utilities.SocialsLoginRequired})
 		return
 	}
 	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(loginData.Password))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "wrong password or email"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": utilities.WrongCredentials})
 		return
 	}
 
 	accessToken := tokens.GenerateAccessToken(user.GivenName, user.Email, user.Id)
 	if accessToken == "failed" {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "failed to create access token",
+			"error": utilities.AccessTokenCreationError,
 		})
 		return
 	}
@@ -66,7 +67,7 @@ func Login(c *gin.Context) {
 	isUpdated := userRepo.SaveUserUpdate(user)
 	if !isUpdated {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "failed to update the accessToken",
+			"error": utilities.AccessTokenUpdateError,
 		})
 		return
 	}

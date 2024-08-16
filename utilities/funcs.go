@@ -6,13 +6,13 @@ import (
 	managerModels "SleekSpace/models/manager"
 	userModels "SleekSpace/models/user"
 
-	// "log"
+	//"log"
 
 	"math/rand"
 	"os"
 	"strconv"
 	"time"
-	// "github.com/joho/godotenv"
+	//"github.com/joho/godotenv"
 )
 
 func GenerateVerificationCode() int {

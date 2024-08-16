@@ -23,6 +23,13 @@ func GetAllUsersLocations(c *gin.Context) {
 	})
 }
 
+func GetAllManagersProfilePictures(c *gin.Context) {
+	pictures := managerRepo.GetAllManagersProfilePictures()
+	c.JSON(http.StatusOK, gin.H{
+		"response": pictures,
+	})
+}
+
 func GetVerificationCodeById(c *gin.Context) {
 	id := c.Param("id")
 	code := userRepo.GetVerificationCodeById(id)

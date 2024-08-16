@@ -3,10 +3,11 @@ package dtos
 import managerModels "SleekSpace/models/manager"
 
 type ManagerCreationDTO struct {
-	UserId   int                                  `json:"userId"`
-	Name     string                               `json:"name" validate:"required,min=2,max=50"`
-	Email    string                               `json:"email"`
-	Contacts []managerModels.ManagerContactNumber `json:"contacts"`
+	UserId         int                                  `json:"userId"`
+	Name           string                               `json:"name" validate:"required,min=2,max=50"`
+	Email          string                               `json:"email"`
+	ProfilePicture ManagerProfilePictureCreationDTO     `json:"profilePicture"`
+	Contacts       []managerModels.ManagerContactNumber `json:"contacts"`
 }
 
 type ManagerResponseDTO struct {
