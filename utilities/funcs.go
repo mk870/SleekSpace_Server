@@ -1,10 +1,13 @@
 package utilities
 
 import (
-	"SleekSpace/dtos"
-	"SleekSpace/models"
+	managerDtos "SleekSpace/dtos/manager"
+	userDtos "SleekSpace/dtos/user"
+	managerModels "SleekSpace/models/manager"
+	userModels "SleekSpace/models/user"
 
 	//"log"
+
 	"math/rand"
 	"os"
 	"strconv"
@@ -53,23 +56,19 @@ func GetEnvVariables() EnvVariables {
 	emailPassword := os.Getenv("EMAIL_PASSWORD")
 	tokenSecret := os.Getenv("ACCESS_TOKEN_SECRET")
 	locationIQToken := os.Getenv("LOCATION_IQ_ACCESS_TOKEN")
-	supabaseApiKey := os.Getenv("SUPABASE_REF_ID")
-	supabaseReferenceId := os.Getenv("SUPABASE_APIKEY")
 	return EnvVariables{
-		DatabaseDetails:     databaseDetails,
-		Email:               email,
-		EmailPassword:       emailPassword,
-		TokenSecret:         tokenSecret,
-		LocationIQToken:     locationIQToken,
-		SupabaseApiKey:      supabaseApiKey,
-		SupabaseReferenceId: supabaseReferenceId,
+		DatabaseDetails: databaseDetails,
+		Email:           email,
+		EmailPassword:   emailPassword,
+		TokenSecret:     tokenSecret,
+		LocationIQToken: locationIQToken,
 	}
 }
 
-func processedContactNumbers(contactNumbers []models.ContactNumber) []dtos.ContactNumberDTO {
-	contacts := []dtos.ContactNumberDTO{}
+func processedContactNumbers(contactNumbers []userModels.ContactNumber) []userDtos.ContactNumberDTO {
+	contacts := []userDtos.ContactNumberDTO{}
 	for i := 0; i < len(contactNumbers); i++ {
-		contact := dtos.ContactNumberDTO{
+		contact := userDtos.ContactNumberDTO{
 			Id:           contactNumbers[i].Id,
 			CountryAbbrv: contactNumbers[i].CountryAbbrv,
 			CountryCode:  contactNumbers[i].CountryCode,
@@ -82,10 +81,10 @@ func processedContactNumbers(contactNumbers []models.ContactNumber) []dtos.Conta
 	return contacts
 }
 
-func processedManagerContactNumbers(contactNumbers []models.ManagerContactNumber) []dtos.ManagerContactNumberDTO {
-	contacts := []dtos.ManagerContactNumberDTO{}
+func processedManagerContactNumbers(contactNumbers []managerModels.ManagerContactNumber) []managerDtos.ManagerContactNumberDTO {
+	contacts := []managerDtos.ManagerContactNumberDTO{}
 	for i := 0; i < len(contactNumbers); i++ {
-		contact := dtos.ManagerContactNumberDTO{
+		contact := managerDtos.ManagerContactNumberDTO{
 			Id:           contactNumbers[i].Id,
 			CountryAbbrv: contactNumbers[i].CountryAbbrv,
 			CountryCode:  contactNumbers[i].CountryCode,
@@ -98,16 +97,25 @@ func processedManagerContactNumbers(contactNumbers []models.ManagerContactNumber
 	return contacts
 }
 
-func UserResponseMapper(user *models.User, accessToken string) dtos.UserResponseDTO {
-	return dtos.UserResponseDTO{
+func UserResponseMapper(user *userModels.User, accessToken string) userDtos.UserResponseDTO {
+	return userDtos.UserResponseDTO{
 		Id:             user.Id,
 		Email:          user.Email,
 		ContactNumbers: processedContactNumbers(user.ContactNumbers),
-		Avatar:         user.Avatar,
 		FamilyName:     user.FamilyName,
 		GivenName:      user.GivenName,
 		AccessToken:    user.AccessToken,
-		Location: dtos.LocationDTO{
+		ProfilePicture: userDtos.UserProfilePictureResponseAndUpdateDTO{
+			Id:          user.ProfilePicture.Id,
+			UserId:      user.ProfilePicture.UserId,
+			Uri:         user.ProfilePicture.Uri,
+			Name:        user.ProfilePicture.Name,
+			FullPath:    user.ProfilePicture.FullPath,
+			FileType:    user.ProfilePicture.FileType,
+			Size:        user.ProfilePicture.Size,
+			ContentType: user.ProfilePicture.ContentType,
+		},
+		Location: userDtos.LocationDTO{
 			UserId:      user.Location.UserId,
 			Lat:         user.Location.Lat,
 			Lon:         user.Location.Lon,
@@ -123,20 +131,30 @@ func UserResponseMapper(user *models.User, accessToken string) dtos.UserResponse
 		},
 	}
 }
-func ManagerResponse(manager *models.Manager) dtos.ManagerResponseDTO {
-	return dtos.ManagerResponseDTO{
-		Id:       manager.Id,
-		UserId:   manager.UserId,
-		Email:    manager.Email,
-		Name:     manager.Name,
+func ManagerResponse(manager *managerModels.Manager) managerDtos.ManagerResponseDTO {
+	return managerDtos.ManagerResponseDTO{
+		Id:     manager.Id,
+		UserId: manager.UserId,
+		Email:  manager.Email,
+		Name:   manager.Name,
+		ProfilePicture: managerDtos.ManagerProfilePictureResponseAndUpdateDTO{
+			Id:          manager.ProfilePicture.Id,
+			ManagerId:   manager.ProfilePicture.ManagerId,
+			Uri:         manager.ProfilePicture.Uri,
+			Name:        manager.ProfilePicture.Name,
+			FullPath:    manager.ProfilePicture.FullPath,
+			FileType:    manager.ProfilePicture.FileType,
+			Size:        manager.ProfilePicture.Size,
+			ContentType: manager.ProfilePicture.ContentType,
+		},
 		Contacts: processedManagerContactNumbers(manager.ManagerContactNumbers),
 	}
 }
 
-func AddManagerIdToContacts(contacts []models.ManagerContactNumber, managerId int) []models.ManagerContactNumber {
-	newContacts := []models.ManagerContactNumber{}
+func AddManagerIdToContacts(contacts []managerModels.ManagerContactNumber, managerId int) []managerModels.ManagerContactNumber {
+	newContacts := []managerModels.ManagerContactNumber{}
 	for i := 0; i < len(contacts); i++ {
-		contact := models.ManagerContactNumber{
+		contact := managerModels.ManagerContactNumber{
 			Id:           contacts[i].Id,
 			CountryAbbrv: contacts[i].CountryAbbrv,
 			CountryCode:  contacts[i].CountryCode,

@@ -1,7 +1,7 @@
 package location
 
 import (
-	"SleekSpace/dtos"
+	httpDtos "SleekSpace/dtos/HttpServices"
 	"SleekSpace/utilities"
 	"encoding/json"
 	"io/ioutil"
@@ -12,7 +12,7 @@ import (
 )
 
 func LocationReverseGeoCoding(c *gin.Context) {
-	var coords dtos.ReverseGeoCodingDTO
+	var coords httpDtos.ReverseGeoCodingDTO
 	validateModelFields := validator.New()
 	c.BindJSON(&coords)
 	modelFieldsValidationError := validateModelFields.Struct(coords)
@@ -35,7 +35,7 @@ func LocationReverseGeoCoding(c *gin.Context) {
 		return
 	}
 
-	var responseObject dtos.IReverseLocation
+	var responseObject httpDtos.IReverseLocation
 	json.Unmarshal(body, &responseObject)
 	c.JSON(http.StatusOK, gin.H{"response": responseObject})
 }
