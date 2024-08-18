@@ -5,7 +5,8 @@ import (
 
 	userDtos "SleekSpace/dtos/user"
 	userRepo "SleekSpace/repositories/user"
-	"SleekSpace/utilities"
+	constantsUtilities "SleekSpace/utilities/constants"
+	generalUtilities "SleekSpace/utilities/funcs/general"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -22,9 +23,9 @@ func UpdatePassword(c *gin.Context) {
 		return
 	}
 
-	user := userRepo.GetUserById(utilities.ConvertIntToString(newPasswordData.UserId))
+	user := userRepo.GetUserById(generalUtilities.ConvertIntToString(newPasswordData.UserId))
 	if user == nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": utilities.NoUserError})
+		c.JSON(http.StatusForbidden, gin.H{"error": constantsUtilities.NoUserError})
 		return
 	}
 	if user.IsSocialsAuthenticated {

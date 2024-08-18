@@ -1,7 +1,7 @@
 package tokens
 
 import (
-	"SleekSpace/utilities"
+	generalUtilities "SleekSpace/utilities/funcs/general"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -25,7 +25,7 @@ func GenerateAccessToken(givenName string, email string, id int) string {
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString([]byte(utilities.GetEnvVariables().TokenSecret))
+	tokenString, err := token.SignedString([]byte(generalUtilities.GetEnvVariables().TokenSecret))
 	if err != nil {
 		println("error", err.Error())
 		return "failed"

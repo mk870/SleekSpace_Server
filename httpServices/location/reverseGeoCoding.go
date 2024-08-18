@@ -2,7 +2,7 @@ package location
 
 import (
 	httpDtos "SleekSpace/dtos/HttpServices"
-	"SleekSpace/utilities"
+	generalUtilities "SleekSpace/utilities/funcs/general"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
@@ -20,7 +20,7 @@ func LocationReverseGeoCoding(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": modelFieldsValidationError.Error()})
 		return
 	}
-	url := "https://api.locationiq.com/v1/reverse.php?key=" + utilities.GetEnvVariables().LocationIQToken + "&lat=" + coords.Lat + "&lon=" + coords.Lon + "&format=json"
+	url := "https://api.locationiq.com/v1/reverse.php?key=" + generalUtilities.GetEnvVariables().LocationIQToken + "&lat=" + coords.Lat + "&lon=" + coords.Lon + "&format=json"
 
 	resp, err := http.Get(url)
 	if err != nil || resp.StatusCode != 200 {

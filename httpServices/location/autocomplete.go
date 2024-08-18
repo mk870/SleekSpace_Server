@@ -2,7 +2,7 @@ package location
 
 import (
 	httpDtos "SleekSpace/dtos/HttpServices"
-	"SleekSpace/utilities"
+	generalUtilities "SleekSpace/utilities/funcs/general"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
@@ -20,7 +20,7 @@ func LocationAutoComplete(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": modelFieldsValidationError.Error()})
 		return
 	}
-	url := "https://api.locationiq.com/v1/autocomplete.php?key=" + utilities.GetEnvVariables().LocationIQToken + "&q=" + location.LocationName + "&limit=10"
+	url := "https://api.locationiq.com/v1/autocomplete.php?key=" + generalUtilities.GetEnvVariables().LocationIQToken + "&q=" + location.LocationName + "&limit=10"
 	resp, err := http.Get(url)
 	if err != nil || resp.StatusCode != 200 {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "error occurred while fetching data"})

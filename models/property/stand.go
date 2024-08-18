@@ -7,12 +7,13 @@ type PropertyStand struct {
 	Id                 int                    `json:"id" gorm:"primary_key"`
 	ManagerId          int                    `json:"managerId"`
 	Price              int                    `json:"price"`
+	SizeNumber         int                    `json:"sizeNumber"`
 	AreaHasElectricity bool                   `json:"areaHasElectricity"`
 	IsServiced         bool                   `json:"isServiced"`
 	IsNegotiable       bool                   `json:"isNegotiable"`
 	Status             string                 `json:"status"`
 	Level              string                 `json:"level"`
-	Size               string                 `json:"size"`
+	SizeDimensions     string                 `json:"sizeDimensions"`
 	Type               string                 `json:"type"`
 	Location           PropertyLocation       `gorm:"ForeignKey:PropertyId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	PropertyInsights   PropertyInsights       `gorm:"ForeignKey:PropertyId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`

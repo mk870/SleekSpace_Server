@@ -7,14 +7,14 @@ import (
 
 	managerRepo "SleekSpace/repositories/manager"
 	userRepo "SleekSpace/repositories/user"
-	"SleekSpace/utilities"
+	generalUtilities "SleekSpace/utilities/funcs/general"
 
 	"github.com/gin-gonic/gin"
 )
 
 func GetLocationById(c *gin.Context) {
 	id := c.Param("id")
-	location := userRepo.GetLocationById(utilities.ConvertStringToInt(id))
+	location := userRepo.GetLocationById(generalUtilities.ConvertStringToInt(id))
 	c.JSON(http.StatusOK, gin.H{"response": location})
 }
 
@@ -66,7 +66,7 @@ func GetAllVerificationCodes(c *gin.Context) {
 
 func DeleteVerificationCode(c *gin.Context) {
 	id := c.Param("id")
-	isDeleted := userRepo.DeleteVerficationCode(utilities.ConvertStringToInt(id))
+	isDeleted := userRepo.DeleteVerficationCode(generalUtilities.ConvertStringToInt(id))
 	if isDeleted {
 		c.JSON(http.StatusOK, gin.H{
 			"response": "code deleted",

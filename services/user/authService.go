@@ -7,7 +7,8 @@ import (
 	userModels "SleekSpace/models/user"
 	userRepo "SleekSpace/repositories/user"
 	"SleekSpace/tokens"
-	"SleekSpace/utilities"
+	constantsUtilities "SleekSpace/utilities/constants"
+	userUtilities "SleekSpace/utilities/funcs/user"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -43,23 +44,23 @@ func Login(c *gin.Context) {
 
 	user := userRepo.GetUserByEmail(loginData.Email)
 	if user == nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": utilities.NoUserError})
+		c.JSON(http.StatusBadRequest, gin.H{"error": constantsUtilities.NoUserError})
 		return
 	}
 	if user.IsSocialsAuthenticated {
-		c.JSON(http.StatusBadRequest, gin.H{"error": utilities.SocialsLoginRequired})
+		c.JSON(http.StatusBadRequest, gin.H{"error": constantsUtilities.SocialsLoginRequired})
 		return
 	}
 	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(loginData.Password))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": utilities.WrongCredentials})
+		c.JSON(http.StatusBadRequest, gin.H{"error": constantsUtilities.WrongCredentials})
 		return
 	}
 
 	accessToken := tokens.GenerateAccessToken(user.GivenName, user.Email, user.Id)
 	if accessToken == "failed" {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": utilities.AccessTokenCreationError,
+			"error": constantsUtilities.AccessTokenCreationError,
 		})
 		return
 	}
@@ -67,10 +68,10 @@ func Login(c *gin.Context) {
 	isUpdated := userRepo.SaveUserUpdate(user)
 	if !isUpdated {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": utilities.AccessTokenUpdateError,
+			"error": constantsUtilities.AccessTokenUpdateError,
 		})
 		return
 	}
-	response := utilities.UserResponseMapper(user, accessToken)
+	response := userUtilities.UserResponseMapper(user, accessToken)
 	c.JSON(http.StatusOK, gin.H{"response": response})
 }

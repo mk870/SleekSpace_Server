@@ -5,7 +5,8 @@ import (
 
 	userModels "SleekSpace/models/user"
 	userRepo "SleekSpace/repositories/user"
-	"SleekSpace/utilities"
+	constantsUtilities "SleekSpace/utilities/constants"
+	generalUtilities "SleekSpace/utilities/funcs/general"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,9 +14,9 @@ import (
 func CreateContactNumber(c *gin.Context) {
 	var contact userModels.ContactNumber
 	c.BindJSON(&contact)
-	user := userRepo.GetUserById(utilities.ConvertIntToString(contact.UserId))
+	user := userRepo.GetUserById(generalUtilities.ConvertIntToString(contact.UserId))
 	if user == nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": utilities.NoUserError})
+		c.JSON(http.StatusForbidden, gin.H{"error": constantsUtilities.NoUserError})
 		return
 	}
 	result := userRepo.CreateContactNumber(user, &contact)
@@ -34,7 +35,7 @@ func UpdateContactNumbers(c *gin.Context) {
 	c.BindJSON(&contacts)
 	user := userRepo.GetUserById(c.Param("id"))
 	if user == nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": utilities.NoUserError})
+		c.JSON(http.StatusForbidden, gin.H{"error": constantsUtilities.NoUserError})
 		return
 	}
 	isContactsUpdated := userRepo.UpdateUserContactNumbers(user, contacts.Contacts)

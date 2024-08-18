@@ -6,7 +6,8 @@ import (
 	managerDtos "SleekSpace/dtos/manager"
 	managerModels "SleekSpace/models/manager"
 	managerRepo "SleekSpace/repositories/manager"
-	"SleekSpace/utilities"
+	constantsUtilities "SleekSpace/utilities/constants"
+	managerUtilities "SleekSpace/utilities/funcs/manager"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -39,8 +40,8 @@ func UpdateManagerProfilePicture(c *gin.Context) {
 	}
 	updatedManager := managerRepo.GetManagerByManagerId(managerId)
 	if updatedManager == nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": "this property management account does not exist"})
+		c.JSON(http.StatusForbidden, gin.H{"error": constantsUtilities.NoManagerAccountError})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"response": utilities.ManagerResponse(updatedManager)})
+	c.JSON(http.StatusOK, gin.H{"response": managerUtilities.ManagerResponse(updatedManager)})
 }

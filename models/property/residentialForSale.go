@@ -2,21 +2,25 @@ package models
 
 import baseModel "SleekSpace/models"
 
-type CommercialRentalProperty struct {
+type ResidentialPropertyForSale struct {
 	baseModel.MyModel
 	Id               int                    `json:"id" gorm:"primary_key"`
 	ManagerId        int                    `json:"managerId"`
 	NumberOfRooms    int                    `json:"numberOfRooms"`
-	RentAmount       int                    `json:"rentAmount"`
+	Price            int                    `json:"price"`
+	NumberOfGarages  int                    `json:"numberOfGarages"`
 	SizeNumber       int                    `json:"sizeNumber"`
-	IsFullSpace      bool                   `json:"isFullSpace"`
+	HasSwimmingPool  bool                   `json:"hasSwimmingPool"`
 	HasElectricity   bool                   `json:"hasElectricity"`
 	HasWater         bool                   `json:"hasWater"`
-	SizeDimensions   string                 `json:"sizeDimensions"`
+	IsNegotiable     bool                   `json:"isNegotiable"`
 	Status           string                 `json:"status"`
+	Bedrooms         string                 `json:"bedrooms"`
+	Bathrooms        string                 `json:"bathrooms"`
 	YearBuilt        string                 `json:"yearBuilt"`
 	Stories          string                 `json:"stories"`
 	Type             string                 `json:"type"`
+	SizeDimensions   string                 `json:"sizeDimensions"`
 	Location         PropertyLocation       `gorm:"ForeignKey:PropertyId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	PropertyInsights PropertyInsights       `gorm:"ForeignKey:PropertyId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	PropertyMedia    []PropertyImageOrVideo `gorm:"ForeignKey:PropertyId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`

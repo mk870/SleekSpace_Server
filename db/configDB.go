@@ -2,8 +2,9 @@ package db
 
 import (
 	managerModels "SleekSpace/models/manager"
+	propertyModels "SleekSpace/models/property"
 	userModels "SleekSpace/models/user"
-	"SleekSpace/utilities"
+	generalUtilities "SleekSpace/utilities/funcs/general"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -12,13 +13,19 @@ import (
 var DB *gorm.DB
 
 func Connect() {
-	databaseDetails := utilities.GetEnvVariables().DatabaseDetails
+	databaseDetails := generalUtilities.GetEnvVariables().DatabaseDetails
 	db, err := gorm.Open(postgres.Open(databaseDetails), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}
-	db.AutoMigrate(&managerModels.ManagerContactNumber{}, &managerModels.ManagerProfilePicture{})
+
+	db.AutoMigrate(&propertyModels.PropertyInsights{}, &propertyModels.PropertyImageOrVideo{}, &propertyModels.PropertyLocation{})
+
+	db.AutoMigrate(&managerModels.ManagerContactNumber{}, &managerModels.ManagerProfilePicture{}, &propertyModels.CommercialForSaleProperty{}, &propertyModels.CommercialRentalProperty{}, &propertyModels.LandForSaleProperty{}, &propertyModels.ResidentialPropertyForSale{}, &propertyModels.ResidentialRentalProperty{}, &propertyModels.PropertyStand{})
+
 	db.AutoMigrate(&userModels.VerificationCode{}, &userModels.ContactNumber{}, &userModels.Location{}, &managerModels.Manager{}, &userModels.UserProfilePicture{})
+
 	db.AutoMigrate(&userModels.User{})
+
 	DB = db
 }
