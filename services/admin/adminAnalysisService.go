@@ -1,7 +1,9 @@
 package admin
 
 import (
+	"fmt"
 	"net/http"
+	"time"
 
 	managerRepo "SleekSpace/repositories/manager"
 	userRepo "SleekSpace/repositories/user"
@@ -14,6 +16,23 @@ func GetLocationById(c *gin.Context) {
 	id := c.Param("id")
 	location := userRepo.GetLocationById(utilities.ConvertStringToInt(id))
 	c.JSON(http.StatusOK, gin.H{"response": location})
+}
+
+func apiSim() <-chan string {
+	result := make(chan string)
+	go func() {
+		defer close(result)
+		time.Sleep(time.Second * 5)
+		result <- "im done"
+	}()
+	return result
+}
+
+func GetInfo(c *gin.Context) {
+	info := <-apiSim()
+	fmt.Println("ran aftrer")
+	c.JSON(http.StatusOK, gin.H{"response": info})
+
 }
 
 func GetAllUsersLocations(c *gin.Context) {

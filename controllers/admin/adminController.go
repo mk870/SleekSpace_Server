@@ -14,6 +14,10 @@ func GetAllManagersProfilePictures(router *gin.Engine) {
 	router.GET("/admin/managers/profile-pictures", adminService.GetAllManagersProfilePictures)
 }
 
+func ApiSim(router *gin.Engine) {
+	router.GET("/admin/sim", adminService.GetInfo)
+}
+
 func GetLocationById(router *gin.Engine) {
 	router.GET("/admin/location/:id", adminService.GetLocationById)
 }

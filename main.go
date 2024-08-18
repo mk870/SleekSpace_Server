@@ -62,6 +62,7 @@ func main() {
 	adminController.GetUserContacts(router)
 	adminController.GetAllVerificationCodes(router)
 	adminController.GetAllManagersProfilePictures(router)
+	adminController.ApiSim(router)
 
 	router.Run()
 }
