@@ -6,13 +6,14 @@ import (
 	managerModels "SleekSpace/models/manager"
 	userModels "SleekSpace/models/user"
 
-	//"log"
+	"log"
 
 	"math/rand"
 	"os"
 	"strconv"
 	"time"
-	//"github.com/joho/godotenv"
+
+	"github.com/joho/godotenv"
 )
 
 func GenerateVerificationCode() int {
@@ -47,10 +48,10 @@ type EnvVariables struct {
 }
 
 func GetEnvVariables() EnvVariables {
-	// err := godotenv.Load()
-	// if err != nil {
-	// 	log.Fatalf("Error loading .env file: %s", err)
-	// }
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file: %s", err)
+	}
 	databaseDetails := os.Getenv("DATABASE_DETAILS")
 	email := os.Getenv("EMAIL")
 	emailPassword := os.Getenv("EMAIL_PASSWORD")
@@ -99,12 +100,14 @@ func processedManagerContactNumbers(contactNumbers []managerModels.ManagerContac
 
 func UserResponseMapper(user *userModels.User, accessToken string) userDtos.UserResponseDTO {
 	return userDtos.UserResponseDTO{
-		Id:             user.Id,
-		Email:          user.Email,
-		ContactNumbers: processedContactNumbers(user.ContactNumbers),
-		FamilyName:     user.FamilyName,
-		GivenName:      user.GivenName,
-		AccessToken:    user.AccessToken,
+		Id:                  user.Id,
+		Email:               user.Email,
+		ContactNumbers:      processedContactNumbers(user.ContactNumbers),
+		FamilyName:          user.FamilyName,
+		GivenName:           user.GivenName,
+		AccessToken:         user.AccessToken,
+		Role:                user.Role,
+		FavouriteProperties: user.FavouriteProperties,
 		ProfilePicture: userDtos.UserProfilePictureResponseAndUpdateDTO{
 			Id:          user.ProfilePicture.Id,
 			UserId:      user.ProfilePicture.UserId,

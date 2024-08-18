@@ -5,7 +5,7 @@ import baseModel "SleekSpace/models"
 type PropertyLocation struct {
 	baseModel.MyModel
 	Id          int      `json:"id" gorm:"primary_key"`
-	PropertyId  int      `json:"propertyId" gorm:"column:propertyId"`
+	PropertyId  int      `json:"propertyId"`
 	DisplayName string   `json:"displayName"`
 	Boundingbox []string `json:"boundingbox" gorm:"serializer:json"`
 	Lat         string   `json:"lat"`
