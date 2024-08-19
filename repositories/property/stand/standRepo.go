@@ -10,10 +10,10 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-func CreateStandForSale(manager *managerModels.Manager, stand *propertyModels.PropertyStand) bool {
-	err := db.DB.Model(manager).Association("PropertyStand").Append(stand)
+func CreateStandForSale(stand *propertyModels.PropertyStand) bool {
+	err := db.DB.Create(stand)
 	if err != nil {
-		println(err.Error())
+		println(err)
 	}
 	return true
 }
@@ -47,7 +47,7 @@ func GetManagerStandsByManagerId(managerId string) []propertyModels.PropertyStan
 
 func GetAllStands() []propertyModels.PropertyStand {
 	var stands = []propertyModels.PropertyStand{}
-	err := db.DB.Find(&stands)
+	err := db.DB.Preload(clause.Associations).Find(&stands)
 	if err != nil {
 		println(err.Error, err.Name())
 	}
@@ -60,10 +60,10 @@ func UpdateStand(update *propertyModels.PropertyStand) bool {
 }
 
 func DeleteStandById(id string) bool {
-	manager := GetStandById(id)
-	if manager == nil {
+	stand := GetStandById(id)
+	if stand == nil {
 		return false
 	}
-	db.DB.Select(clause.Associations).Unscoped().Delete(&manager)
+	db.DB.Select(clause.Associations).Unscoped().Delete(&stand)
 	return true
 }

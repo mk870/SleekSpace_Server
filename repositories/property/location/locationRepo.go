@@ -3,9 +3,12 @@ package insights
 import (
 	"SleekSpace/db"
 	propertyModels "SleekSpace/models/property"
+	"errors"
+
+	"gorm.io/gorm"
 )
 
-func GetAllPropertyLocation() []propertyModels.PropertyLocation {
+func GetAllPropertyLocations() []propertyModels.PropertyLocation {
 	var locations = []propertyModels.PropertyLocation{}
 	err := db.DB.Find(&locations)
 	if err != nil {
@@ -14,10 +17,13 @@ func GetAllPropertyLocation() []propertyModels.PropertyLocation {
 	return locations
 }
 
-func GetPropertyLocationById(propertyLocationId int) propertyModels.PropertyLocation {
+func GetPropertyLocationById(propertyLocationId string) *propertyModels.PropertyLocation {
 	var location = propertyModels.PropertyLocation{}
-	db.DB.First(&location, propertyLocationId)
-	return location
+	result := db.DB.First(&location, propertyLocationId)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return nil
+	}
+	return &location
 }
 
 func UpdatePropertyLocation(propertyLocationUpdate *propertyModels.PropertyLocation) bool {
@@ -25,7 +31,7 @@ func UpdatePropertyLocation(propertyLocationUpdate *propertyModels.PropertyLocat
 	return true
 }
 
-func DeletePropertyLocation(propertyLocationId int) bool {
+func DeletePropertyLocation(propertyLocationId string) bool {
 	db.DB.Unscoped().Delete(&propertyModels.PropertyLocation{}, propertyLocationId)
 	return true
 }

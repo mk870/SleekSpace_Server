@@ -3,71 +3,137 @@ package stand
 import (
 	"net/http"
 
-	managerDtos "SleekSpace/dtos/manager"
-	managerModels "SleekSpace/models/manager"
-	managerRepo "SleekSpace/repositories/manager"
-	userRepo "SleekSpace/repositories/user"
-	constantsUtilities "SleekSpace/utilities/constants"
-	generalUtilities "SleekSpace/utilities/funcs/general"
-	managerUtilities "SleekSpace/utilities/funcs/manager"
+	standDtos "SleekSpace/dtos/property/stand"
+	propertyModels "SleekSpace/models/property"
+	standRepo "SleekSpace/repositories/property/stand"
+	propertyUtilities "SleekSpace/utilities/funcs/property"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 )
 
 func CreateStandForSale(c *gin.Context) {
-	var manager managerDtos.ManagerCreationDTO
+	var standInfo standDtos.StandCreationDTO
 	validateModelFields := validator.New()
-	c.BindJSON(&manager)
+	c.BindJSON(&standInfo)
 
-	modelFieldsValidationError := validateModelFields.Struct(manager)
+	modelFieldsValidationError := validateModelFields.Struct(standInfo)
 	if modelFieldsValidationError != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": modelFieldsValidationError.Error()})
 		return
 	}
 
-	newManager := managerModels.Manager{
-		UserId: manager.UserId,
-		Name:   manager.Name,
-		Email:  manager.Email,
-		ProfilePicture: managerModels.ManagerProfilePicture{
-			Name:        manager.ProfilePicture.Name,
-			Uri:         manager.ProfilePicture.Uri,
-			ContentType: manager.ProfilePicture.ContentType,
-			FullPath:    manager.ProfilePicture.FullPath,
-			FileType:    manager.ProfilePicture.FileType,
-			Size:        manager.ProfilePicture.Size,
+	newStandForSale := propertyModels.PropertyStand{
+		ManagerId:          standInfo.ManagerId,
+		Price:              standInfo.Price,
+		SizeNumber:         standInfo.SizeNumber,
+		SizeDimensions:     standInfo.SizeDimensions,
+		Status:             standInfo.Status,
+		IsServiced:         standInfo.IsServiced,
+		IsNegotiable:       standInfo.IsNegotiable,
+		AreaHasElectricity: standInfo.AreaHasElectricity,
+		Level:              standInfo.Level,
+		Type:               standInfo.Type,
+		PropertyInsights: propertyModels.PropertyInsights{
+			Views:             0,
+			Shared:            0,
+			AddedToFavourites: 0,
+			ContactInfoViews:  0,
+			PropertyType:      "stand",
 		},
-		ManagerContactNumbers: []managerModels.ManagerContactNumber{
-			{
-				Number:       manager.Contacts[0].Number,
-				CountryCode:  manager.Contacts[0].CountryCode,
-				CountryAbbrv: manager.Contacts[0].CountryAbbrv,
-				Type:         manager.Contacts[0].Type,
-			},
-			{
-				Number:       manager.Contacts[1].Number,
-				CountryCode:  manager.Contacts[1].CountryCode,
-				CountryAbbrv: manager.Contacts[1].CountryAbbrv,
-				Type:         manager.Contacts[1].Type,
-			},
+		PropertyMedia: propertyUtilities.ConvertPropertyImagesOrVideosWithNoPropertyIdToModel(standInfo.Media),
+		Location: propertyModels.PropertyLocation{
+			Boundingbox:  standInfo.PropertyLocation.Boundingbox,
+			Lat:          standInfo.PropertyLocation.Lat,
+			Lon:          standInfo.PropertyLocation.Lon,
+			DisplayName:  standInfo.PropertyLocation.DisplayName,
+			City:         standInfo.PropertyLocation.City,
+			County:       standInfo.PropertyLocation.County,
+			Country:      standInfo.PropertyLocation.Country,
+			CountryCode:  standInfo.PropertyLocation.CountryCode,
+			Province:     standInfo.PropertyLocation.Province,
+			Surburb:      standInfo.PropertyLocation.Surburb,
+			PropertyType: standInfo.PropertyLocation.PropertyType,
 		},
-	}
-	isManagerCreated := managerRepo.CreateManager(&newManager)
-	if isManagerCreated {
-		createdManager := userRepo.GetUserByIdWithManager(generalUtilities.ConvertIntToString(manager.UserId))
-		if createdManager == nil {
-			c.JSON(http.StatusForbidden, gin.H{"error": constantsUtilities.ManagerAccountCreatedButNoDataRetrievedError})
-			return
-		}
-		createdManagerWithAssociations := managerRepo.GetManagerByManagerId(generalUtilities.ConvertIntToString(createdManager.Manager.Id))
-		if createdManagerWithAssociations == nil {
-			c.JSON(http.StatusForbidden, gin.H{"error": constantsUtilities.ManagerAccountCreatedButNoDataRetrievedError})
-		}
-		c.JSON(http.StatusOK, gin.H{"response": managerUtilities.ManagerResponse(createdManagerWithAssociations)})
-		return
-	} else {
-		c.JSON(http.StatusForbidden, gin.H{"error": "failed to create a manager"})
 	}
 
+	isStandCreated := standRepo.CreateStandForSale(&newStandForSale)
+	if isStandCreated {
+		c.JSON(http.StatusOK, gin.H{"response": "your stand was successfully posted"})
+		return
+	} else {
+		c.JSON(http.StatusForbidden, gin.H{"error": "failed to post your stand"})
+	}
+
+}
+
+func UpdateStandDetails(c *gin.Context) {
+	var standUpdates standDtos.StandUpdateDTO
+	validateModelFields := validator.New()
+	c.BindJSON(&standUpdates)
+
+	modelFieldsValidationError := validateModelFields.Struct(standUpdates)
+	if modelFieldsValidationError != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": modelFieldsValidationError.Error()})
+		return
+	}
+
+	oldStandData := standRepo.GetStandById(c.Param("id"))
+	if oldStandData == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": "this stand does not exist"})
+		return
+	}
+	oldStandData.AreaHasElectricity = standUpdates.AreaHasElectricity
+	oldStandData.IsNegotiable = standUpdates.IsNegotiable
+	oldStandData.Price = standUpdates.Price
+	oldStandData.SizeNumber = standUpdates.SizeNumber
+	oldStandData.SizeDimensions = standUpdates.SizeDimensions
+	oldStandData.Level = standUpdates.Level
+	oldStandData.IsServiced = standUpdates.IsServiced
+	oldStandData.Status = standUpdates.Status
+	oldStandData.Type = standUpdates.Type
+
+	isStandUpdated := standRepo.UpdateStand(oldStandData)
+	if !isStandUpdated {
+		c.JSON(http.StatusForbidden, gin.H{"error": "stand details update failed"})
+		return
+	}
+	updatedStand := standRepo.GetStandWithAllAssociationsById(c.Param("id"))
+	if updatedStand == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": "this stand does not exist"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"response": propertyUtilities.PropertyStandResponse(*updatedStand)})
+}
+
+func GetStandById(c *gin.Context) {
+	stand := standRepo.GetStandWithAllAssociationsById(c.Param("id"))
+	if stand == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": "this stand does not exist"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"response": propertyUtilities.PropertyStandResponse(*stand)})
+}
+
+func GetManagerStandsByManagerId(c *gin.Context) {
+	stands := standRepo.GetManagerStandsByManagerId(c.Param("id"))
+	standsResponse := []standDtos.StandResponseDTO{}
+	if len(stands) > 0 {
+		for i := 0; i < len(stands); i++ {
+			standResponse := propertyUtilities.PropertyStandResponse(stands[i])
+			standsResponse = append(standsResponse, standResponse)
+		}
+	}
+	c.JSON(http.StatusOK, gin.H{"response": standsResponse})
+}
+
+func DeleteStandById(c *gin.Context) {
+	isStandDeleted := standRepo.DeleteStandById(c.Param("id"))
+	if !isStandDeleted {
+		c.JSON(http.StatusForbidden, gin.H{"error": "this stand does not exist"})
+		return
+	} else {
+		c.JSON(http.StatusOK, gin.H{"response": "your stand was successfully deleted"})
+		return
+	}
 }

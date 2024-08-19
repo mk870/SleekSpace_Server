@@ -3,9 +3,12 @@ package insights
 import (
 	"SleekSpace/db"
 	propertyModels "SleekSpace/models/property"
+	"errors"
+
+	"gorm.io/gorm"
 )
 
-func GetAllPropertyInsights() []propertyModels.PropertyInsights {
+func GetAllPropertiesInsights() []propertyModels.PropertyInsights {
 	var insightsList = []propertyModels.PropertyInsights{}
 	err := db.DB.Find(&insightsList)
 	if err != nil {
@@ -14,10 +17,22 @@ func GetAllPropertyInsights() []propertyModels.PropertyInsights {
 	return insightsList
 }
 
-func GetPropertyInsightsById(propertyInsightsId int) propertyModels.PropertyInsights {
+func GetPropertyInsightsByPropertyId(propertyId string) *propertyModels.PropertyInsights {
 	var insights = propertyModels.PropertyInsights{}
-	db.DB.First(&insights, propertyInsightsId)
-	return insights
+	result := db.DB.Where("property_id =?", propertyId).First(&insights)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return nil
+	}
+	return &insights
+}
+
+func GetPropertyInsightsById(propertyInsightsId string) *propertyModels.PropertyInsights {
+	var insights = propertyModels.PropertyInsights{}
+	result := db.DB.First(&insights, propertyInsightsId)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return nil
+	}
+	return &insights
 }
 
 func UpdatePropertyInsights(propertyInsightsUpdate *propertyModels.PropertyInsights) bool {

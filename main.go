@@ -5,6 +5,10 @@ import (
 	authController "SleekSpace/controllers/auth"
 	externalApiCallsController "SleekSpace/controllers/externalApiCalls"
 	managerController "SleekSpace/controllers/manager"
+	insightsController "SleekSpace/controllers/property/insights"
+	locationController "SleekSpace/controllers/property/location"
+	mediaController "SleekSpace/controllers/property/media"
+	standsController "SleekSpace/controllers/property/stand"
 	userController "SleekSpace/controllers/user"
 	"SleekSpace/db"
 
@@ -52,6 +56,7 @@ func main() {
 	managerController.UpdateManager(router)
 	managerController.UpdateManagerProfilePicture(router)
 	managerController.UpdateManagerContactNumbers(router)
+	managerController.GetManagerStandsByManagerId(router)
 
 	adminController.GetVerificationCodeById(router)
 	adminController.DeleteVerificationCode(router)
@@ -63,6 +68,27 @@ func main() {
 	adminController.GetAllVerificationCodes(router)
 	adminController.GetAllManagersProfilePictures(router)
 	adminController.ApiSim(router)
+	adminController.GetAllStands(router)
+	adminController.GetAllPropertiesImagesOrVideos(router)
+	adminController.GetAllPropertiesLocations(router)
+	adminController.GetAllPropertiesInsights(router)
+
+	standsController.CreateStandForSale(router)
+	standsController.DeleteStandById(router)
+	standsController.UpdateStandDetails(router)
+	standsController.GetStandById(router)
+
+	mediaController.CreatePropertyImageOrVideo(router)
+	mediaController.DeletePropertyImageOrVideo(router)
+	mediaController.UpdatePropertyImageOrVideo(router)
+	mediaController.GetPropertyImageOrVideoById(router)
+
+	locationController.GetPropertyLocationById(router)
+	locationController.UpdatePropertyLocation(router)
+
+	insightsController.GetPropertyInsightsById(router)
+	insightsController.GetPropertyInsightsByPropertyId(router)
+	insightsController.UpdatePropertyInsights(router)
 
 	router.Run()
 }

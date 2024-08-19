@@ -1,8 +1,11 @@
-package imagesandvideos
+package media
 
 import (
 	"SleekSpace/db"
 	propertyModels "SleekSpace/models/property"
+	"errors"
+
+	"gorm.io/gorm"
 )
 
 func CreatePropertyImageOrVideo(propertyImageOrVideo *propertyModels.PropertyImageOrVideo) bool {
@@ -19,10 +22,13 @@ func GetAllPropertiesImagesOrVideos() []propertyModels.PropertyImageOrVideo {
 	return mediaList
 }
 
-func GetPropertyImageOrVideoById(propertyMediaId string) propertyModels.PropertyImageOrVideo {
-	var media = propertyModels.PropertyImageOrVideo{}
-	db.DB.First(&media, propertyMediaId)
-	return media
+func GetPropertyImageOrVideoById(propertyMediaId string) *propertyModels.PropertyImageOrVideo {
+	var media propertyModels.PropertyImageOrVideo
+	result := db.DB.First(&media, propertyMediaId)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return nil
+	}
+	return &media
 }
 
 func UpdatePropertyImageOrVideo(propertyImageOrVideoUpdate *propertyModels.PropertyImageOrVideo) bool {

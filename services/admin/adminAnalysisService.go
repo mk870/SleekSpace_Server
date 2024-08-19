@@ -5,9 +5,16 @@ import (
 	"net/http"
 	"time"
 
+	propertyLocationDtos "SleekSpace/dtos/property/location"
+	standDtos "SleekSpace/dtos/property/stand"
 	managerRepo "SleekSpace/repositories/manager"
+	propertyInsightsRepo "SleekSpace/repositories/property/insights"
+	propertyLocationRepo "SleekSpace/repositories/property/location"
+	propertyMediaRepo "SleekSpace/repositories/property/media"
+	standRepo "SleekSpace/repositories/property/stand"
 	userRepo "SleekSpace/repositories/user"
 	generalUtilities "SleekSpace/utilities/funcs/general"
+	propertyUtilities "SleekSpace/utilities/funcs/property"
 
 	"github.com/gin-gonic/gin"
 )
@@ -92,5 +99,55 @@ func GetAllManagers(c *gin.Context) {
 	managers := managerRepo.GetAllManagers()
 	c.JSON(http.StatusOK, gin.H{
 		"response": managers,
+	})
+}
+
+func GetAllStands(c *gin.Context) {
+	stands := standRepo.GetAllStands()
+	responseList := []standDtos.StandResponseDTO{}
+	if len(stands) > 0 {
+		for i := 0; i < len(stands); i++ {
+			responseItem := propertyUtilities.PropertyStandResponse(stands[i])
+			responseList = append(responseList, responseItem)
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"response": responseList,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"response": responseList,
+	})
+}
+
+func GetAllPropertiesImagesOrVideos(c *gin.Context) {
+	imagesOrVideosList := propertyMediaRepo.GetAllPropertiesImagesOrVideos()
+	c.JSON(http.StatusOK, gin.H{
+		"response": imagesOrVideosList,
+	})
+}
+
+func GetAllPropertiesInsights(c *gin.Context) {
+	insightsList := propertyInsightsRepo.GetAllPropertiesInsights()
+	c.JSON(http.StatusOK, gin.H{
+		"response": insightsList,
+	})
+}
+
+func GetAllPropertiesLocation(c *gin.Context) {
+	propertyLocations := propertyLocationRepo.GetAllPropertyLocations()
+	responseList := []propertyLocationDtos.PropertyLocationUpdateAndResponseDto{}
+	if len(propertyLocations) > 0 {
+		for i := 0; i < len(propertyLocations); i++ {
+			responseItem := propertyUtilities.PropertyLocationResponse(propertyLocations[i])
+			responseList = append(responseList, responseItem)
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"response": responseList,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"response": responseList,
 	})
 }

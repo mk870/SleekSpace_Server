@@ -45,3 +45,19 @@ func GetAllManagersContacts(router *gin.Engine) {
 func GetAllManagers(router *gin.Engine) {
 	router.GET("/admin/managers", adminService.GetAllManagers)
 }
+
+func GetAllStands(router *gin.Engine) {
+	router.GET("/admin/property/stands", adminService.GetAllStands)
+}
+
+func GetAllPropertiesImagesOrVideos(router *gin.Engine) {
+	router.GET("/admin/property/media", adminService.GetAllPropertiesImagesOrVideos)
+}
+
+func GetAllPropertiesLocations(router *gin.Engine) {
+	router.GET("/admin/property/location", adminService.GetAllPropertiesLocation)
+}
+
+func GetAllPropertiesInsights(router *gin.Engine) {
+	router.GET("/admin/property/insights", adminService.GetAllPropertiesInsights)
+}
