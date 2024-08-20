@@ -6,6 +6,7 @@ type ResidentialPropertyForSale struct {
 	baseModel.MyModel
 	Id               int                    `json:"id" gorm:"primary_key"`
 	ManagerId        int                    `json:"managerId"`
+	UniqueId         int                    `json:"uniqueId"`
 	NumberOfRooms    int                    `json:"numberOfRooms"`
 	Price            int                    `json:"price"`
 	NumberOfGarages  int                    `json:"numberOfGarages"`
@@ -21,7 +22,7 @@ type ResidentialPropertyForSale struct {
 	Stories          string                 `json:"stories"`
 	Type             string                 `json:"type"`
 	SizeDimensions   string                 `json:"sizeDimensions"`
-	Location         PropertyLocation       `gorm:"ForeignKey:PropertyId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
-	PropertyInsights PropertyInsights       `gorm:"ForeignKey:PropertyId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
-	PropertyMedia    []PropertyImageOrVideo `gorm:"ForeignKey:PropertyId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	Location         PropertyLocation       `gorm:"ForeignKey:PropertyId;references:UniqueId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	PropertyInsights PropertyInsights       `gorm:"ForeignKey:PropertyId;references:UniqueId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	PropertyMedia    []PropertyImageOrVideo `gorm:"ForeignKey:PropertyId;references:UniqueId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 }

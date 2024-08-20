@@ -5,9 +5,12 @@ import (
 	authController "SleekSpace/controllers/auth"
 	externalApiCallsController "SleekSpace/controllers/externalApiCalls"
 	managerController "SleekSpace/controllers/manager"
+	commercialController "SleekSpace/controllers/property/commercial"
 	insightsController "SleekSpace/controllers/property/insights"
+	landsController "SleekSpace/controllers/property/land"
 	locationController "SleekSpace/controllers/property/location"
 	mediaController "SleekSpace/controllers/property/media"
+	residentialController "SleekSpace/controllers/property/residential"
 	standsController "SleekSpace/controllers/property/stand"
 	userController "SleekSpace/controllers/user"
 	"SleekSpace/db"
@@ -57,6 +60,11 @@ func main() {
 	managerController.UpdateManagerProfilePicture(router)
 	managerController.UpdateManagerContactNumbers(router)
 	managerController.GetManagerStandsByManagerId(router)
+	managerController.GetManagerCommercialPropertiesForSaleByManagerId(router)
+	managerController.GetManagerCommercialRentalPropertiesByManagerId(router)
+	managerController.GetManagerLandPropertiesByManagerId(router)
+	managerController.GetManagerResidentialPropertiesForSaleByManagerId(router)
+	managerController.GetManagerResidentialRentalPropertiesByManagerId(router)
 
 	adminController.GetVerificationCodeById(router)
 	adminController.DeleteVerificationCode(router)
@@ -72,11 +80,39 @@ func main() {
 	adminController.GetAllPropertiesImagesOrVideos(router)
 	adminController.GetAllPropertiesLocations(router)
 	adminController.GetAllPropertiesInsights(router)
+	adminController.GetAllResidentialPropertiesForSale(router)
+	adminController.GetAllCommercialPropertiesForSale(router)
+	adminController.GetAllCommercialRentalProperties(router)
+	adminController.GetAllResidentialRentalProperties(router)
+	adminController.GetAllLandProperties(router)
 
 	standsController.CreateStandForSale(router)
 	standsController.DeleteStandById(router)
 	standsController.UpdateStandDetails(router)
 	standsController.GetStandById(router)
+
+	residentialController.CreateResidentialPropertyForSale(router)
+	residentialController.CreateResidentialRentalProperty(router)
+	residentialController.GetResidentialPropertyForSaleById(router)
+	residentialController.GetResidentialRentalPropertyById(router)
+	residentialController.UpdateResidentialPropertyForSaleDetails(router)
+	residentialController.UpdateResidentialRentalPropertyDetails(router)
+	residentialController.DeleteResidentialPropertyForSaleById(router)
+	residentialController.DeleteResidentialRentalPropertyById(router)
+
+	commercialController.CreateCommercialPropertyForSale(router)
+	commercialController.CreateCommercialRentalProperty(router)
+	commercialController.GetCommercialPropertyForSaleById(router)
+	commercialController.GetCommercialRentalPropertyById(router)
+	commercialController.UpdateCommercialPropertyForSaleDetails(router)
+	commercialController.UpdateCommercialRentalPropertyDetails(router)
+	commercialController.DeleteCommercialPropertyForSaleById(router)
+	commercialController.DeleteCommercialRentalPropertyId(router)
+
+	landsController.CreateLandForSale(router)
+	landsController.GetLandById(router)
+	landsController.UpdateLandDetails(router)
+	landsController.DeleteLandById(router)
 
 	mediaController.CreatePropertyImageOrVideo(router)
 	mediaController.DeletePropertyImageOrVideo(router)

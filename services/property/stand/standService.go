@@ -25,6 +25,7 @@ func CreateStandForSale(c *gin.Context) {
 
 	newStandForSale := propertyModels.PropertyStand{
 		ManagerId:          standInfo.ManagerId,
+		UniqueId:           propertyUtilities.GeneratePropertyUniqueId(),
 		Price:              standInfo.Price,
 		SizeNumber:         standInfo.SizeNumber,
 		SizeDimensions:     standInfo.SizeDimensions,
@@ -92,6 +93,7 @@ func UpdateStandDetails(c *gin.Context) {
 	oldStandData.IsServiced = standUpdates.IsServiced
 	oldStandData.Status = standUpdates.Status
 	oldStandData.Type = standUpdates.Type
+	oldStandData.UniqueId = standUpdates.UniqueId
 
 	isStandUpdated := standRepo.UpdateStand(oldStandData)
 	if !isStandUpdated {

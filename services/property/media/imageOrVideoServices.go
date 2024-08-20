@@ -46,7 +46,7 @@ func CreatePropertyImageOrVideoWithPropertyId(c *gin.Context) {
 func GetPropertyImageOrVideoById(c *gin.Context) {
 	propertyImageOrVideo := imagesOrVideosRepo.GetPropertyImageOrVideoById(c.Param("id"))
 	if propertyImageOrVideo == nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": "this stand does not exist"})
+		c.JSON(http.StatusForbidden, gin.H{"error": "this media file does not exist"})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"response": propertyUtilities.PropertyImageOrVideoResponse(*propertyImageOrVideo)})
@@ -86,12 +86,12 @@ func UpdatePropertyImageOrVideo(c *gin.Context) {
 func DeletePropertyImageOrVideo(c *gin.Context) {
 	imageOrVideo := imagesOrVideosRepo.GetPropertyImageOrVideoById(c.Param("id"))
 	if imageOrVideo == nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": "this stand does not exist"})
+		c.JSON(http.StatusForbidden, gin.H{"error": "this media file does not exist"})
 		return
 	}
 	isImageOrVideoDeleted := imagesOrVideosRepo.DeletePropertyImageOrVideo(c.Param("id"))
 	if !isImageOrVideoDeleted {
-		c.JSON(http.StatusForbidden, gin.H{"error": "this stand does not exist"})
+		c.JSON(http.StatusForbidden, gin.H{"error": "this media file does not exist"})
 		return
 	} else {
 		generalServices.GetPropertyTypeById(c, imageOrVideo.PropertyType, imageOrVideo.PropertyId)

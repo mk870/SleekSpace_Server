@@ -3,6 +3,9 @@ package controllers
 import (
 	"SleekSpace/middleware"
 	managerService "SleekSpace/services/manager"
+	commercialService "SleekSpace/services/property/commercial"
+	landService "SleekSpace/services/property/land"
+	residentialService "SleekSpace/services/property/residential"
 	standService "SleekSpace/services/property/stand"
 
 	"github.com/gin-gonic/gin"
@@ -22,6 +25,26 @@ func GetManagerById(router *gin.Engine) {
 
 func GetManagerStandsByManagerId(router *gin.Engine) {
 	router.GET("/manager/stands/:id", middleware.AuthValidator, standService.GetManagerStandsByManagerId)
+}
+
+func GetManagerLandPropertiesByManagerId(router *gin.Engine) {
+	router.GET("/manager/lands/:id", middleware.AuthValidator, landService.GetManagerLandPropertiesByManagerId)
+}
+
+func GetManagerCommercialRentalPropertiesByManagerId(router *gin.Engine) {
+	router.GET("/manager/commercial/rentals/:id", middleware.AuthValidator, commercialService.GetManagerCommercialRentalPropertiesByManagerId)
+}
+
+func GetManagerCommercialPropertiesForSaleByManagerId(router *gin.Engine) {
+	router.GET("/manager/commercial/onsale/:id", middleware.AuthValidator, commercialService.GetManagerCommercialPropertiesForSaleByManagerId)
+}
+
+func GetManagerResidentialRentalPropertiesByManagerId(router *gin.Engine) {
+	router.GET("/manager/residential/rentals/:id", middleware.AuthValidator, residentialService.GetManagerResidentialRentalPropertiesByManagerId)
+}
+
+func GetManagerResidentialPropertiesForSaleByManagerId(router *gin.Engine) {
+	router.GET("/manager/residential/onsale/:id", middleware.AuthValidator, residentialService.GetManagerResidentialPropertiesForSaleByManagerId)
 }
 
 func UpdateManager(router *gin.Engine) {

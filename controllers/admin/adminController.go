@@ -50,6 +50,26 @@ func GetAllStands(router *gin.Engine) {
 	router.GET("/admin/property/stands", adminService.GetAllStands)
 }
 
+func GetAllLandProperties(router *gin.Engine) {
+	router.GET("/admin/property/lands", adminService.GetAllLandProperties)
+}
+
+func GetAllCommercialRentalProperties(router *gin.Engine) {
+	router.GET("/admin/property/commercial/rentals", adminService.GetAllCommercialRentalProperties)
+}
+
+func GetAllCommercialPropertiesForSale(router *gin.Engine) {
+	router.GET("/admin/property/commercial/onsale", adminService.GetAllCommercialForSaleProperties)
+}
+
+func GetAllResidentialPropertiesForSale(router *gin.Engine) {
+	router.GET("/admin/property/residential/onsale", adminService.GetAllResidentialForSaleProperties)
+}
+
+func GetAllResidentialRentalProperties(router *gin.Engine) {
+	router.GET("/admin/property/residential/rentals", adminService.GetAllResidentialRentalProperties)
+}
+
 func GetAllPropertiesImagesOrVideos(router *gin.Engine) {
 	router.GET("/admin/property/media", adminService.GetAllPropertiesImagesOrVideos)
 }

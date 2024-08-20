@@ -7,20 +7,20 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var groupRouteName string = "/property/"
+var standRoute string = "/property/stand"
 
 func CreateStandForSale(router *gin.Engine) {
-	router.POST(groupRouteName+"stands", middleware.AuthValidator, standService.CreateStandForSale)
+	router.POST(standRoute, middleware.AuthValidator, standService.CreateStandForSale)
 }
 
 func GetStandById(router *gin.Engine) {
-	router.GET(groupRouteName+"stands/:id", middleware.AuthValidator, standService.GetStandById)
+	router.GET(standRoute+"/:id", middleware.AuthValidator, standService.GetStandById)
 }
 
 func UpdateStandDetails(router *gin.Engine) {
-	router.PUT(groupRouteName+"stands/:id", middleware.AuthValidator, standService.UpdateStandDetails)
+	router.PUT(standRoute+"/:id", middleware.AuthValidator, standService.UpdateStandDetails)
 }
 
 func DeleteStandById(router *gin.Engine) {
-	router.DELETE(groupRouteName+"stands/:id", middleware.AuthValidator, standService.DeleteStandById)
+	router.DELETE(standRoute+"/:id", middleware.AuthValidator, standService.DeleteStandById)
 }

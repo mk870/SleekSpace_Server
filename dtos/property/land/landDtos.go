@@ -1,4 +1,4 @@
-package stand
+package land
 
 import (
 	imageorvideoDtos "SleekSpace/dtos/property/imageorvideo"
@@ -6,50 +6,44 @@ import (
 	locationDtos "SleekSpace/dtos/property/location"
 )
 
-type StandCreationDTO struct {
+type LandForSalePropertyCreationDto struct {
 	ManagerId          int                                                                `json:"managerId"`
 	Price              int                                                                `json:"price"`
 	SizeNumber         int                                                                `json:"sizeNumber"`
 	AreaHasElectricity bool                                                               `json:"areaHasElectricity"`
-	IsServiced         bool                                                               `json:"isServiced"`
-	IsNegotiable       bool                                                               `json:"isNegotiable"`
+	HasWater           bool                                                               `json:"hasWater"`
 	Status             string                                                             `json:"status"`
-	Level              string                                                             `json:"level"`
-	SizeDimensions     string                                                             `json:"sizeDimensions"`
 	Type               string                                                             `json:"type"`
+	SizeDimensions     string                                                             `json:"sizeDimensions"`
 	PropertyLocation   locationDtos.PropertyLocationCreationDto                           `json:"propertyLocation"`
 	Media              []imageorvideoDtos.PropertyImageOrVideoCreationWithNoPropertyIdDto `json:"media"`
 }
 
-type StandResponseDTO struct {
+type LandForSalePropertyResponseDto struct {
 	Id                 int                                                         `json:"id"`
 	ManagerId          int                                                         `json:"managerId"`
 	UniqueId           int                                                         `json:"uniqueId"`
 	Price              int                                                         `json:"price"`
 	SizeNumber         int                                                         `json:"sizeNumber"`
 	AreaHasElectricity bool                                                        `json:"areaHasElectricity"`
-	IsServiced         bool                                                        `json:"isServiced"`
-	IsNegotiable       bool                                                        `json:"isNegotiable"`
+	HasWater           bool                                                        `json:"hasWater"`
 	Status             string                                                      `json:"status"`
-	Level              string                                                      `json:"level"`
-	SizeDimensions     string                                                      `json:"sizeDimensions"`
 	Type               string                                                      `json:"type"`
+	SizeDimensions     string                                                      `json:"sizeDimensions"`
 	PropertyLocation   locationDtos.PropertyLocationUpdateAndResponseDto           `json:"propertyLocation"`
 	Insights           insightsDtos.PropertyInsightsUpdateAndResponseDto           `json:"insights"`
 	Media              []imageorvideoDtos.PropertyImageOrVideoUpdateAndResponseDto `json:"media"`
 }
 
-type StandUpdateDTO struct {
+type LandForSalePropertyUpdateDto struct {
 	Id                 int    `json:"id"`
 	ManagerId          int    `json:"managerId"`
 	UniqueId           int    `json:"uniqueId"`
 	Price              int    `json:"price"`
 	SizeNumber         int    `json:"sizeNumber"`
 	AreaHasElectricity bool   `json:"areaHasElectricity"`
-	IsServiced         bool   `json:"isServiced"`
-	IsNegotiable       bool   `json:"isNegotiable"`
+	HasWater           bool   `json:"hasWater"`
 	Status             string `json:"status"`
-	Level              string `json:"level"`
-	SizeDimensions     string `json:"sizeDimensions"`
 	Type               string `json:"type"`
+	SizeDimensions     string `json:"sizeDimensions"`
 }
