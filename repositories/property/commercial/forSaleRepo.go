@@ -27,6 +27,15 @@ func GetCommercialPropertyForSaleById(id string) *propertyModels.CommercialForSa
 	return &property
 }
 
+func GetCommercialPropertyForSaleWithAllAssociationsByUniqueId(uniqueId string) *propertyModels.CommercialForSaleProperty {
+	var property propertyModels.CommercialForSaleProperty
+	result := db.DB.Where("unique_id= ?", uniqueId).Preload(clause.Associations).First(&property)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return nil
+	}
+	return &property
+}
+
 func GetCommercialPropertyForSaleWithAllAssociationsById(id string) *propertyModels.CommercialForSaleProperty {
 	var property propertyModels.CommercialForSaleProperty
 	result := db.DB.Preload(clause.Associations).First(&property, id)

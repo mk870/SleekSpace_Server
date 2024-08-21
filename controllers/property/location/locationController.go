@@ -7,12 +7,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var groupRouteName string = "/property/"
-
-func GetPropertyLocationById(router *gin.Engine) {
-	router.GET(groupRouteName+"location/:id", middleware.AuthValidator, locationService.GetPropertyLocationById)
-}
-
-func UpdatePropertyLocation(router *gin.Engine) {
-	router.PUT(groupRouteName+"location/:id", middleware.AuthValidator, locationService.UpdatePropertyLocation)
+func LocationRoutes(router *gin.Engine) {
+	routes := router.Group("/property/location")
+	{
+		routes.GET("/:id", middleware.AuthValidator, locationService.GetPropertyLocationById)
+		routes.PUT("/:id", middleware.AuthValidator, locationService.UpdatePropertyLocation)
+	}
 }

@@ -2,10 +2,10 @@ package property
 
 import (
 	commercialPropertyDtos "SleekSpace/dtos/property/commercial"
-	propertyMediaDtos "SleekSpace/dtos/property/imageorvideo"
 	propertyInsightsDtos "SleekSpace/dtos/property/insights"
 	landDtos "SleekSpace/dtos/property/land"
 	propertyLocationDtos "SleekSpace/dtos/property/location"
+	propertyMediaDtos "SleekSpace/dtos/property/media"
 	residentialPropertyDtos "SleekSpace/dtos/property/residential"
 	propertyStandDtos "SleekSpace/dtos/property/stand"
 	propertyModels "SleekSpace/models/property"
@@ -21,7 +21,7 @@ func GeneratePropertyUniqueId() int {
 	return randomInt
 }
 
-func ConvertPropertyImagesOrVideosWithNoPropertyIdToModel(propertyMediaList []propertyMediaDtos.PropertyImageOrVideoCreationWithNoPropertyIdDto) []propertyModels.PropertyImageOrVideo {
+func ConvertPropertyImagesOrVideosWithNoPropertyIdToModel(propertyMediaList []propertyMediaDtos.PropertyImageOrVideoCreationWithNoPropertyIdDto, propertyType string) []propertyModels.PropertyImageOrVideo {
 	mediaList := []propertyModels.PropertyImageOrVideo{}
 	if len(propertyMediaList) > 0 {
 		for i := 0; i < len(propertyMediaList); i++ {
@@ -32,7 +32,7 @@ func ConvertPropertyImagesOrVideosWithNoPropertyIdToModel(propertyMediaList []pr
 				Size:         propertyMediaList[i].Size,
 				Name:         propertyMediaList[i].Name,
 				FullPath:     propertyMediaList[i].FullPath,
-				PropertyType: propertyMediaList[i].PropertyType,
+				PropertyType: propertyType,
 			}
 			mediaList = append(mediaList, media)
 		}
@@ -190,6 +190,7 @@ func CommercialPropertyForSaleResponse(commercialPropertyForSale propertyModels.
 		YearBuilt:        commercialPropertyForSale.YearBuilt,
 		Stories:          commercialPropertyForSale.Stories,
 		HasElectricity:   commercialPropertyForSale.HasElectricity,
+		IsNegotiable:     commercialPropertyForSale.IsNegotiable,
 		HasWater:         commercialPropertyForSale.HasWater,
 		NumberOfRooms:    commercialPropertyForSale.NumberOfRooms,
 		PropertyLocation: PropertyLocationResponse(commercialPropertyForSale.Location),
@@ -232,6 +233,7 @@ func LandPropertyResponse(landPropertyModel propertyModels.LandForSaleProperty) 
 		Type:               landPropertyModel.Type,
 		AreaHasElectricity: landPropertyModel.AreaHasElectricity,
 		HasWater:           landPropertyModel.HasWater,
+		IsNegotiable:       landPropertyModel.IsNegotiable,
 		PropertyLocation:   PropertyLocationResponse(landPropertyModel.Location),
 		Insights:           PropertyInsightsResponse(landPropertyModel.PropertyInsights),
 		Media:              ProcessedPropertyImageAndVideosListToResponse(landPropertyModel.PropertyMedia),

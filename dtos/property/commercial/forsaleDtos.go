@@ -1,9 +1,9 @@
 package commercial
 
 import (
-	imageorvideoDtos "SleekSpace/dtos/property/imageorvideo"
 	insightsDtos "SleekSpace/dtos/property/insights"
 	locationDtos "SleekSpace/dtos/property/location"
+	imageorvideoDtos "SleekSpace/dtos/property/media"
 )
 
 type CommercialForSalePropertyCreationDto struct {
@@ -13,6 +13,7 @@ type CommercialForSalePropertyCreationDto struct {
 	SizeNumber       int                                                                `json:"sizeNumber"`
 	HasElectricity   bool                                                               `json:"hasElectricity"`
 	HasWater         bool                                                               `json:"hasWater"`
+	IsNegotiable     bool                                                               `json:"isNegotiable"`
 	Status           string                                                             `json:"status"`
 	YearBuilt        string                                                             `json:"yearBuilt"`
 	Stories          string                                                             `json:"stories"`
@@ -30,6 +31,7 @@ type CommercialForSalePropertyResponseDto struct {
 	Price            int                                                         `json:"price"`
 	SizeNumber       int                                                         `json:"sizeNumber"`
 	HasElectricity   bool                                                        `json:"hasElectricity"`
+	IsNegotiable     bool                                                        `json:"isNegotiable"`
 	HasWater         bool                                                        `json:"hasWater"`
 	Status           string                                                      `json:"status"`
 	YearBuilt        string                                                      `json:"yearBuilt"`
@@ -50,6 +52,7 @@ type CommercialForSalePropertyUpdateDto struct {
 	SizeNumber     int    `json:"sizeNumber"`
 	HasElectricity bool   `json:"hasElectricity"`
 	HasWater       bool   `json:"hasWater"`
+	IsNegotiable   bool   `json:"isNegotiable"`
 	Status         string `json:"status"`
 	YearBuilt      string `json:"yearBuilt"`
 	Stories        string `json:"stories"`

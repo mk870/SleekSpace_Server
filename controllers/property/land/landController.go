@@ -7,20 +7,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var landRoute string = "/property/land"
-
-func CreateLandForSale(router *gin.Engine) {
-	router.POST(landRoute, middleware.AuthValidator, landService.CreateLandPropertyForSale)
-}
-
-func GetLandById(router *gin.Engine) {
-	router.GET(landRoute+"/:id", middleware.AuthValidator, landService.GetLandPropertyById)
-}
-
-func UpdateLandDetails(router *gin.Engine) {
-	router.PUT(landRoute+"/:id", middleware.AuthValidator, landService.UpdateLandPropertyDetails)
-}
-
-func DeleteLandById(router *gin.Engine) {
-	router.DELETE(landRoute+"/:id", middleware.AuthValidator, landService.DeleteLandPropertyById)
+func LandPropertyRoutes(router *gin.Engine) {
+	routes := router.Group("/property/land")
+	{
+		routes.POST("", middleware.AuthValidator, landService.CreateLandPropertyForSale)
+		routes.GET("/:id", middleware.AuthValidator, landService.GetLandPropertyById)
+		routes.PUT("/:id", middleware.AuthValidator, landService.UpdateLandPropertyDetails)
+		routes.DELETE("/:id", middleware.AuthValidator, landService.DeleteLandPropertyById)
+	}
 }

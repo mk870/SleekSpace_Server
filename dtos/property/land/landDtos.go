@@ -1,9 +1,9 @@
 package land
 
 import (
-	imageorvideoDtos "SleekSpace/dtos/property/imageorvideo"
 	insightsDtos "SleekSpace/dtos/property/insights"
 	locationDtos "SleekSpace/dtos/property/location"
+	imageorvideoDtos "SleekSpace/dtos/property/media"
 )
 
 type LandForSalePropertyCreationDto struct {
@@ -12,6 +12,7 @@ type LandForSalePropertyCreationDto struct {
 	SizeNumber         int                                                                `json:"sizeNumber"`
 	AreaHasElectricity bool                                                               `json:"areaHasElectricity"`
 	HasWater           bool                                                               `json:"hasWater"`
+	IsNegotiable       bool                                                               `json:"isNegotiable"`
 	Status             string                                                             `json:"status"`
 	Type               string                                                             `json:"type"`
 	SizeDimensions     string                                                             `json:"sizeDimensions"`
@@ -26,6 +27,7 @@ type LandForSalePropertyResponseDto struct {
 	Price              int                                                         `json:"price"`
 	SizeNumber         int                                                         `json:"sizeNumber"`
 	AreaHasElectricity bool                                                        `json:"areaHasElectricity"`
+	IsNegotiable       bool                                                        `json:"isNegotiable"`
 	HasWater           bool                                                        `json:"hasWater"`
 	Status             string                                                      `json:"status"`
 	Type               string                                                      `json:"type"`
@@ -42,6 +44,7 @@ type LandForSalePropertyUpdateDto struct {
 	Price              int    `json:"price"`
 	SizeNumber         int    `json:"sizeNumber"`
 	AreaHasElectricity bool   `json:"areaHasElectricity"`
+	IsNegotiable       bool   `json:"isNegotiable"`
 	HasWater           bool   `json:"hasWater"`
 	Status             string `json:"status"`
 	Type               string `json:"type"`

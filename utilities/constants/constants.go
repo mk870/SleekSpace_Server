@@ -12,3 +12,10 @@ var ManagerAccountDeleteSuccess string = "your property management account was s
 var ManagerAccountUpdateError string = "this property management account failed to update"
 var NoManagerAccountError string = "this property management account does not exist"
 var ManagerAccountCreatedButNoDataRetrievedError string = "manager was created but failed to get the data back, please close the app and remove it from the background then come back again to see your manager account"
+
+var StandPropertyType string = "stand"
+var LandPropertyType string = "land"
+var CommercialRentalPropertyType string = "commercialRentalProperty"
+var CommercialPropertyForSaleType string = "commercialPropertyForSale"
+var ResidentialPropertyForSaleType string = "residentialPropertyForSale"
+var ResidentialRentalPropertyType = "residentialRentalProperty"

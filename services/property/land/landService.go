@@ -6,6 +6,7 @@ import (
 	landDtos "SleekSpace/dtos/property/land"
 	propertyModels "SleekSpace/models/property"
 	landRepo "SleekSpace/repositories/property/land"
+	constants "SleekSpace/utilities/constants"
 	propertyUtilities "SleekSpace/utilities/funcs/property"
 
 	"github.com/gin-gonic/gin"
@@ -33,14 +34,15 @@ func CreateLandPropertyForSale(c *gin.Context) {
 		Type:               landDetails.Type,
 		AreaHasElectricity: landDetails.AreaHasElectricity,
 		HasWater:           landDetails.HasWater,
+		IsNegotiable:       landDetails.IsNegotiable,
 		PropertyInsights: propertyModels.PropertyInsights{
 			Views:             0,
 			Shared:            0,
 			AddedToFavourites: 0,
 			ContactInfoViews:  0,
-			PropertyType:      "land",
+			PropertyType:      constants.LandPropertyType,
 		},
-		PropertyMedia: propertyUtilities.ConvertPropertyImagesOrVideosWithNoPropertyIdToModel(landDetails.Media),
+		PropertyMedia: propertyUtilities.ConvertPropertyImagesOrVideosWithNoPropertyIdToModel(landDetails.Media, constants.LandPropertyType),
 		Location: propertyModels.PropertyLocation{
 			Boundingbox:  landDetails.PropertyLocation.Boundingbox,
 			Lat:          landDetails.PropertyLocation.Lat,
@@ -52,7 +54,7 @@ func CreateLandPropertyForSale(c *gin.Context) {
 			CountryCode:  landDetails.PropertyLocation.CountryCode,
 			Province:     landDetails.PropertyLocation.Province,
 			Surburb:      landDetails.PropertyLocation.Surburb,
-			PropertyType: landDetails.PropertyLocation.PropertyType,
+			PropertyType: constants.LandPropertyType,
 		},
 	}
 
@@ -90,6 +92,7 @@ func UpdateLandPropertyDetails(c *gin.Context) {
 	oldLandData.Status = landUpdates.Status
 	oldLandData.Type = landUpdates.Type
 	oldLandData.UniqueId = landUpdates.UniqueId
+	oldLandData.IsNegotiable = landUpdates.IsNegotiable
 
 	isStandUpdated := landRepo.UpdateLandPropertyForSale(oldLandData)
 	if !isStandUpdated {

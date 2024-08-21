@@ -73,7 +73,7 @@ func CreateManager(c *gin.Context) {
 }
 
 func GetManagerByUserId(c *gin.Context) {
-	id := c.Param("userId")
+	id := c.Param("id")
 	user := userRepo.GetUserByIdWithManager(id)
 	if user == nil {
 		c.JSON(http.StatusForbidden, gin.H{"error": constantsUtilities.NoUserError})

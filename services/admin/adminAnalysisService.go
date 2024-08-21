@@ -55,6 +55,13 @@ func GetAllUsersLocations(c *gin.Context) {
 	})
 }
 
+func GetAllUsers(c *gin.Context) {
+	users := userRepo.GetUsers()
+	c.JSON(http.StatusOK, gin.H{
+		"response": users,
+	})
+}
+
 func GetAllManagersProfilePictures(c *gin.Context) {
 	pictures := managerRepo.GetAllManagersProfilePictures()
 	c.JSON(http.StatusOK, gin.H{

@@ -7,20 +7,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var rentalRoute string = "/property/commercial/rentals"
-
-func CreateCommercialRentalProperty(router *gin.Engine) {
-	router.POST(rentalRoute, middleware.AuthValidator, commercialService.CreateCommercialRentalProperty)
-}
-
-func GetCommercialRentalPropertyById(router *gin.Engine) {
-	router.GET(rentalRoute+"/:id", middleware.AuthValidator, commercialService.GetCommercialRentalPropertyId)
-}
-
-func UpdateCommercialRentalPropertyDetails(router *gin.Engine) {
-	router.PUT(rentalRoute+"/:id", middleware.AuthValidator, commercialService.UpdateCommercialRentalPropertyDetails)
-}
-
-func DeleteCommercialRentalPropertyId(router *gin.Engine) {
-	router.DELETE(rentalRoute+"/:id", middleware.AuthValidator, commercialService.DeleteCommercialRentalPropertyById)
+func CommercialRentalPropertyForSaleRoutes(router *gin.Engine) {
+	routes := router.Group("/property/commercial/rentals")
+	{
+		routes.POST("", middleware.AuthValidator, commercialService.CreateCommercialRentalProperty)
+		routes.GET("/:id", middleware.AuthValidator, commercialService.GetCommercialRentalPropertyId)
+		routes.PUT("/:id", middleware.AuthValidator, commercialService.UpdateCommercialRentalPropertyDetails)
+		routes.DELETE("/:id", middleware.AuthValidator, commercialService.DeleteCommercialRentalPropertyById)
+	}
 }

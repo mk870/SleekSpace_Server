@@ -99,3 +99,78 @@ package utilities
 // 		}
 // ]
 // }
+
+//residential onsale
+// {
+// 	"response": {
+// 			"id": 2,
+// 			"managerId": 9,
+// 			"uniqueId": 3497069152515782,
+// 			"numberOfRooms": 6,
+// 			"price": 258888,
+// 			"numberOfGarages": 4,
+// 			"sizeNumber": 2,
+// 			"hasSwimmingPool": true,
+// 			"hasElectricity": true,
+// 			"hasWater": true,
+// 			"isNegotiable": true,
+// 			"status": "on market",
+// 			"bedrooms": "6",
+// 			"bathrooms": "4",
+// 			"yearBuilt": "2019",
+// 			"stories": "3",
+// 			"type": "residential",
+// 			"sizeDimensions": "acres",
+// 			"propertyLocation": {
+// 					"id": 2,
+// 					"propertyId": 3497069152515782,
+// 					"displayName": "Burnside",
+// 					"boundingbox": [
+// 							"87",
+// 							"90"
+// 					],
+// 					"lat": "7747.5",
+// 					"lon": "90",
+// 					"surburb": "luveve",
+// 					"city": "Byo",
+// 					"county": "luv",
+// 					"province": "Byo",
+// 					"country": "zim",
+// 					"countryCode": "263",
+// 					"propertyType": "residentialPropertyForSale"
+// 			},
+// 			"insights": {
+// 					"id": 2,
+// 					"propertyId": 3497069152515782,
+// 					"views": 0,
+// 					"addedToFavourites": 0,
+// 					"shared": 0,
+// 					"contactInfoViews": 0,
+// 					"propertyType": "residentialPropertyForSale"
+// 			},
+// 			"media": [
+// 					{
+// 							"id": 22,
+// 							"propertyId": 3497069152515782,
+// 							"uri": "jnfj3b",
+// 							"name": "jnr",
+// 							"fullPath": "h3jhjfbjhf",
+// 							"size": 99,
+// 							"contentType": "mp4",
+// 							"fileType": "video",
+// 							"propertyType": "residentialPropertyForSale"
+// 					},
+// 					{
+// 							"id": 23,
+// 							"propertyId": 3497069152515782,
+// 							"uri": "zzzzz",
+// 							"name": "jnr",
+// 							"fullPath": "h3jhoooo",
+// 							"size": 98,
+// 							"contentType": "png",
+// 							"fileType": "image",
+// 							"propertyType": "residentialPropertyForSale"
+// 					}
+// 			]
+// 	}
+// }

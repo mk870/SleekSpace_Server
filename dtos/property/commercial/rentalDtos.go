@@ -1,9 +1,9 @@
 package commercial
 
 import (
-	imageorvideoDtos "SleekSpace/dtos/property/imageorvideo"
 	insightsDtos "SleekSpace/dtos/property/insights"
 	locationDtos "SleekSpace/dtos/property/location"
+	imageorvideoDtos "SleekSpace/dtos/property/media"
 )
 
 type CommercialForRentPropertyCreationDto struct {

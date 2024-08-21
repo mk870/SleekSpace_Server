@@ -6,6 +6,7 @@ import (
 	residentialDtos "SleekSpace/dtos/property/residential"
 	propertyModels "SleekSpace/models/property"
 	residentialRepo "SleekSpace/repositories/property/residential"
+	constants "SleekSpace/utilities/constants"
 	propertyUtilities "SleekSpace/utilities/funcs/property"
 
 	"github.com/gin-gonic/gin"
@@ -46,9 +47,9 @@ func CreateResidentialPropertyForSale(c *gin.Context) {
 			Shared:            0,
 			AddedToFavourites: 0,
 			ContactInfoViews:  0,
-			PropertyType:      "residentialPropertyForSale",
+			PropertyType:      constants.ResidentialPropertyForSaleType,
 		},
-		PropertyMedia: propertyUtilities.ConvertPropertyImagesOrVideosWithNoPropertyIdToModel(residentialPropertyForSaleDetails.Media),
+		PropertyMedia: propertyUtilities.ConvertPropertyImagesOrVideosWithNoPropertyIdToModel(residentialPropertyForSaleDetails.Media, constants.ResidentialPropertyForSaleType),
 		Location: propertyModels.PropertyLocation{
 			Boundingbox:  residentialPropertyForSaleDetails.PropertyLocation.Boundingbox,
 			Lat:          residentialPropertyForSaleDetails.PropertyLocation.Lat,
@@ -60,7 +61,7 @@ func CreateResidentialPropertyForSale(c *gin.Context) {
 			CountryCode:  residentialPropertyForSaleDetails.PropertyLocation.CountryCode,
 			Province:     residentialPropertyForSaleDetails.PropertyLocation.Province,
 			Surburb:      residentialPropertyForSaleDetails.PropertyLocation.Surburb,
-			PropertyType: residentialPropertyForSaleDetails.PropertyLocation.PropertyType,
+			PropertyType: constants.ResidentialPropertyForSaleType,
 		},
 	}
 

@@ -27,6 +27,15 @@ func GetLandPropertyForSaleById(id string) *propertyModels.LandForSaleProperty {
 	return &land
 }
 
+func GetLandPropertyForSaleWithAllAssociationsByUniqueId(uniqueId string) *propertyModels.LandForSaleProperty {
+	var land propertyModels.LandForSaleProperty
+	result := db.DB.Where("unique_id= ?", uniqueId).Preload(clause.Associations).First(&land)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return nil
+	}
+	return &land
+}
+
 func GetLandPropertyForSaleWithAllAssociationsById(id string) *propertyModels.LandForSaleProperty {
 	var land propertyModels.LandForSaleProperty
 	result := db.DB.Preload(clause.Associations).First(&land, id)

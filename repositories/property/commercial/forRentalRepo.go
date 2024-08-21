@@ -36,6 +36,15 @@ func GetCommercialRentalPropertyWithAllAssociationsById(id string) *propertyMode
 	return &property
 }
 
+func GetCommercialRentalPropertyWithAllAssociationsByUniqueId(uniqueId string) *propertyModels.CommercialRentalProperty {
+	var property propertyModels.CommercialRentalProperty
+	result := db.DB.Where("unique_id= ?", uniqueId).Preload(clause.Associations).First(&property)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return nil
+	}
+	return &property
+}
+
 func GetManagerCommercialRentalPropertiesByManagerId(managerId string) []propertyModels.CommercialRentalProperty {
 	var manager = managerModels.Manager{}
 	result := db.DB.Preload("CommercialRentalProperty").First(&manager, managerId)

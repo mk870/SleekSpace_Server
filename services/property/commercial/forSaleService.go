@@ -6,6 +6,7 @@ import (
 	commercialDtos "SleekSpace/dtos/property/commercial"
 	propertyModels "SleekSpace/models/property"
 	commercialRepo "SleekSpace/repositories/property/commercial"
+	constants "SleekSpace/utilities/constants"
 	propertyUtilities "SleekSpace/utilities/funcs/property"
 
 	"github.com/gin-gonic/gin"
@@ -35,15 +36,16 @@ func CreateCommercialPropertyForSale(c *gin.Context) {
 		Stories:        commercialPropertyForSaleDetails.Stories,
 		HasElectricity: commercialPropertyForSaleDetails.HasElectricity,
 		HasWater:       commercialPropertyForSaleDetails.HasWater,
+		IsNegotiable:   commercialPropertyForSaleDetails.IsNegotiable,
 		NumberOfRooms:  commercialPropertyForSaleDetails.NumberOfRooms,
 		PropertyInsights: propertyModels.PropertyInsights{
 			Views:             0,
 			Shared:            0,
 			AddedToFavourites: 0,
 			ContactInfoViews:  0,
-			PropertyType:      "commercialPropertyForSale",
+			PropertyType:      constants.CommercialPropertyForSaleType,
 		},
-		PropertyMedia: propertyUtilities.ConvertPropertyImagesOrVideosWithNoPropertyIdToModel(commercialPropertyForSaleDetails.Media),
+		PropertyMedia: propertyUtilities.ConvertPropertyImagesOrVideosWithNoPropertyIdToModel(commercialPropertyForSaleDetails.Media, constants.CommercialPropertyForSaleType),
 		Location: propertyModels.PropertyLocation{
 			Boundingbox:  commercialPropertyForSaleDetails.PropertyLocation.Boundingbox,
 			Lat:          commercialPropertyForSaleDetails.PropertyLocation.Lat,
@@ -55,7 +57,7 @@ func CreateCommercialPropertyForSale(c *gin.Context) {
 			CountryCode:  commercialPropertyForSaleDetails.PropertyLocation.CountryCode,
 			Province:     commercialPropertyForSaleDetails.PropertyLocation.Province,
 			Surburb:      commercialPropertyForSaleDetails.PropertyLocation.Surburb,
-			PropertyType: commercialPropertyForSaleDetails.PropertyLocation.PropertyType,
+			PropertyType: constants.CommercialPropertyForSaleType,
 		},
 	}
 
@@ -96,6 +98,7 @@ func UpdateCommercialPropertyForSaleDetails(c *gin.Context) {
 	oldCommercialPropertyForSaleData.Stories = commercialPropertyForSaleUpdates.Stories
 	oldCommercialPropertyForSaleData.YearBuilt = commercialPropertyForSaleUpdates.YearBuilt
 	oldCommercialPropertyForSaleData.UniqueId = commercialPropertyForSaleUpdates.UniqueId
+	oldCommercialPropertyForSaleData.IsNegotiable = commercialPropertyForSaleUpdates.IsNegotiable
 
 	isCommercialPropertyForSaleUpdated := commercialRepo.UpdateCommercialPropertyForSale(oldCommercialPropertyForSaleData)
 	if !isCommercialPropertyForSaleUpdated {

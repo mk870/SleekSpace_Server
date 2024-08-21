@@ -36,6 +36,15 @@ func GetStandWithAllAssociationsById(id string) *propertyModels.PropertyStand {
 	return &stand
 }
 
+func GetStandWithAllAssociationsByUniqueId(uniqueId string) *propertyModels.PropertyStand {
+	var stand propertyModels.PropertyStand
+	result := db.DB.Where("unique_id= ?", uniqueId).Preload(clause.Associations).First(&stand)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return nil
+	}
+	return &stand
+}
+
 func GetManagerStandsByManagerId(managerId string) []propertyModels.PropertyStand {
 	var manager = managerModels.Manager{}
 	result := db.DB.Preload("PropertyStand").First(&manager, managerId)

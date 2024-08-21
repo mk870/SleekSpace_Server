@@ -6,6 +6,7 @@ import (
 	commercialDtos "SleekSpace/dtos/property/commercial"
 	propertyModels "SleekSpace/models/property"
 	commercialRepo "SleekSpace/repositories/property/commercial"
+	constants "SleekSpace/utilities/constants"
 	propertyUtilities "SleekSpace/utilities/funcs/property"
 
 	"github.com/gin-gonic/gin"
@@ -42,9 +43,9 @@ func CreateCommercialRentalProperty(c *gin.Context) {
 			Shared:            0,
 			AddedToFavourites: 0,
 			ContactInfoViews:  0,
-			PropertyType:      "commercialRentalProperty",
+			PropertyType:      constants.CommercialRentalPropertyType,
 		},
-		PropertyMedia: propertyUtilities.ConvertPropertyImagesOrVideosWithNoPropertyIdToModel(commercialRentalPropertyDetails.Media),
+		PropertyMedia: propertyUtilities.ConvertPropertyImagesOrVideosWithNoPropertyIdToModel(commercialRentalPropertyDetails.Media, constants.CommercialRentalPropertyType),
 		Location: propertyModels.PropertyLocation{
 			Boundingbox:  commercialRentalPropertyDetails.PropertyLocation.Boundingbox,
 			Lat:          commercialRentalPropertyDetails.PropertyLocation.Lat,
@@ -56,7 +57,7 @@ func CreateCommercialRentalProperty(c *gin.Context) {
 			CountryCode:  commercialRentalPropertyDetails.PropertyLocation.CountryCode,
 			Province:     commercialRentalPropertyDetails.PropertyLocation.Province,
 			Surburb:      commercialRentalPropertyDetails.PropertyLocation.Surburb,
-			PropertyType: commercialRentalPropertyDetails.PropertyLocation.PropertyType,
+			PropertyType: constants.CommercialRentalPropertyType,
 		},
 	}
 

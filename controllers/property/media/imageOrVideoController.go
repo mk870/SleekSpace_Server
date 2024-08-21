@@ -7,20 +7,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var groupRouteName string = "/property/"
-
-func CreatePropertyImageOrVideo(router *gin.Engine) {
-	router.POST(groupRouteName+"media", middleware.AuthValidator, mediaService.CreatePropertyImageOrVideoWithPropertyId)
-}
-
-func GetPropertyImageOrVideoById(router *gin.Engine) {
-	router.GET(groupRouteName+"media/:id", middleware.AuthValidator, mediaService.GetPropertyImageOrVideoById)
-}
-
-func UpdatePropertyImageOrVideo(router *gin.Engine) {
-	router.PUT(groupRouteName+"media/:id", middleware.AuthValidator, mediaService.UpdatePropertyImageOrVideo)
-}
-
-func DeletePropertyImageOrVideo(router *gin.Engine) {
-	router.DELETE(groupRouteName+"media/:id", middleware.AuthValidator, mediaService.DeletePropertyImageOrVideo)
+func PropertyImagesOrVideosRoutes(router *gin.Engine) {
+	routes := router.Group("/property/media")
+	{
+		routes.POST("", middleware.AuthValidator, mediaService.CreatePropertyImageOrVideoWithPropertyId)
+		routes.GET("/:id", middleware.AuthValidator, mediaService.GetPropertyImageOrVideoById)
+		routes.PUT("/:id", middleware.AuthValidator, mediaService.UpdatePropertyImageOrVideo)
+		routes.DELETE("/:id", middleware.AuthValidator, mediaService.DeletePropertyImageOrVideo)
+	}
 }

@@ -3,7 +3,7 @@ package media
 import (
 	"net/http"
 
-	imagesOrVideosDtos "SleekSpace/dtos/property/imageorvideo"
+	imagesOrVideosDtos "SleekSpace/dtos/property/media"
 	propertyModels "SleekSpace/models/property"
 	imagesOrVideosRepo "SleekSpace/repositories/property/media"
 	generalServices "SleekSpace/services/property"

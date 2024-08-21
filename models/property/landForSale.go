@@ -11,6 +11,7 @@ type LandForSaleProperty struct {
 	SizeNumber         int                    `json:"sizeNumber"`
 	AreaHasElectricity bool                   `json:"areaHasElectricity"`
 	HasWater           bool                   `json:"hasWater"`
+	IsNegotiable       bool                   `json:"isNegotiable"`
 	Status             string                 `json:"status"`
 	Type               string                 `json:"type"`
 	SizeDimensions     string                 `json:"sizeDimensions"`

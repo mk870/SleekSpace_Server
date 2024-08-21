@@ -6,6 +6,7 @@ import (
 	standDtos "SleekSpace/dtos/property/stand"
 	propertyModels "SleekSpace/models/property"
 	standRepo "SleekSpace/repositories/property/stand"
+	constants "SleekSpace/utilities/constants"
 	propertyUtilities "SleekSpace/utilities/funcs/property"
 
 	"github.com/gin-gonic/gin"
@@ -40,9 +41,9 @@ func CreateStandForSale(c *gin.Context) {
 			Shared:            0,
 			AddedToFavourites: 0,
 			ContactInfoViews:  0,
-			PropertyType:      "stand",
+			PropertyType:      constants.StandPropertyType,
 		},
-		PropertyMedia: propertyUtilities.ConvertPropertyImagesOrVideosWithNoPropertyIdToModel(standInfo.Media),
+		PropertyMedia: propertyUtilities.ConvertPropertyImagesOrVideosWithNoPropertyIdToModel(standInfo.Media, constants.StandPropertyType),
 		Location: propertyModels.PropertyLocation{
 			Boundingbox:  standInfo.PropertyLocation.Boundingbox,
 			Lat:          standInfo.PropertyLocation.Lat,
@@ -54,7 +55,7 @@ func CreateStandForSale(c *gin.Context) {
 			CountryCode:  standInfo.PropertyLocation.CountryCode,
 			Province:     standInfo.PropertyLocation.Province,
 			Surburb:      standInfo.PropertyLocation.Surburb,
-			PropertyType: standInfo.PropertyLocation.PropertyType,
+			PropertyType: constants.StandPropertyType,
 		},
 	}
 
