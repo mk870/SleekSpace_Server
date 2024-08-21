@@ -5,7 +5,7 @@ import (
 
 	managerDtos "SleekSpace/dtos/manager"
 	managerRepo "SleekSpace/repositories/manager"
-	"SleekSpace/utilities"
+	managerUtilities "SleekSpace/utilities/funcs/manager"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -40,7 +40,7 @@ func CreateManagerContactNumbers(c *gin.Context) {
 		c.JSON(http.StatusForbidden, gin.H{"error": "this property management account does not exist"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"response": utilities.ManagerResponse(updatedManager)})
+	c.JSON(http.StatusOK, gin.H{"response": managerUtilities.ManagerResponse(updatedManager)})
 }
 
 func UpdateManagerContactNumbers(c *gin.Context) {
@@ -72,5 +72,5 @@ func UpdateManagerContactNumbers(c *gin.Context) {
 		c.JSON(http.StatusForbidden, gin.H{"error": "this property management account does not exist"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"response": utilities.ManagerResponse(updatedManager)})
+	c.JSON(http.StatusOK, gin.H{"response": managerUtilities.ManagerResponse(updatedManager)})
 }

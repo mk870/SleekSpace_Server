@@ -5,7 +5,8 @@ import (
 
 	userModels "SleekSpace/models/user"
 	userRepo "SleekSpace/repositories/user"
-	"SleekSpace/utilities"
+	constantsUtilities "SleekSpace/utilities/constants"
+	generalUtilities "SleekSpace/utilities/funcs/general"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -21,9 +22,9 @@ func CreateLocation(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": modelFieldsValidationError.Error()})
 		return
 	}
-	user := userRepo.GetUserById(utilities.ConvertIntToString(location.UserId))
+	user := userRepo.GetUserById(generalUtilities.ConvertIntToString(location.UserId))
 	if user == nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
+		c.JSON(http.StatusForbidden, gin.H{"error": constantsUtilities.NoUserError})
 		return
 	}
 	isLocationCreated := userRepo.CreateLocation(user, &location)

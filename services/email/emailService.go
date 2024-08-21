@@ -1,7 +1,7 @@
 package email
 
 import (
-	"SleekSpace/utilities"
+	generalUtilities "SleekSpace/utilities/funcs/general"
 	"net/smtp"
 )
 
@@ -15,15 +15,15 @@ func SendVerificationCodeEmail(email string, firstName string, verificationCode 
 	msg := "Subject: Confirm your email for Account Registration\n" + headers + "\n\n" + html
 	auth := smtp.PlainAuth(
 		"",
-		utilities.GetEnvVariables().Email,
-		utilities.GetEnvVariables().EmailPassword,
+		generalUtilities.GetEnvVariables().Email,
+		generalUtilities.GetEnvVariables().EmailPassword,
 		"smtp.gmail.com",
 	)
 
 	err := smtp.SendMail(
 		"smtp.gmail.com:587",
 		auth,
-		utilities.GetEnvVariables().Email,
+		generalUtilities.GetEnvVariables().Email,
 		[]string{email},
 		[]byte(msg),
 	)

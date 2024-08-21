@@ -6,10 +6,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func LocationAutoComplete(router *gin.Engine) {
-	router.POST("/location/autocomplete", location.LocationAutoComplete)
-}
-
-func LocationReverseGeoCoding(router *gin.Engine) {
-	router.POST("/location/reverse-geocoding", location.LocationReverseGeoCoding)
+func LocationIQRoutes(router *gin.Engine) {
+	routes := router.Group("/locationIQ")
+	{
+		routes.POST("/autocomplete", location.LocationAutoComplete)
+		routes.POST("/reverse-geocoding", location.LocationReverseGeoCoding)
+	}
 }

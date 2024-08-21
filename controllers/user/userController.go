@@ -7,22 +7,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetUsers(router *gin.Engine) {
-	router.GET("/users", userService.GetUsers)
-}
-
-func UpdateUser(router *gin.Engine) {
-	router.PUT("/user/:id", userService.UpdateUser)
-}
-
-func GetUser(router *gin.Engine) {
-	router.GET("/user/:id", middleware.AuthValidator, userService.GetUser)
-}
-
-func GetUserByEmail(router *gin.Engine) {
-	router.GET("/user", middleware.AuthValidator, userService.GetUserByEmail)
-}
-
-func DeleteUser(router *gin.Engine) {
-	router.DELETE("/user/:id", userService.DeleteUser)
+func UserRoutes(router *gin.Engine) {
+	routes := router.Group("/user")
+	{
+		routes.PUT("/:id", userService.UpdateUser)
+		routes.GET("/:id", middleware.AuthValidator, userService.GetUser)
+		routes.GET("/email", middleware.AuthValidator, userService.GetUserByEmail)
+		routes.DELETE("/:id", userService.DeleteUser)
+		routes.POST("/profile-picture/:id", middleware.AuthValidator, userService.CreateUserProfilePicture)
+		routes.PUT("/profile-picture/:id", middleware.AuthValidator, userService.UpdateUserProfilePicture)
+		routes.POST("/location", middleware.AuthValidator, userService.CreateLocation)
+		routes.PUT("/location", middleware.AuthValidator, userService.UpdateLocation)
+		routes.POST("/contact-number", middleware.AuthValidator, userService.CreateContactNumber)
+		routes.PUT("/contact-number/:id", middleware.AuthValidator, userService.UpdateContactNumbers)
+	}
 }

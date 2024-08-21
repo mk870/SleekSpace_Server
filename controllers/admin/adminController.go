@@ -6,42 +6,28 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetAllUsersLocations(router *gin.Engine) {
-	router.GET("/admin/users/location", adminService.GetAllUsersLocations)
-}
-
-func GetAllManagersProfilePictures(router *gin.Engine) {
-	router.GET("/admin/managers/profile-pictures", adminService.GetAllManagersProfilePictures)
-}
-
-func ApiSim(router *gin.Engine) {
-	router.GET("/admin/sim", adminService.GetInfo)
-}
-
-func GetLocationById(router *gin.Engine) {
-	router.GET("/admin/location/:id", adminService.GetLocationById)
-}
-
-func GetVerificationCodeById(router *gin.Engine) {
-	router.GET("/admin/verification-code/:id", adminService.GetVerificationCodeById)
-}
-
-func GetAllVerificationCodes(router *gin.Engine) {
-	router.GET("/admin/verification-codes", adminService.GetAllVerificationCodes)
-}
-
-func DeleteVerificationCode(router *gin.Engine) {
-	router.DELETE("/admin/verification-code/:id", adminService.DeleteVerificationCode)
-}
-
-func GetUserContacts(router *gin.Engine) {
-	router.GET("/admin/user/contacts", adminService.GetUserContacts)
-}
-
-func GetAllManagersContacts(router *gin.Engine) {
-	router.GET("/admin/managers/contacts", adminService.GetAllManagersContacts)
-}
-
-func GetAllManagers(router *gin.Engine) {
-	router.GET("/admin/managers", adminService.GetAllManagers)
+func AdminRoutes(router *gin.Engine) {
+	routes := router.Group("/admin")
+	{
+		routes.GET("/users", adminService.GetAllUsers)
+		routes.GET("/users/location", adminService.GetAllUsersLocations)
+		routes.GET("/managers/profile-pictures", adminService.GetAllManagersProfilePictures)
+		routes.GET("/sim", adminService.GetInfo)
+		routes.GET("/location/:id", adminService.GetLocationById)
+		routes.GET("/verification-code/:id", adminService.GetVerificationCodeById)
+		routes.GET("/verification-codes", adminService.GetAllVerificationCodes)
+		routes.DELETE("/verification-code/:id", adminService.DeleteVerificationCode)
+		routes.GET("/user/contacts", adminService.GetUserContacts)
+		routes.GET("/managers/contacts", adminService.GetAllManagersContacts)
+		routes.GET("/managers", adminService.GetAllManagers)
+		routes.GET("/property/stands", adminService.GetAllStands)
+		routes.GET("/property/lands", adminService.GetAllLandProperties)
+		routes.GET("/property/commercial/rentals", adminService.GetAllCommercialRentalProperties)
+		routes.GET("/property/commercial/onsale", adminService.GetAllCommercialForSaleProperties)
+		routes.GET("/property/residential/onsale", adminService.GetAllResidentialForSaleProperties)
+		routes.GET("/property/residential/rentals", adminService.GetAllResidentialRentalProperties)
+		routes.GET("/property/media", adminService.GetAllPropertiesImagesOrVideos)
+		routes.GET("/property/location", adminService.GetAllPropertiesLocation)
+		routes.GET("/property/insights", adminService.GetAllPropertiesInsights)
+	}
 }

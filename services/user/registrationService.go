@@ -7,7 +7,7 @@ import (
 	userModels "SleekSpace/models/user"
 	userRepo "SleekSpace/repositories/user"
 	emailService "SleekSpace/services/email"
-	"SleekSpace/utilities"
+	generalUtilities "SleekSpace/utilities/funcs/general"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -38,8 +38,8 @@ func Registration(c *gin.Context) {
 		Email:                  userRegistartionDTO.Email,
 		IsSocialsAuthenticated: false,
 		RegistrationCode: userModels.VerificationCode{
-			Code:       utilities.GenerateVerificationCode(),
-			ExpiryDate: utilities.GenerateVerificationGracePeriod(),
+			Code:       generalUtilities.GenerateVerificationCode(),
+			ExpiryDate: generalUtilities.GenerateVerificationGracePeriod(),
 		},
 	}
 
@@ -49,7 +49,7 @@ func Registration(c *gin.Context) {
 		return
 	}
 
-	isVerificationEmailSent := emailService.SendVerificationCodeEmail(userRegistartionDTO.Email, userRegistartionDTO.GivenName, utilities.ConvertIntToString(newUser.RegistrationCode.Code))
+	isVerificationEmailSent := emailService.SendVerificationCodeEmail(userRegistartionDTO.Email, userRegistartionDTO.GivenName, generalUtilities.ConvertIntToString(newUser.RegistrationCode.Code))
 	if !isVerificationEmailSent {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to send verification email"})
 		return

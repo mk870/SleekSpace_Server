@@ -6,7 +6,7 @@ import (
 	"SleekSpace/db"
 	userModels "SleekSpace/models/user"
 	managerRepo "SleekSpace/repositories/manager"
-	"SleekSpace/utilities"
+	generalUtilities "SleekSpace/utilities/funcs/general"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -70,7 +70,7 @@ func DeleteUserById(id string) bool {
 	if user == nil {
 		return false
 	}
-	isManagerDeleted := managerRepo.DeleteManagerById(utilities.ConvertIntToString(user.Manager.Id))
+	isManagerDeleted := managerRepo.DeleteManagerById(generalUtilities.ConvertIntToString(user.Manager.Id))
 	if !isManagerDeleted || isManagerDeleted {
 		db.DB.Select(clause.Associations).Unscoped().Delete(&user)
 		return true

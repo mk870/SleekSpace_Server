@@ -9,7 +9,8 @@ import (
 	userRepo "SleekSpace/repositories/user"
 	emailService "SleekSpace/services/email"
 	"SleekSpace/tokens"
-	"SleekSpace/utilities"
+	generalUtilities "SleekSpace/utilities/funcs/general"
+	userUtilities "SleekSpace/utilities/funcs/user"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -24,7 +25,7 @@ func VerifyCodeForRegistration(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": modelFieldsValidationError.Error()})
 		return
 	}
-	storedVerificationCode := userRepo.GetVerificationCodeByUserId(utilities.ConvertIntToString(verificationInfo.UserId))
+	storedVerificationCode := userRepo.GetVerificationCodeByUserId(generalUtilities.ConvertIntToString(verificationInfo.UserId))
 
 	if storedVerificationCode.ExpiryDate.Unix() < time.Now().Local().Unix() {
 		isUserDeleted := userRepo.DeleteUserById(strconv.Itoa(storedVerificationCode.UserId))
@@ -67,7 +68,7 @@ func VerifyCodeForRegistration(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"response": utilities.UserResponseMapper(user, accessToken)})
+	c.JSON(http.StatusOK, gin.H{"response": userUtilities.UserResponseMapper(user, accessToken)})
 }
 
 func CreateVerificationCode(c *gin.Context) {
@@ -84,8 +85,8 @@ func CreateVerificationCode(c *gin.Context) {
 		c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
 		return
 	}
-	verificationCode := userRepo.GetVerificationCodeByUserId(utilities.ConvertIntToString(user.Id))
-	verificationCode.Code = utilities.GenerateVerificationCode()
+	verificationCode := userRepo.GetVerificationCodeByUserId(generalUtilities.ConvertIntToString(user.Id))
+	verificationCode.Code = generalUtilities.GenerateVerificationCode()
 	verificationCode.ExpiryDate = time.Now().Add(time.Minute * 15)
 	isVerificationCodeUpdated := userRepo.UpdateVerificationCode(&verificationCode)
 	if !isVerificationCodeUpdated {
@@ -94,7 +95,7 @@ func CreateVerificationCode(c *gin.Context) {
 		})
 		return
 	}
-	isEmailSent := emailService.SendVerificationCodeEmail(user.Email, user.GivenName, utilities.ConvertIntToString(verificationCode.Code))
+	isEmailSent := emailService.SendVerificationCodeEmail(user.Email, user.GivenName, generalUtilities.ConvertIntToString(verificationCode.Code))
 	if !isEmailSent {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to send verification email"})
 		return
@@ -113,7 +114,7 @@ func VerifyCodeForSecurity(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": modelFieldsValidationError.Error()})
 		return
 	}
-	storedVerificationCode := userRepo.GetVerificationCodeByUserId(utilities.ConvertIntToString(verificationInfo.UserId))
+	storedVerificationCode := userRepo.GetVerificationCodeByUserId(generalUtilities.ConvertIntToString(verificationInfo.UserId))
 
 	if storedVerificationCode.ExpiryDate.Unix() < time.Now().Local().Unix() {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -140,7 +141,7 @@ func ResendVerificationCode(c *gin.Context) {
 		return
 	}
 	verificationCode := userRepo.GetVerificationCodeByUserId(userId)
-	verificationCode.Code = utilities.GenerateVerificationCode()
+	verificationCode.Code = generalUtilities.GenerateVerificationCode()
 	verificationCode.ExpiryDate = time.Now().Add(time.Minute * 15)
 	isVerificationCodeUpdated := userRepo.UpdateVerificationCode(&verificationCode)
 	if !isVerificationCodeUpdated {
@@ -149,7 +150,7 @@ func ResendVerificationCode(c *gin.Context) {
 		})
 		return
 	}
-	isEmailSent := emailService.SendVerificationCodeEmail(user.Email, user.GivenName, utilities.ConvertIntToString(verificationCode.Code))
+	isEmailSent := emailService.SendVerificationCodeEmail(user.Email, user.GivenName, generalUtilities.ConvertIntToString(verificationCode.Code))
 	if !isEmailSent {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to send verification email"})
 		return

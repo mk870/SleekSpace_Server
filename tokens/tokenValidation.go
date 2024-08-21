@@ -1,7 +1,7 @@
 package tokens
 
 import (
-	"SleekSpace/utilities"
+	generalUtilities "SleekSpace/utilities/funcs/general"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -9,7 +9,7 @@ import (
 
 func ValidateAccessToken(clientToken string) (claims *AccessTokenClaims, msg string) {
 	token, err := jwt.ParseWithClaims(clientToken, &AccessTokenClaims{}, func(t *jwt.Token) (interface{}, error) {
-		return []byte(utilities.GetEnvVariables().TokenSecret), nil
+		return []byte(generalUtilities.GetEnvVariables().TokenSecret), nil
 	})
 	if err != nil {
 		msg = err.Error()

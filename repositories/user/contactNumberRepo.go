@@ -8,7 +8,6 @@ import (
 )
 
 func CreateContactNumber(user *userModels.User, contactNumber *userModels.ContactNumber) bool {
-	println("number: ", contactNumber.Number)
 	err := db.DB.Model(user).Association("ContactNumbers").Append(contactNumber)
 	if err != nil {
 		println(err.Error())

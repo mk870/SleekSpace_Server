@@ -6,7 +6,9 @@ import (
 	userDtos "SleekSpace/dtos/user"
 	userModels "SleekSpace/models/user"
 	userRepo "SleekSpace/repositories/user"
-	"SleekSpace/utilities"
+	constantsUtilities "SleekSpace/utilities/constants"
+	generalUtilities "SleekSpace/utilities/funcs/general"
+	userUtilities "SleekSpace/utilities/funcs/user"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -22,9 +24,9 @@ func CreateUserProfilePicture(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": modelFieldsValidationError.Error()})
 		return
 	}
-	user := userRepo.GetUserById(utilities.ConvertIntToString(userProfilePicture.UserId))
+	user := userRepo.GetUserById(generalUtilities.ConvertIntToString(userProfilePicture.UserId))
 	if user == nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
+		c.JSON(http.StatusForbidden, gin.H{"error": constantsUtilities.NoUserError})
 		return
 	}
 	newProfilePicture := userModels.UserProfilePicture{
@@ -38,12 +40,12 @@ func CreateUserProfilePicture(c *gin.Context) {
 	}
 	isUserProfilePictureCreated := userRepo.CreateUserProfilePicture(user, &newProfilePicture)
 	if isUserProfilePictureCreated {
-		updatedUser := userRepo.GetUserById(utilities.ConvertIntToString(userProfilePicture.UserId))
+		updatedUser := userRepo.GetUserById(generalUtilities.ConvertIntToString(userProfilePicture.UserId))
 		if updatedUser == nil {
-			c.JSON(http.StatusForbidden, gin.H{"error": "this user account does not exist"})
+			c.JSON(http.StatusForbidden, gin.H{"error": constantsUtilities.NoUserError})
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"response": utilities.UserResponseMapper(updatedUser, updatedUser.AccessToken)})
+		c.JSON(http.StatusOK, gin.H{"response": userUtilities.UserResponseMapper(updatedUser, updatedUser.AccessToken)})
 		return
 	} else {
 		c.JSON(http.StatusForbidden, gin.H{"error": "failed to create a profile picture"})
@@ -78,8 +80,8 @@ func UpdateUserProfilePicture(c *gin.Context) {
 	}
 	updatedUser := userRepo.GetUserById(userId)
 	if updatedUser == nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": "this user account does not exist"})
+		c.JSON(http.StatusForbidden, gin.H{"error": constantsUtilities.NoUserError})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"response": utilities.UserResponseMapper(updatedUser, updatedUser.AccessToken)})
+	c.JSON(http.StatusOK, gin.H{"response": userUtilities.UserResponseMapper(updatedUser, updatedUser.AccessToken)})
 }

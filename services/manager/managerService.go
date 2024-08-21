@@ -7,7 +7,9 @@ import (
 	managerModels "SleekSpace/models/manager"
 	managerRepo "SleekSpace/repositories/manager"
 	userRepo "SleekSpace/repositories/user"
-	"SleekSpace/utilities"
+	constantsUtilities "SleekSpace/utilities/constants"
+	generalUtilities "SleekSpace/utilities/funcs/general"
+	managerUtilities "SleekSpace/utilities/funcs/manager"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -53,16 +55,16 @@ func CreateManager(c *gin.Context) {
 	}
 	isManagerCreated := managerRepo.CreateManager(&newManager)
 	if isManagerCreated {
-		createdManager := userRepo.GetUserByIdWithManager(utilities.ConvertIntToString(manager.UserId))
+		createdManager := userRepo.GetUserByIdWithManager(generalUtilities.ConvertIntToString(manager.UserId))
 		if createdManager == nil {
-			c.JSON(http.StatusForbidden, gin.H{"error": utilities.ManagerAccountCreatedButNoDataRetrievedError})
+			c.JSON(http.StatusForbidden, gin.H{"error": constantsUtilities.ManagerAccountCreatedButNoDataRetrievedError})
 			return
 		}
-		createdManagerWithAssociations := managerRepo.GetManagerByManagerId(utilities.ConvertIntToString(createdManager.Manager.Id))
+		createdManagerWithAssociations := managerRepo.GetManagerByManagerId(generalUtilities.ConvertIntToString(createdManager.Manager.Id))
 		if createdManagerWithAssociations == nil {
-			c.JSON(http.StatusForbidden, gin.H{"error": utilities.ManagerAccountCreatedButNoDataRetrievedError})
+			c.JSON(http.StatusForbidden, gin.H{"error": constantsUtilities.ManagerAccountCreatedButNoDataRetrievedError})
 		}
-		c.JSON(http.StatusOK, gin.H{"response": utilities.ManagerResponse(createdManagerWithAssociations)})
+		c.JSON(http.StatusOK, gin.H{"response": managerUtilities.ManagerResponse(createdManagerWithAssociations)})
 		return
 	} else {
 		c.JSON(http.StatusForbidden, gin.H{"error": "failed to create a manager"})
@@ -71,28 +73,28 @@ func CreateManager(c *gin.Context) {
 }
 
 func GetManagerByUserId(c *gin.Context) {
-	id := c.Param("userId")
+	id := c.Param("id")
 	user := userRepo.GetUserByIdWithManager(id)
 	if user == nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": utilities.NoUserError})
+		c.JSON(http.StatusForbidden, gin.H{"error": constantsUtilities.NoUserError})
 		return
 	}
-	manager := managerRepo.GetManagerByManagerId(utilities.ConvertIntToString(user.Manager.Id))
+	manager := managerRepo.GetManagerByManagerId(generalUtilities.ConvertIntToString(user.Manager.Id))
 	if manager == nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": utilities.NoManagerAccountError})
+		c.JSON(http.StatusForbidden, gin.H{"error": constantsUtilities.NoManagerAccountError})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"response": utilities.ManagerResponse(manager)})
+	c.JSON(http.StatusOK, gin.H{"response": managerUtilities.ManagerResponse(manager)})
 }
 
 func GetManagerByManagerId(c *gin.Context) {
 	id := c.Param("id")
 	manager := managerRepo.GetManagerByManagerId(id)
 	if manager == nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": utilities.NoManagerAccountError})
+		c.JSON(http.StatusForbidden, gin.H{"error": constantsUtilities.NoManagerAccountError})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"response": utilities.ManagerResponse(manager)})
+	c.JSON(http.StatusOK, gin.H{"response": managerUtilities.ManagerResponse(manager)})
 }
 
 func UpdateManagerEmailAndName(c *gin.Context) {
@@ -109,7 +111,7 @@ func UpdateManagerEmailAndName(c *gin.Context) {
 
 	manager := managerRepo.GetManagerByManagerId(managerId)
 	if manager == nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": utilities.NoManagerAccountError})
+		c.JSON(http.StatusForbidden, gin.H{"error": constantsUtilities.NoManagerAccountError})
 		return
 	}
 
@@ -119,13 +121,13 @@ func UpdateManagerEmailAndName(c *gin.Context) {
 	if isManagerUpdated {
 		updatedManager := managerRepo.GetManagerByManagerId(c.Param("id"))
 		if updatedManager == nil {
-			c.JSON(http.StatusForbidden, gin.H{"error": utilities.NoManagerAccountError})
+			c.JSON(http.StatusForbidden, gin.H{"error": constantsUtilities.NoManagerAccountError})
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"response": utilities.ManagerResponse(updatedManager)})
+		c.JSON(http.StatusOK, gin.H{"response": managerUtilities.ManagerResponse(updatedManager)})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"response": utilities.ManagerAccountUpdateError})
+	c.JSON(http.StatusOK, gin.H{"response": constantsUtilities.ManagerAccountUpdateError})
 
 }
 
@@ -133,10 +135,10 @@ func DeleteManager(c *gin.Context) {
 	id := c.Param("id")
 	isManagerDeleted := managerRepo.DeleteManagerById(id)
 	if isManagerDeleted {
-		c.String(http.StatusOK, utilities.ManagerAccountDeleteSuccess)
+		c.String(http.StatusOK, constantsUtilities.ManagerAccountDeleteSuccess)
 		return
 	} else {
-		c.JSON(http.StatusForbidden, gin.H{"error": utilities.NoManagerAccountError})
+		c.JSON(http.StatusForbidden, gin.H{"error": constantsUtilities.NoManagerAccountError})
 		return
 	}
 }

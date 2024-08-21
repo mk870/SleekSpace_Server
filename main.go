@@ -5,6 +5,13 @@ import (
 	authController "SleekSpace/controllers/auth"
 	externalApiCallsController "SleekSpace/controllers/externalApiCalls"
 	managerController "SleekSpace/controllers/manager"
+	commercialController "SleekSpace/controllers/property/commercial"
+	insightsController "SleekSpace/controllers/property/insights"
+	landsController "SleekSpace/controllers/property/land"
+	locationController "SleekSpace/controllers/property/location"
+	mediaController "SleekSpace/controllers/property/media"
+	residentialController "SleekSpace/controllers/property/residential"
+	standsController "SleekSpace/controllers/property/stand"
 	userController "SleekSpace/controllers/user"
 	"SleekSpace/db"
 
@@ -21,48 +28,20 @@ func main() {
 	router.Use(cors.New(config))
 	db.Connect()
 
-	userController.UpdateContactNumbers(router)
-	userController.CreateContact(router)
-	userController.CreateLocation(router)
-	userController.UpdateLocation(router)
-	userController.GetUsers(router)
-	userController.UpdateUser(router)
-	userController.GetUser(router)
-	userController.GetUserByEmail(router)
-	userController.DeleteUser(router)
-	userController.CreateUserProfilePicture(router)
-	userController.UpdateUserProfilePicture(router)
-
-	authController.Registration(router)
-	authController.Login(router)
-	authController.LoginOut(router)
-	authController.RegistrationVerificationCodeValidation(router)
-	authController.SecurityVerificationCodeValidation(router)
-	authController.ResendVerificationCode(router)
-	authController.CreateVerificationCode(router)
-	authController.PasswordUpdate(router)
-
-	externalApiCallsController.LocationAutoComplete(router)
-	externalApiCallsController.LocationReverseGeoCoding(router)
-
-	managerController.CreateManager(router)
-	managerController.GetManagerById(router)
-	managerController.GetManagerByUserId(router)
-	managerController.DeleteManager(router)
-	managerController.UpdateManager(router)
-	managerController.UpdateManagerProfilePicture(router)
-	managerController.UpdateManagerContactNumbers(router)
-
-	adminController.GetVerificationCodeById(router)
-	adminController.DeleteVerificationCode(router)
-	adminController.GetAllManagers(router)
-	adminController.GetAllManagersContacts(router)
-	adminController.GetAllUsersLocations(router)
-	adminController.GetLocationById(router)
-	adminController.GetUserContacts(router)
-	adminController.GetAllVerificationCodes(router)
-	adminController.GetAllManagersProfilePictures(router)
-	adminController.ApiSim(router)
+	userController.UserRoutes(router)
+	authController.AuthRoutes(router)
+	externalApiCallsController.LocationIQRoutes(router)
+	managerController.ManagerRoutes(router)
+	adminController.AdminRoutes(router)
+	standsController.StandsRoutes(router)
+	residentialController.ResidentialPropertyForSaleRoutes(router)
+	residentialController.ResidentialRentalPropertyRoutes(router)
+	commercialController.CommercialPropertyForSaleRoutes(router)
+	commercialController.CommercialRentalPropertyForSaleRoutes(router)
+	landsController.LandPropertyRoutes(router)
+	mediaController.PropertyImagesOrVideosRoutes(router)
+	locationController.LocationRoutes(router)
+	insightsController.PropertyInsightsRoutes(router)
 
 	router.Run()
 }
