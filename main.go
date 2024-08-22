@@ -4,6 +4,7 @@ import (
 	adminController "SleekSpace/controllers/admin"
 	authController "SleekSpace/controllers/auth"
 	externalApiCallsController "SleekSpace/controllers/externalApiCalls"
+	favoritesController "SleekSpace/controllers/favorites"
 	managerController "SleekSpace/controllers/manager"
 	commercialController "SleekSpace/controllers/property/commercial"
 	insightsController "SleekSpace/controllers/property/insights"
@@ -42,6 +43,7 @@ func main() {
 	mediaController.PropertyImagesOrVideosRoutes(router)
 	locationController.LocationRoutes(router)
 	insightsController.PropertyInsightsRoutes(router)
+	favoritesController.PropertyFavoritesRoutes(router)
 
 	router.Run()
 }

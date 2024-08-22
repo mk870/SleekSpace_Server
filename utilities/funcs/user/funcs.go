@@ -23,14 +23,19 @@ func processedContactNumbers(contactNumbers []userModels.ContactNumber) []userDt
 
 func UserResponseMapper(user *userModels.User, accessToken string) userDtos.UserResponseDTO {
 	return userDtos.UserResponseDTO{
-		Id:                  user.Id,
-		Email:               user.Email,
-		ContactNumbers:      processedContactNumbers(user.ContactNumbers),
-		FamilyName:          user.FamilyName,
-		GivenName:           user.GivenName,
-		AccessToken:         user.AccessToken,
-		Role:                user.Role,
-		FavouriteProperties: user.FavouriteProperties,
+		Id:                                   user.Id,
+		Email:                                user.Email,
+		ContactNumbers:                       processedContactNumbers(user.ContactNumbers),
+		FamilyName:                           user.FamilyName,
+		GivenName:                            user.GivenName,
+		AccessToken:                          user.AccessToken,
+		Role:                                 user.Role,
+		FavoriteLandProperties:               user.FavoriteLandProperties,
+		FavoriteStands:                       user.FavoriteStands,
+		FavoriteCommercialForSaleProperties:  user.FavoriteCommercialForSaleProperties,
+		FavoriteCommercialRentalProperties:   user.FavoriteCommercialRentalProperties,
+		FavoriteResidentialForSaleProperties: user.FavoriteResidentialForSaleProperties,
+		FavoriteResidentialRentalProperties:  user.FavoriteCommercialRentalProperties,
 		ProfilePicture: userDtos.UserProfilePictureResponseAndUpdateDTO{
 			Id:          user.ProfilePicture.Id,
 			UserId:      user.ProfilePicture.UserId,
