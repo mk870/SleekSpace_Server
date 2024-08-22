@@ -21,6 +21,20 @@ func GeneratePropertyUniqueId() int {
 	return randomInt
 }
 
+func ReturnDeletedFavoriteProperties(availableFavoritePropertyIds, allFavoritePropertyIds []int) []int {
+	deletedProperties := []int{}
+	idsMap := make(map[int]bool)
+	for i := 0; i < len(availableFavoritePropertyIds); i++ {
+		idsMap[availableFavoritePropertyIds[i]] = true
+	}
+	for i := 0; i < len(allFavoritePropertyIds); i++ {
+		if !idsMap[allFavoritePropertyIds[i]] {
+			deletedProperties = append(deletedProperties, allFavoritePropertyIds[i])
+		}
+	}
+	return deletedProperties
+}
+
 func ConvertPropertyImagesOrVideosWithNoPropertyIdToModel(propertyMediaList []propertyMediaDtos.PropertyImageOrVideoCreationWithNoPropertyIdDto, propertyType string) []propertyModels.PropertyImageOrVideo {
 	mediaList := []propertyModels.PropertyImageOrVideo{}
 	if len(propertyMediaList) > 0 {
