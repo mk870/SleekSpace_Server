@@ -4,9 +4,12 @@ import (
 	"net/http"
 
 	residentialDtos "SleekSpace/dtos/property/residential"
+	managerModels "SleekSpace/models/manager"
 	propertyModels "SleekSpace/models/property"
+	managerRepo "SleekSpace/repositories/manager"
 	residentialRepo "SleekSpace/repositories/property/residential"
 	constants "SleekSpace/utilities/constants"
+	generalUtilities "SleekSpace/utilities/funcs/general"
 	propertyUtilities "SleekSpace/utilities/funcs/property"
 
 	"github.com/gin-gonic/gin"
@@ -24,24 +27,34 @@ func CreateResidentialPropertyForSale(c *gin.Context) {
 		return
 	}
 
-	newResidentialPropertyForSale := propertyModels.ResidentialPropertyForSale{
-		ManagerId:       residentialPropertyForSaleDetails.ManagerId,
-		UniqueId:        propertyUtilities.GeneratePropertyUniqueId(),
-		Price:           residentialPropertyForSaleDetails.Price,
-		SizeNumber:      residentialPropertyForSaleDetails.SizeNumber,
-		SizeDimensions:  residentialPropertyForSaleDetails.SizeDimensions,
-		Status:          residentialPropertyForSaleDetails.Status,
-		Type:            residentialPropertyForSaleDetails.Type,
-		YearBuilt:       residentialPropertyForSaleDetails.YearBuilt,
-		Bedrooms:        residentialPropertyForSaleDetails.Bedrooms,
-		Bathrooms:       residentialPropertyForSaleDetails.Bathrooms,
-		Stories:         residentialPropertyForSaleDetails.Stories,
-		HasElectricity:  residentialPropertyForSaleDetails.HasElectricity,
-		HasWater:        residentialPropertyForSaleDetails.HasWater,
-		NumberOfRooms:   residentialPropertyForSaleDetails.NumberOfRooms,
-		NumberOfGarages: residentialPropertyForSaleDetails.NumberOfGarages,
-		HasSwimmingPool: residentialPropertyForSaleDetails.HasSwimmingPool,
-		IsNegotiable:    residentialPropertyForSaleDetails.IsNegotiable,
+	manager := managerRepo.GetManagerWithProfilePictureAndContactsByManagerId(generalUtilities.ConvertIntToString(residentialPropertyForSaleDetails.ManagerId))
+	if manager == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": "this manager does not exist"})
+		return
+	}
+
+	newResidentialPropertyForSale := managerModels.ResidentialPropertyForSale{
+		ManagerId:        residentialPropertyForSaleDetails.ManagerId,
+		UniqueId:         propertyUtilities.GeneratePropertyUniqueId(),
+		Price:            residentialPropertyForSaleDetails.Price,
+		SizeNumber:       residentialPropertyForSaleDetails.SizeNumber,
+		SizeDimensions:   residentialPropertyForSaleDetails.SizeDimensions,
+		Status:           residentialPropertyForSaleDetails.Status,
+		Type:             residentialPropertyForSaleDetails.Type,
+		YearBuilt:        residentialPropertyForSaleDetails.YearBuilt,
+		Bedrooms:         residentialPropertyForSaleDetails.Bedrooms,
+		Bathrooms:        residentialPropertyForSaleDetails.Bathrooms,
+		Stories:          residentialPropertyForSaleDetails.Stories,
+		HasElectricity:   residentialPropertyForSaleDetails.HasElectricity,
+		HasWater:         residentialPropertyForSaleDetails.HasWater,
+		NumberOfRooms:    residentialPropertyForSaleDetails.NumberOfRooms,
+		NumberOfGarages:  residentialPropertyForSaleDetails.NumberOfGarages,
+		HasSwimmingPool:  residentialPropertyForSaleDetails.HasSwimmingPool,
+		IsNegotiable:     residentialPropertyForSaleDetails.IsNegotiable,
+		ExteriorFeatures: residentialPropertyForSaleDetails.ExteriorFeatures,
+		InteriorFeatures: residentialPropertyForSaleDetails.InteriorFeatures,
+		OtherDetails:     residentialPropertyForSaleDetails.OtherDetails,
+		Manager:          *manager,
 		PropertyInsights: propertyModels.PropertyInsights{
 			Views:             0,
 			Shared:            0,
@@ -106,6 +119,9 @@ func UpdateResidentialPropertyForSaleDetails(c *gin.Context) {
 	oldResidentialPropertyForSaleData.Stories = residentialPropertyForSaleUpdates.Stories
 	oldResidentialPropertyForSaleData.YearBuilt = residentialPropertyForSaleUpdates.YearBuilt
 	oldResidentialPropertyForSaleData.UniqueId = residentialPropertyForSaleUpdates.UniqueId
+	oldResidentialPropertyForSaleData.OtherDetails = residentialPropertyForSaleUpdates.OtherDetails
+	oldResidentialPropertyForSaleData.InteriorFeatures = residentialPropertyForSaleUpdates.InteriorFeatures
+	oldResidentialPropertyForSaleData.ExteriorFeatures = residentialPropertyForSaleUpdates.ExteriorFeatures
 
 	isResidentialPropertyForSaleUpdated := residentialRepo.UpdateResidentialPropertyForSale(oldResidentialPropertyForSaleData)
 	if !isResidentialPropertyForSaleUpdated {
@@ -120,13 +136,31 @@ func UpdateResidentialPropertyForSaleDetails(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"response": propertyUtilities.ResidentialForSalePropertyResponse(*UpdatedResidentialPropertyForSale)})
 }
 
+func GetAllResidentialForSaleProperties(c *gin.Context) {
+	residentialPropertiesForSale := residentialRepo.GetAllResidentialPropertiesForSale()
+	responseList := []residentialDtos.ResidentialPropertyForSaleWithManagerResponseDto{}
+	if len(residentialPropertiesForSale) > 0 {
+		for i := 0; i < len(residentialPropertiesForSale); i++ {
+			responseItem := propertyUtilities.ResidentialForSalePropertyWithManagerResponse(residentialPropertiesForSale[i])
+			responseList = append(responseList, responseItem)
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"response": responseList,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"response": responseList,
+	})
+}
+
 func GetResidentialPropertyForSaleById(c *gin.Context) {
 	residentialPropertyForSale := residentialRepo.GetResidentialPropertyForSaleWithAllAssociationsById(c.Param("id"))
 	if residentialPropertyForSale == nil {
 		c.JSON(http.StatusForbidden, gin.H{"error": "this property does not exist"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"response": propertyUtilities.ResidentialForSalePropertyResponse(*residentialPropertyForSale)})
+	c.JSON(http.StatusOK, gin.H{"response": propertyUtilities.ResidentialForSalePropertyWithManagerResponse(*residentialPropertyForSale)})
 }
 
 func GetManagerResidentialPropertiesForSaleByManagerId(c *gin.Context) {

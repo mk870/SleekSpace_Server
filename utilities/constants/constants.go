@@ -19,3 +19,5 @@ var CommercialRentalPropertyType string = "commercialRentalProperty"
 var CommercialPropertyForSaleType string = "commercialPropertyForSale"
 var ResidentialPropertyForSaleType string = "residentialPropertyForSale"
 var ResidentialRentalPropertyType = "residentialRentalProperty"
+var PageLimit int = 15
+var PageOffSet int = 15

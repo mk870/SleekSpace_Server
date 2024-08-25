@@ -24,6 +24,15 @@ func GetManagerByManagerId(managerId string) *managerModels.Manager {
 	return &manager
 }
 
+func GetManagerWithProfilePictureAndContactsByManagerId(managerId string) *managerModels.Manager {
+	var manager managerModels.Manager
+	result := db.DB.Preload("ProfilePicture").Preload("ManagerContactNumbers").First(&manager, managerId)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return nil
+	}
+	return &manager
+}
+
 func UpdateManager(managerUpdate *managerModels.Manager) bool {
 	db.DB.Save(managerUpdate)
 	return true

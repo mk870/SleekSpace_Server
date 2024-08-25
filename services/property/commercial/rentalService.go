@@ -4,9 +4,12 @@ import (
 	"net/http"
 
 	commercialDtos "SleekSpace/dtos/property/commercial"
+	managerModels "SleekSpace/models/manager"
 	propertyModels "SleekSpace/models/property"
+	managerRepo "SleekSpace/repositories/manager"
 	commercialRepo "SleekSpace/repositories/property/commercial"
 	constants "SleekSpace/utilities/constants"
+	generalUtilities "SleekSpace/utilities/funcs/general"
 	propertyUtilities "SleekSpace/utilities/funcs/property"
 
 	"github.com/gin-gonic/gin"
@@ -24,20 +27,30 @@ func CreateCommercialRentalProperty(c *gin.Context) {
 		return
 	}
 
-	newCommercialRentalProperty := propertyModels.CommercialRentalProperty{
-		ManagerId:      commercialRentalPropertyDetails.ManagerId,
-		UniqueId:       propertyUtilities.GeneratePropertyUniqueId(),
-		RentAmount:     commercialRentalPropertyDetails.RentAmount,
-		SizeNumber:     commercialRentalPropertyDetails.SizeNumber,
-		SizeDimensions: commercialRentalPropertyDetails.SizeDimensions,
-		Status:         commercialRentalPropertyDetails.Status,
-		Type:           commercialRentalPropertyDetails.Type,
-		YearBuilt:      commercialRentalPropertyDetails.YearBuilt,
-		Stories:        commercialRentalPropertyDetails.Stories,
-		HasElectricity: commercialRentalPropertyDetails.HasElectricity,
-		HasWater:       commercialRentalPropertyDetails.HasWater,
-		NumberOfRooms:  commercialRentalPropertyDetails.NumberOfRooms,
-		IsFullSpace:    commercialRentalPropertyDetails.IsFullSpace,
+	manager := managerRepo.GetManagerWithProfilePictureAndContactsByManagerId(generalUtilities.ConvertIntToString(commercialRentalPropertyDetails.ManagerId))
+	if manager == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": "this manager does not exist"})
+		return
+	}
+
+	newCommercialRentalProperty := managerModels.CommercialRentalProperty{
+		ManagerId:        commercialRentalPropertyDetails.ManagerId,
+		UniqueId:         propertyUtilities.GeneratePropertyUniqueId(),
+		RentAmount:       commercialRentalPropertyDetails.RentAmount,
+		SizeNumber:       commercialRentalPropertyDetails.SizeNumber,
+		SizeDimensions:   commercialRentalPropertyDetails.SizeDimensions,
+		Status:           commercialRentalPropertyDetails.Status,
+		Type:             commercialRentalPropertyDetails.Type,
+		YearBuilt:        commercialRentalPropertyDetails.YearBuilt,
+		Stories:          commercialRentalPropertyDetails.Stories,
+		HasElectricity:   commercialRentalPropertyDetails.HasElectricity,
+		HasWater:         commercialRentalPropertyDetails.HasWater,
+		NumberOfRooms:    commercialRentalPropertyDetails.NumberOfRooms,
+		IsFullSpace:      commercialRentalPropertyDetails.IsFullSpace,
+		ExteriorFeatures: commercialRentalPropertyDetails.ExteriorFeatures,
+		InteriorFeatures: commercialRentalPropertyDetails.InteriorFeatures,
+		OtherDetails:     commercialRentalPropertyDetails.OtherDetails,
+		Manager:          *manager,
 		PropertyInsights: propertyModels.PropertyInsights{
 			Views:             0,
 			Shared:            0,
@@ -99,6 +112,9 @@ func UpdateCommercialRentalPropertyDetails(c *gin.Context) {
 	oldCommercialRentalPropertyData.YearBuilt = commercialRentalPropertyUpdates.YearBuilt
 	oldCommercialRentalPropertyData.IsFullSpace = commercialRentalPropertyUpdates.IsFullSpace
 	oldCommercialRentalPropertyData.UniqueId = commercialRentalPropertyUpdates.UniqueId
+	oldCommercialRentalPropertyData.OtherDetails = commercialRentalPropertyUpdates.OtherDetails
+	oldCommercialRentalPropertyData.ExteriorFeatures = commercialRentalPropertyUpdates.ExteriorFeatures
+	oldCommercialRentalPropertyData.InteriorFeatures = commercialRentalPropertyUpdates.InteriorFeatures
 
 	isCommercialRentalPropertyUpdated := commercialRepo.UpdateCommercialRentalProperty(oldCommercialRentalPropertyData)
 	if !isCommercialRentalPropertyUpdated {
@@ -119,7 +135,25 @@ func GetCommercialRentalPropertyId(c *gin.Context) {
 		c.JSON(http.StatusForbidden, gin.H{"error": "this property does not exist"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"response": propertyUtilities.CommercialPropertyForRentResponse(*commercialRentalProperty)})
+	c.JSON(http.StatusOK, gin.H{"response": propertyUtilities.CommercialPropertyForRentWithManagerResponse(*commercialRentalProperty)})
+}
+
+func GetAllCommercialRentalProperties(c *gin.Context) {
+	commercialRentalProperties := commercialRepo.GetAllCommercialRentalProperties()
+	responseList := []commercialDtos.CommercialForRentPropertyWithManagerResponseDto{}
+	if len(commercialRentalProperties) > 0 {
+		for i := 0; i < len(commercialRentalProperties); i++ {
+			responseItem := propertyUtilities.CommercialPropertyForRentWithManagerResponse(commercialRentalProperties[i])
+			responseList = append(responseList, responseItem)
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"response": responseList,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"response": responseList,
+	})
 }
 
 func GetManagerCommercialRentalPropertiesByManagerId(c *gin.Context) {

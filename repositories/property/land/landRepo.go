@@ -3,14 +3,13 @@ package land
 import (
 	"SleekSpace/db"
 	managerModels "SleekSpace/models/manager"
-	propertyModels "SleekSpace/models/property"
 	"errors"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
-func CreateLandPropertyForSale(land *propertyModels.LandForSaleProperty) bool {
+func CreateLandPropertyForSale(land *managerModels.LandForSaleProperty) bool {
 	err := db.DB.Create(land)
 	if err != nil {
 		println(err)
@@ -18,8 +17,8 @@ func CreateLandPropertyForSale(land *propertyModels.LandForSaleProperty) bool {
 	return true
 }
 
-func GetLandPropertyForSaleById(id string) *propertyModels.LandForSaleProperty {
-	var land propertyModels.LandForSaleProperty
+func GetLandPropertyForSaleById(id string) *managerModels.LandForSaleProperty {
+	var land managerModels.LandForSaleProperty
 	result := db.DB.First(&land, id)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil
@@ -27,8 +26,20 @@ func GetLandPropertyForSaleById(id string) *propertyModels.LandForSaleProperty {
 	return &land
 }
 
-func GetLandPropertyForSaleWithAllAssociationsByUniqueId(uniqueId string) *propertyModels.LandForSaleProperty {
-	var land propertyModels.LandForSaleProperty
+func GetLandPropertyForSaleByIdWithmanager(id string) *managerModels.Manager {
+	var land managerModels.Manager
+	result := db.DB.
+		Joins("JOIN manager_profile_pictures ON manager_profile_pictures.manager_id = managers.id").
+		Where("managers.id =?", id).
+		Find(&land)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return nil
+	}
+	return &land
+}
+
+func GetLandPropertyForSaleWithAllAssociationsByUniqueId(uniqueId string) *managerModels.LandForSaleProperty {
+	var land managerModels.LandForSaleProperty
 	result := db.DB.Where("unique_id= ?", uniqueId).Preload(clause.Associations).First(&land)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil
@@ -36,16 +47,16 @@ func GetLandPropertyForSaleWithAllAssociationsByUniqueId(uniqueId string) *prope
 	return &land
 }
 
-func GetLandPropertyForSaleWithAllAssociationsById(id string) *propertyModels.LandForSaleProperty {
-	var land propertyModels.LandForSaleProperty
-	result := db.DB.Preload(clause.Associations).First(&land, id)
+func GetLandPropertyForSaleWithAllAssociationsById(id string) *managerModels.LandForSaleProperty {
+	var land managerModels.LandForSaleProperty
+	result := db.DB.Preload(clause.Associations).Preload("Manager.ProfilePicture").Preload("Manager.ManagerContactNumbers").First(&land, id)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil
 	}
 	return &land
 }
 
-func GetManagerLandPropertiesForSaleByManagerId(managerId string) []propertyModels.LandForSaleProperty {
+func GetManagerLandPropertiesForSaleByManagerId(managerId string) []managerModels.LandForSaleProperty {
 	var manager = managerModels.Manager{}
 	result := db.DB.Preload("LandForSaleProperty").First(&manager, managerId)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
@@ -54,16 +65,16 @@ func GetManagerLandPropertiesForSaleByManagerId(managerId string) []propertyMode
 	return manager.LandForSaleProperty
 }
 
-func GetAllLandPropertiesForSale() []propertyModels.LandForSaleProperty {
-	var properties = []propertyModels.LandForSaleProperty{}
-	err := db.DB.Preload(clause.Associations).Find(&properties)
+func GetAllLandPropertiesForSale() []managerModels.LandForSaleProperty {
+	var properties = []managerModels.LandForSaleProperty{}
+	err := db.DB.Preload(clause.Associations).Preload("Manager.ProfilePicture").Preload("Manager.ManagerContactNumbers").Find(&properties)
 	if err != nil {
 		println(err.Error, err.Name())
 	}
 	return properties
 }
 
-func UpdateLandPropertyForSale(update *propertyModels.LandForSaleProperty) bool {
+func UpdateLandPropertyForSale(update *managerModels.LandForSaleProperty) bool {
 	db.DB.Save(update)
 	return true
 }

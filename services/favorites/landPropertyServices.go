@@ -25,10 +25,10 @@ func GetFavoriteLandProperties(c *gin.Context) {
 		c.JSON(http.StatusForbidden, gin.H{"error": "your don't have land property favorites"})
 		return
 	}
-	response := []landDtos.LandForSalePropertyResponseDto{}
+	response := []landDtos.LandForSalePropertyWithManagerResponseDto{}
 	if len(properties) > 0 {
 		for i := 0; i < len(properties); i++ {
-			response = append(response, propertyUtilities.LandPropertyResponse(properties[i]))
+			response = append(response, propertyUtilities.LandPropertyWithManagerResponse(properties[i]))
 		}
 	}
 
@@ -72,10 +72,10 @@ func UpdateLandPropertyFavourites(c *gin.Context) {
 		c.JSON(http.StatusForbidden, gin.H{"error": "your don't have land property favorites"})
 		return
 	}
-	response := []landDtos.LandForSalePropertyResponseDto{}
+	response := []landDtos.LandForSalePropertyWithManagerResponseDto{}
 	if len(properties) > 0 {
 		for i := 0; i < len(properties); i++ {
-			response = append(response, propertyUtilities.LandPropertyResponse(properties[i]))
+			response = append(response, propertyUtilities.LandPropertyWithManagerResponse(properties[i]))
 		}
 	}
 

@@ -4,9 +4,12 @@ import (
 	"net/http"
 
 	standDtos "SleekSpace/dtos/property/stand"
+	managerModels "SleekSpace/models/manager"
 	propertyModels "SleekSpace/models/property"
+	managerRepo "SleekSpace/repositories/manager"
 	standRepo "SleekSpace/repositories/property/stand"
 	constants "SleekSpace/utilities/constants"
+	generalUtilities "SleekSpace/utilities/funcs/general"
 	propertyUtilities "SleekSpace/utilities/funcs/property"
 
 	"github.com/gin-gonic/gin"
@@ -24,7 +27,13 @@ func CreateStandForSale(c *gin.Context) {
 		return
 	}
 
-	newStandForSale := propertyModels.PropertyStand{
+	manager := managerRepo.GetManagerWithProfilePictureAndContactsByManagerId(generalUtilities.ConvertIntToString(standInfo.ManagerId))
+	if manager == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": "this manager does not exist"})
+		return
+	}
+
+	newStandForSale := managerModels.PropertyStand{
 		ManagerId:          standInfo.ManagerId,
 		UniqueId:           propertyUtilities.GeneratePropertyUniqueId(),
 		Price:              standInfo.Price,
@@ -36,6 +45,8 @@ func CreateStandForSale(c *gin.Context) {
 		AreaHasElectricity: standInfo.AreaHasElectricity,
 		Level:              standInfo.Level,
 		Type:               standInfo.Type,
+		OtherDetails:       standInfo.OtherDetails,
+		Manager:            *manager,
 		PropertyInsights: propertyModels.PropertyInsights{
 			Views:             0,
 			Shared:            0,
@@ -69,6 +80,24 @@ func CreateStandForSale(c *gin.Context) {
 
 }
 
+func GetAllStands(c *gin.Context) {
+	stands := standRepo.GetAllStands()
+	responseList := []standDtos.StandWithManagerResponseDTO{}
+	if len(stands) > 0 {
+		for i := 0; i < len(stands); i++ {
+			responseItem := propertyUtilities.PropertyStandWithManagerResponse(stands[i])
+			responseList = append(responseList, responseItem)
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"response": responseList,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"response": responseList,
+	})
+}
+
 func UpdateStandDetails(c *gin.Context) {
 	var standUpdates standDtos.StandUpdateDTO
 	validateModelFields := validator.New()
@@ -95,6 +124,7 @@ func UpdateStandDetails(c *gin.Context) {
 	oldStandData.Status = standUpdates.Status
 	oldStandData.Type = standUpdates.Type
 	oldStandData.UniqueId = standUpdates.UniqueId
+	oldStandData.OtherDetails = standUpdates.OtherDetails
 
 	isStandUpdated := standRepo.UpdateStand(oldStandData)
 	if !isStandUpdated {
@@ -115,7 +145,7 @@ func GetStandById(c *gin.Context) {
 		c.JSON(http.StatusForbidden, gin.H{"error": "this stand does not exist"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"response": propertyUtilities.PropertyStandResponse(*stand)})
+	c.JSON(http.StatusOK, gin.H{"response": propertyUtilities.PropertyStandWithManagerResponse(*stand)})
 }
 
 func GetManagerStandsByManagerId(c *gin.Context) {

@@ -25,10 +25,10 @@ func GetFavoriteResidentialRentalProperties(c *gin.Context) {
 		c.JSON(http.StatusForbidden, gin.H{"error": "your don't have favorite residential rental properties"})
 		return
 	}
-	response := []residentialDtos.ResidentialPropertyForRentResponseDto{}
+	response := []residentialDtos.ResidentialPropertyForRentWithManagerResponseDto{}
 	if len(properties) > 0 {
 		for i := 0; i < len(properties); i++ {
-			response = append(response, propertyUtilities.ResidentialRentalPropertyResponse(properties[i]))
+			response = append(response, propertyUtilities.ResidentialRentalPropertyWithManagerResponse(properties[i]))
 		}
 	}
 
@@ -72,10 +72,10 @@ func UpdateFavouritesResidentialRentalProperties(c *gin.Context) {
 		c.JSON(http.StatusForbidden, gin.H{"error": "your don't have favorite residential rental properties"})
 		return
 	}
-	response := []residentialDtos.ResidentialPropertyForRentResponseDto{}
+	response := []residentialDtos.ResidentialPropertyForRentWithManagerResponseDto{}
 	if len(properties) > 0 {
 		for i := 0; i < len(properties); i++ {
-			response = append(response, propertyUtilities.ResidentialRentalPropertyResponse(properties[i]))
+			response = append(response, propertyUtilities.ResidentialRentalPropertyWithManagerResponse(properties[i]))
 		}
 	}
 

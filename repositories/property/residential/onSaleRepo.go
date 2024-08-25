@@ -3,14 +3,13 @@ package residential
 import (
 	"SleekSpace/db"
 	managerModels "SleekSpace/models/manager"
-	propertyModels "SleekSpace/models/property"
 	"errors"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
-func CreateResidentialPropertyForSale(property *propertyModels.ResidentialPropertyForSale) bool {
+func CreateResidentialPropertyForSale(property *managerModels.ResidentialPropertyForSale) bool {
 	err := db.DB.Create(property)
 	if err != nil {
 		println(err)
@@ -18,8 +17,8 @@ func CreateResidentialPropertyForSale(property *propertyModels.ResidentialProper
 	return true
 }
 
-func GetResidentialPropertyForSaleById(id string) *propertyModels.ResidentialPropertyForSale {
-	var property propertyModels.ResidentialPropertyForSale
+func GetResidentialPropertyForSaleById(id string) *managerModels.ResidentialPropertyForSale {
+	var property managerModels.ResidentialPropertyForSale
 	result := db.DB.First(&property, id)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil
@@ -27,17 +26,17 @@ func GetResidentialPropertyForSaleById(id string) *propertyModels.ResidentialPro
 	return &property
 }
 
-func GetResidentialPropertyForSaleWithAllAssociationsById(id string) *propertyModels.ResidentialPropertyForSale {
-	var property propertyModels.ResidentialPropertyForSale
-	result := db.DB.Preload(clause.Associations).First(&property, id)
+func GetResidentialPropertyForSaleWithAllAssociationsById(id string) *managerModels.ResidentialPropertyForSale {
+	var property managerModels.ResidentialPropertyForSale
+	result := db.DB.Preload(clause.Associations).Preload("Manager.ProfilePicture").Preload("Manager.ManagerContactNumbers").First(&property, id)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil
 	}
 	return &property
 }
 
-func GetResidentialPropertyForSaleWithAllAssociationsByUniqueId(uniqueId string) *propertyModels.ResidentialPropertyForSale {
-	var property propertyModels.ResidentialPropertyForSale
+func GetResidentialPropertyForSaleWithAllAssociationsByUniqueId(uniqueId string) *managerModels.ResidentialPropertyForSale {
+	var property managerModels.ResidentialPropertyForSale
 	result := db.DB.Where("unique_id= ?", uniqueId).Preload(clause.Associations).First(&property)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil
@@ -45,7 +44,7 @@ func GetResidentialPropertyForSaleWithAllAssociationsByUniqueId(uniqueId string)
 	return &property
 }
 
-func GetManagerResidentialPropertiesForSaleByManagerId(managerId string) []propertyModels.ResidentialPropertyForSale {
+func GetManagerResidentialPropertiesForSaleByManagerId(managerId string) []managerModels.ResidentialPropertyForSale {
 	var manager = managerModels.Manager{}
 	result := db.DB.Preload("ResidentialPropertyForSale").First(&manager, managerId)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
@@ -54,16 +53,16 @@ func GetManagerResidentialPropertiesForSaleByManagerId(managerId string) []prope
 	return manager.ResidentialPropertyForSale
 }
 
-func GetAllResidentialPropertiesForSale() []propertyModels.ResidentialPropertyForSale {
-	var properties = []propertyModels.ResidentialPropertyForSale{}
-	err := db.DB.Preload(clause.Associations).Find(&properties)
+func GetAllResidentialPropertiesForSale() []managerModels.ResidentialPropertyForSale {
+	var properties = []managerModels.ResidentialPropertyForSale{}
+	err := db.DB.Preload(clause.Associations).Preload("Manager.ProfilePicture").Preload("Manager.ManagerContactNumbers").Find(&properties)
 	if err != nil {
 		println(err.Error, err.Name())
 	}
 	return properties
 }
 
-func UpdateResidentialPropertyForSale(update *propertyModels.ResidentialPropertyForSale) bool {
+func UpdateResidentialPropertyForSale(update *managerModels.ResidentialPropertyForSale) bool {
 	db.DB.Save(update)
 	return true
 }
