@@ -133,12 +133,19 @@ func GetAllStands(c *gin.Context) {
 	})
 }
 
+func GetLandWithManager(c *gin.Context) {
+	result := landRepo.GetLandPropertyForSaleByIdWithmanager(c.Param("id"))
+	c.JSON(http.StatusOK, gin.H{
+		"response": result,
+	})
+}
+
 func GetAllLandProperties(c *gin.Context) {
 	landProperties := landRepo.GetAllLandPropertiesForSale()
-	responseList := []landDtos.LandForSalePropertyResponseDto{}
+	responseList := []landDtos.LandForSalePropertyWithManagerResponseDto{}
 	if len(landProperties) > 0 {
 		for i := 0; i < len(landProperties); i++ {
-			responseItem := propertyUtilities.LandPropertyResponse(landProperties[i])
+			responseItem := propertyUtilities.LandPropertyWithManagerResponse(landProperties[i])
 			responseList = append(responseList, responseItem)
 		}
 		c.JSON(http.StatusOK, gin.H{

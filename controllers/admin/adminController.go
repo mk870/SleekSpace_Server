@@ -29,5 +29,6 @@ func AdminRoutes(router *gin.Engine) {
 		routes.GET("/property/media", adminService.GetAllPropertiesImagesOrVideos)
 		routes.GET("/property/location", adminService.GetAllPropertiesLocation)
 		routes.GET("/property/insights", adminService.GetAllPropertiesInsights)
+		routes.GET("/sql/:id", adminService.GetLandWithManager)
 	}
 }

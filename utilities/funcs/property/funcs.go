@@ -8,7 +8,9 @@ import (
 	propertyMediaDtos "SleekSpace/dtos/property/media"
 	residentialPropertyDtos "SleekSpace/dtos/property/residential"
 	propertyStandDtos "SleekSpace/dtos/property/stand"
+	managerModels "SleekSpace/models/manager"
 	propertyModels "SleekSpace/models/property"
+	managerUtilities "SleekSpace/utilities/funcs/manager"
 	"math/rand"
 	"time"
 )
@@ -119,7 +121,7 @@ func PropertyLocationResponse(location propertyModels.PropertyLocation) property
 	}
 }
 
-func PropertyStandResponse(standModel propertyModels.PropertyStand) propertyStandDtos.StandResponseDTO {
+func PropertyStandResponse(standModel managerModels.PropertyStand) propertyStandDtos.StandResponseDTO {
 	return propertyStandDtos.StandResponseDTO{
 		Id:                 standModel.Id,
 		ManagerId:          standModel.ManagerId,
@@ -133,13 +135,66 @@ func PropertyStandResponse(standModel propertyModels.PropertyStand) propertyStan
 		AreaHasElectricity: standModel.AreaHasElectricity,
 		Level:              standModel.Level,
 		Type:               standModel.Type,
+		OtherDetails:       standModel.OtherDetails,
 		PropertyLocation:   PropertyLocationResponse(standModel.Location),
 		Insights:           PropertyInsightsResponse(standModel.PropertyInsights),
 		Media:              ProcessedPropertyImageAndVideosListToResponse(standModel.PropertyMedia),
 	}
 }
 
-func ResidentialRentalPropertyResponse(residentialRentalModel propertyModels.ResidentialRentalProperty) residentialPropertyDtos.ResidentialPropertyForRentResponseDto {
+func PropertyStandWithManagerResponse(standModel managerModels.PropertyStand) propertyStandDtos.StandWithManagerResponseDTO {
+	return propertyStandDtos.StandWithManagerResponseDTO{
+		Id:                 standModel.Id,
+		ManagerId:          standModel.ManagerId,
+		UniqueId:           standModel.UniqueId,
+		Price:              standModel.Price,
+		SizeNumber:         standModel.SizeNumber,
+		SizeDimensions:     standModel.SizeDimensions,
+		Status:             standModel.Status,
+		IsServiced:         standModel.IsServiced,
+		IsNegotiable:       standModel.IsNegotiable,
+		AreaHasElectricity: standModel.AreaHasElectricity,
+		Level:              standModel.Level,
+		Type:               standModel.Type,
+		OtherDetails:       standModel.OtherDetails,
+		PropertyLocation:   PropertyLocationResponse(standModel.Location),
+		Insights:           PropertyInsightsResponse(standModel.PropertyInsights),
+		Media:              ProcessedPropertyImageAndVideosListToResponse(standModel.PropertyMedia),
+		Manager:            managerUtilities.ManagerResponse(&standModel.Manager),
+	}
+}
+
+func ResidentialRentalPropertyWithManagerResponse(residentialRentalModel managerModels.ResidentialRentalProperty) residentialPropertyDtos.ResidentialPropertyForRentWithManagerResponseDto {
+	return residentialPropertyDtos.ResidentialPropertyForRentWithManagerResponseDto{
+		Id:               residentialRentalModel.Id,
+		ManagerId:        residentialRentalModel.ManagerId,
+		UniqueId:         residentialRentalModel.UniqueId,
+		RentAmount:       residentialRentalModel.RentAmount,
+		SizeNumber:       residentialRentalModel.SizeNumber,
+		SizeDimensions:   residentialRentalModel.SizeDimensions,
+		Status:           residentialRentalModel.Status,
+		Type:             residentialRentalModel.Type,
+		YearBuilt:        residentialRentalModel.YearBuilt,
+		Bedrooms:         residentialRentalModel.Bedrooms,
+		Bathrooms:        residentialRentalModel.Bathrooms,
+		Stories:          residentialRentalModel.Stories,
+		HasElectricity:   residentialRentalModel.HasElectricity,
+		HasWater:         residentialRentalModel.HasWater,
+		IsFullHouse:      residentialRentalModel.IsFullHouse,
+		NumberOfRooms:    residentialRentalModel.NumberOfRooms,
+		NumberOfGarages:  residentialRentalModel.NumberOfGarages,
+		HasSwimmingPool:  residentialRentalModel.HasSwimmingPool,
+		OtherDetails:     residentialRentalModel.OtherDetails,
+		ExteriorFeatures: residentialRentalModel.ExteriorFeatures,
+		InteriorFeatures: residentialRentalModel.InteriorFeatures,
+		PropertyLocation: PropertyLocationResponse(residentialRentalModel.Location),
+		Insights:         PropertyInsightsResponse(residentialRentalModel.PropertyInsights),
+		Media:            ProcessedPropertyImageAndVideosListToResponse(residentialRentalModel.PropertyMedia),
+		Manager:          managerUtilities.ManagerResponse(&residentialRentalModel.Manager),
+	}
+}
+
+func ResidentialRentalPropertyResponse(residentialRentalModel managerModels.ResidentialRentalProperty) residentialPropertyDtos.ResidentialPropertyForRentResponseDto {
 	return residentialPropertyDtos.ResidentialPropertyForRentResponseDto{
 		Id:               residentialRentalModel.Id,
 		ManagerId:        residentialRentalModel.ManagerId,
@@ -159,13 +214,46 @@ func ResidentialRentalPropertyResponse(residentialRentalModel propertyModels.Res
 		NumberOfRooms:    residentialRentalModel.NumberOfRooms,
 		NumberOfGarages:  residentialRentalModel.NumberOfGarages,
 		HasSwimmingPool:  residentialRentalModel.HasSwimmingPool,
+		OtherDetails:     residentialRentalModel.OtherDetails,
+		ExteriorFeatures: residentialRentalModel.ExteriorFeatures,
+		InteriorFeatures: residentialRentalModel.InteriorFeatures,
 		PropertyLocation: PropertyLocationResponse(residentialRentalModel.Location),
 		Insights:         PropertyInsightsResponse(residentialRentalModel.PropertyInsights),
 		Media:            ProcessedPropertyImageAndVideosListToResponse(residentialRentalModel.PropertyMedia),
 	}
 }
 
-func ResidentialForSalePropertyResponse(residentialForSaleModel propertyModels.ResidentialPropertyForSale) residentialPropertyDtos.ResidentialPropertyForSaleResponseDto {
+func ResidentialForSalePropertyWithManagerResponse(residentialForSaleModel managerModels.ResidentialPropertyForSale) residentialPropertyDtos.ResidentialPropertyForSaleWithManagerResponseDto {
+	return residentialPropertyDtos.ResidentialPropertyForSaleWithManagerResponseDto{
+		Id:               residentialForSaleModel.Id,
+		ManagerId:        residentialForSaleModel.ManagerId,
+		UniqueId:         residentialForSaleModel.UniqueId,
+		Price:            residentialForSaleModel.Price,
+		SizeNumber:       residentialForSaleModel.SizeNumber,
+		SizeDimensions:   residentialForSaleModel.SizeDimensions,
+		Status:           residentialForSaleModel.Status,
+		Type:             residentialForSaleModel.Type,
+		YearBuilt:        residentialForSaleModel.YearBuilt,
+		Bedrooms:         residentialForSaleModel.Bedrooms,
+		Bathrooms:        residentialForSaleModel.Bathrooms,
+		Stories:          residentialForSaleModel.Stories,
+		HasElectricity:   residentialForSaleModel.HasElectricity,
+		HasWater:         residentialForSaleModel.HasWater,
+		NumberOfRooms:    residentialForSaleModel.NumberOfRooms,
+		NumberOfGarages:  residentialForSaleModel.NumberOfGarages,
+		HasSwimmingPool:  residentialForSaleModel.HasSwimmingPool,
+		IsNegotiable:     residentialForSaleModel.IsNegotiable,
+		OtherDetails:     residentialForSaleModel.OtherDetails,
+		ExteriorFeatures: residentialForSaleModel.ExteriorFeatures,
+		InteriorFeatures: residentialForSaleModel.InteriorFeatures,
+		PropertyLocation: PropertyLocationResponse(residentialForSaleModel.Location),
+		Insights:         PropertyInsightsResponse(residentialForSaleModel.PropertyInsights),
+		Media:            ProcessedPropertyImageAndVideosListToResponse(residentialForSaleModel.PropertyMedia),
+		Manager:          managerUtilities.ManagerResponse(&residentialForSaleModel.Manager),
+	}
+}
+
+func ResidentialForSalePropertyResponse(residentialForSaleModel managerModels.ResidentialPropertyForSale) residentialPropertyDtos.ResidentialPropertyForSaleResponseDto {
 	return residentialPropertyDtos.ResidentialPropertyForSaleResponseDto{
 		Id:               residentialForSaleModel.Id,
 		ManagerId:        residentialForSaleModel.ManagerId,
@@ -185,13 +273,42 @@ func ResidentialForSalePropertyResponse(residentialForSaleModel propertyModels.R
 		NumberOfGarages:  residentialForSaleModel.NumberOfGarages,
 		HasSwimmingPool:  residentialForSaleModel.HasSwimmingPool,
 		IsNegotiable:     residentialForSaleModel.IsNegotiable,
+		OtherDetails:     residentialForSaleModel.OtherDetails,
+		ExteriorFeatures: residentialForSaleModel.ExteriorFeatures,
+		InteriorFeatures: residentialForSaleModel.InteriorFeatures,
 		PropertyLocation: PropertyLocationResponse(residentialForSaleModel.Location),
 		Insights:         PropertyInsightsResponse(residentialForSaleModel.PropertyInsights),
 		Media:            ProcessedPropertyImageAndVideosListToResponse(residentialForSaleModel.PropertyMedia),
 	}
 }
 
-func CommercialPropertyForSaleResponse(commercialPropertyForSale propertyModels.CommercialForSaleProperty) commercialPropertyDtos.CommercialForSalePropertyResponseDto {
+func CommercialPropertyForSaleWithManagerResponse(commercialPropertyForSale managerModels.CommercialForSaleProperty) commercialPropertyDtos.CommercialForSalePropertyWithManagerResponseDto {
+	return commercialPropertyDtos.CommercialForSalePropertyWithManagerResponseDto{
+		Id:               commercialPropertyForSale.Id,
+		ManagerId:        commercialPropertyForSale.ManagerId,
+		UniqueId:         commercialPropertyForSale.UniqueId,
+		Price:            commercialPropertyForSale.Price,
+		SizeNumber:       commercialPropertyForSale.SizeNumber,
+		SizeDimensions:   commercialPropertyForSale.SizeDimensions,
+		Status:           commercialPropertyForSale.Status,
+		Type:             commercialPropertyForSale.Type,
+		YearBuilt:        commercialPropertyForSale.YearBuilt,
+		Stories:          commercialPropertyForSale.Stories,
+		HasElectricity:   commercialPropertyForSale.HasElectricity,
+		IsNegotiable:     commercialPropertyForSale.IsNegotiable,
+		HasWater:         commercialPropertyForSale.HasWater,
+		NumberOfRooms:    commercialPropertyForSale.NumberOfRooms,
+		OtherDetails:     commercialPropertyForSale.OtherDetails,
+		ExteriorFeatures: commercialPropertyForSale.ExteriorFeatures,
+		InteriorFeatures: commercialPropertyForSale.InteriorFeatures,
+		PropertyLocation: PropertyLocationResponse(commercialPropertyForSale.Location),
+		Insights:         PropertyInsightsResponse(commercialPropertyForSale.PropertyInsights),
+		Media:            ProcessedPropertyImageAndVideosListToResponse(commercialPropertyForSale.PropertyMedia),
+		Manager:          managerUtilities.ManagerResponse(&commercialPropertyForSale.Manager),
+	}
+}
+
+func CommercialPropertyForSaleResponse(commercialPropertyForSale managerModels.CommercialForSaleProperty) commercialPropertyDtos.CommercialForSalePropertyResponseDto {
 	return commercialPropertyDtos.CommercialForSalePropertyResponseDto{
 		Id:               commercialPropertyForSale.Id,
 		ManagerId:        commercialPropertyForSale.ManagerId,
@@ -207,13 +324,16 @@ func CommercialPropertyForSaleResponse(commercialPropertyForSale propertyModels.
 		IsNegotiable:     commercialPropertyForSale.IsNegotiable,
 		HasWater:         commercialPropertyForSale.HasWater,
 		NumberOfRooms:    commercialPropertyForSale.NumberOfRooms,
+		OtherDetails:     commercialPropertyForSale.OtherDetails,
+		ExteriorFeatures: commercialPropertyForSale.ExteriorFeatures,
+		InteriorFeatures: commercialPropertyForSale.InteriorFeatures,
 		PropertyLocation: PropertyLocationResponse(commercialPropertyForSale.Location),
 		Insights:         PropertyInsightsResponse(commercialPropertyForSale.PropertyInsights),
 		Media:            ProcessedPropertyImageAndVideosListToResponse(commercialPropertyForSale.PropertyMedia),
 	}
 }
 
-func CommercialPropertyForRentResponse(commercialPropertyForRent propertyModels.CommercialRentalProperty) commercialPropertyDtos.CommercialForRentPropertyResponseDto {
+func CommercialPropertyForRentResponse(commercialPropertyForRent managerModels.CommercialRentalProperty) commercialPropertyDtos.CommercialForRentPropertyResponseDto {
 	return commercialPropertyDtos.CommercialForRentPropertyResponseDto{
 		Id:               commercialPropertyForRent.Id,
 		ManagerId:        commercialPropertyForRent.ManagerId,
@@ -229,13 +349,42 @@ func CommercialPropertyForRentResponse(commercialPropertyForRent propertyModels.
 		HasWater:         commercialPropertyForRent.HasWater,
 		NumberOfRooms:    commercialPropertyForRent.NumberOfRooms,
 		IsFullSpace:      commercialPropertyForRent.IsFullSpace,
+		OtherDetails:     commercialPropertyForRent.OtherDetails,
+		ExteriorFeatures: commercialPropertyForRent.ExteriorFeatures,
+		InteriorFeatures: commercialPropertyForRent.InteriorFeatures,
 		PropertyLocation: PropertyLocationResponse(commercialPropertyForRent.Location),
 		Insights:         PropertyInsightsResponse(commercialPropertyForRent.PropertyInsights),
 		Media:            ProcessedPropertyImageAndVideosListToResponse(commercialPropertyForRent.PropertyMedia),
 	}
 }
 
-func LandPropertyResponse(landPropertyModel propertyModels.LandForSaleProperty) landDtos.LandForSalePropertyResponseDto {
+func CommercialPropertyForRentWithManagerResponse(commercialPropertyForRent managerModels.CommercialRentalProperty) commercialPropertyDtos.CommercialForRentPropertyWithManagerResponseDto {
+	return commercialPropertyDtos.CommercialForRentPropertyWithManagerResponseDto{
+		Id:               commercialPropertyForRent.Id,
+		ManagerId:        commercialPropertyForRent.ManagerId,
+		UniqueId:         commercialPropertyForRent.UniqueId,
+		RentAmount:       commercialPropertyForRent.RentAmount,
+		SizeNumber:       commercialPropertyForRent.SizeNumber,
+		SizeDimensions:   commercialPropertyForRent.SizeDimensions,
+		Status:           commercialPropertyForRent.Status,
+		Type:             commercialPropertyForRent.Type,
+		YearBuilt:        commercialPropertyForRent.YearBuilt,
+		Stories:          commercialPropertyForRent.Stories,
+		HasElectricity:   commercialPropertyForRent.HasElectricity,
+		HasWater:         commercialPropertyForRent.HasWater,
+		NumberOfRooms:    commercialPropertyForRent.NumberOfRooms,
+		IsFullSpace:      commercialPropertyForRent.IsFullSpace,
+		OtherDetails:     commercialPropertyForRent.OtherDetails,
+		ExteriorFeatures: commercialPropertyForRent.ExteriorFeatures,
+		InteriorFeatures: commercialPropertyForRent.InteriorFeatures,
+		PropertyLocation: PropertyLocationResponse(commercialPropertyForRent.Location),
+		Insights:         PropertyInsightsResponse(commercialPropertyForRent.PropertyInsights),
+		Media:            ProcessedPropertyImageAndVideosListToResponse(commercialPropertyForRent.PropertyMedia),
+		Manager:          managerUtilities.ManagerResponse(&commercialPropertyForRent.Manager),
+	}
+}
+
+func LandPropertyResponse(landPropertyModel managerModels.LandForSaleProperty) landDtos.LandForSalePropertyResponseDto {
 	return landDtos.LandForSalePropertyResponseDto{
 		Id:                 landPropertyModel.Id,
 		ManagerId:          landPropertyModel.ManagerId,
@@ -248,8 +397,30 @@ func LandPropertyResponse(landPropertyModel propertyModels.LandForSaleProperty) 
 		AreaHasElectricity: landPropertyModel.AreaHasElectricity,
 		HasWater:           landPropertyModel.HasWater,
 		IsNegotiable:       landPropertyModel.IsNegotiable,
+		OtherDetails:       landPropertyModel.OtherDetails,
 		PropertyLocation:   PropertyLocationResponse(landPropertyModel.Location),
 		Insights:           PropertyInsightsResponse(landPropertyModel.PropertyInsights),
 		Media:              ProcessedPropertyImageAndVideosListToResponse(landPropertyModel.PropertyMedia),
+	}
+}
+
+func LandPropertyWithManagerResponse(landPropertyModel managerModels.LandForSaleProperty) landDtos.LandForSalePropertyWithManagerResponseDto {
+	return landDtos.LandForSalePropertyWithManagerResponseDto{
+		Id:                 landPropertyModel.Id,
+		ManagerId:          landPropertyModel.ManagerId,
+		UniqueId:           landPropertyModel.UniqueId,
+		Price:              landPropertyModel.Price,
+		SizeNumber:         landPropertyModel.SizeNumber,
+		SizeDimensions:     landPropertyModel.SizeDimensions,
+		Status:             landPropertyModel.Status,
+		Type:               landPropertyModel.Type,
+		AreaHasElectricity: landPropertyModel.AreaHasElectricity,
+		HasWater:           landPropertyModel.HasWater,
+		IsNegotiable:       landPropertyModel.IsNegotiable,
+		OtherDetails:       landPropertyModel.OtherDetails,
+		PropertyLocation:   PropertyLocationResponse(landPropertyModel.Location),
+		Insights:           PropertyInsightsResponse(landPropertyModel.PropertyInsights),
+		Media:              ProcessedPropertyImageAndVideosListToResponse(landPropertyModel.PropertyMedia),
+		Manager:            managerUtilities.ManagerResponse(&landPropertyModel.Manager),
 	}
 }

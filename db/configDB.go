@@ -21,7 +21,9 @@ func Connect() {
 
 	db.AutoMigrate(&propertyModels.PropertyInsights{}, &propertyModels.PropertyImageOrVideo{}, &propertyModels.PropertyLocation{})
 
-	db.AutoMigrate(&managerModels.ManagerContactNumber{}, &managerModels.ManagerProfilePicture{}, &propertyModels.CommercialForSaleProperty{}, &propertyModels.CommercialRentalProperty{}, &propertyModels.LandForSaleProperty{}, &propertyModels.ResidentialPropertyForSale{}, &propertyModels.ResidentialRentalProperty{}, &propertyModels.PropertyStand{})
+	db.AutoMigrate(&managerModels.CommercialForSaleProperty{}, &managerModels.CommercialRentalProperty{}, &managerModels.LandForSaleProperty{}, &managerModels.ResidentialPropertyForSale{}, &managerModels.ResidentialRentalProperty{}, &managerModels.PropertyStand{})
+
+	db.AutoMigrate(&managerModels.ManagerContactNumber{}, &managerModels.ManagerProfilePicture{})
 
 	db.AutoMigrate(&userModels.VerificationCode{}, &userModels.ContactNumber{}, &userModels.Location{}, &managerModels.Manager{}, &userModels.UserProfilePicture{})
 

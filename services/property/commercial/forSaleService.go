@@ -4,9 +4,12 @@ import (
 	"net/http"
 
 	commercialDtos "SleekSpace/dtos/property/commercial"
+	managerModels "SleekSpace/models/manager"
 	propertyModels "SleekSpace/models/property"
+	managerRepo "SleekSpace/repositories/manager"
 	commercialRepo "SleekSpace/repositories/property/commercial"
 	constants "SleekSpace/utilities/constants"
+	generalUtilities "SleekSpace/utilities/funcs/general"
 	propertyUtilities "SleekSpace/utilities/funcs/property"
 
 	"github.com/gin-gonic/gin"
@@ -24,20 +27,30 @@ func CreateCommercialPropertyForSale(c *gin.Context) {
 		return
 	}
 
-	newCommercialPropertyForSale := propertyModels.CommercialForSaleProperty{
-		ManagerId:      commercialPropertyForSaleDetails.ManagerId,
-		UniqueId:       propertyUtilities.GeneratePropertyUniqueId(),
-		Price:          commercialPropertyForSaleDetails.Price,
-		SizeNumber:     commercialPropertyForSaleDetails.SizeNumber,
-		SizeDimensions: commercialPropertyForSaleDetails.SizeDimensions,
-		Status:         commercialPropertyForSaleDetails.Status,
-		Type:           commercialPropertyForSaleDetails.Type,
-		YearBuilt:      commercialPropertyForSaleDetails.YearBuilt,
-		Stories:        commercialPropertyForSaleDetails.Stories,
-		HasElectricity: commercialPropertyForSaleDetails.HasElectricity,
-		HasWater:       commercialPropertyForSaleDetails.HasWater,
-		IsNegotiable:   commercialPropertyForSaleDetails.IsNegotiable,
-		NumberOfRooms:  commercialPropertyForSaleDetails.NumberOfRooms,
+	manager := managerRepo.GetManagerWithProfilePictureAndContactsByManagerId(generalUtilities.ConvertIntToString(commercialPropertyForSaleDetails.ManagerId))
+	if manager == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": "this manager does not exist"})
+		return
+	}
+
+	newCommercialPropertyForSale := managerModels.CommercialForSaleProperty{
+		ManagerId:        commercialPropertyForSaleDetails.ManagerId,
+		UniqueId:         propertyUtilities.GeneratePropertyUniqueId(),
+		Price:            commercialPropertyForSaleDetails.Price,
+		SizeNumber:       commercialPropertyForSaleDetails.SizeNumber,
+		SizeDimensions:   commercialPropertyForSaleDetails.SizeDimensions,
+		Status:           commercialPropertyForSaleDetails.Status,
+		Type:             commercialPropertyForSaleDetails.Type,
+		YearBuilt:        commercialPropertyForSaleDetails.YearBuilt,
+		Stories:          commercialPropertyForSaleDetails.Stories,
+		HasElectricity:   commercialPropertyForSaleDetails.HasElectricity,
+		HasWater:         commercialPropertyForSaleDetails.HasWater,
+		IsNegotiable:     commercialPropertyForSaleDetails.IsNegotiable,
+		NumberOfRooms:    commercialPropertyForSaleDetails.NumberOfRooms,
+		ExteriorFeatures: commercialPropertyForSaleDetails.ExteriorFeatures,
+		InteriorFeatures: commercialPropertyForSaleDetails.InteriorFeatures,
+		OtherDetails:     commercialPropertyForSaleDetails.OtherDetails,
+		Manager:          *manager,
 		PropertyInsights: propertyModels.PropertyInsights{
 			Views:             0,
 			Shared:            0,
@@ -99,6 +112,9 @@ func UpdateCommercialPropertyForSaleDetails(c *gin.Context) {
 	oldCommercialPropertyForSaleData.YearBuilt = commercialPropertyForSaleUpdates.YearBuilt
 	oldCommercialPropertyForSaleData.UniqueId = commercialPropertyForSaleUpdates.UniqueId
 	oldCommercialPropertyForSaleData.IsNegotiable = commercialPropertyForSaleUpdates.IsNegotiable
+	oldCommercialPropertyForSaleData.InteriorFeatures = commercialPropertyForSaleUpdates.InteriorFeatures
+	oldCommercialPropertyForSaleData.ExteriorFeatures = commercialPropertyForSaleUpdates.ExteriorFeatures
+	oldCommercialPropertyForSaleData.OtherDetails = commercialPropertyForSaleUpdates.OtherDetails
 
 	isCommercialPropertyForSaleUpdated := commercialRepo.UpdateCommercialPropertyForSale(oldCommercialPropertyForSaleData)
 	if !isCommercialPropertyForSaleUpdated {
@@ -113,13 +129,31 @@ func UpdateCommercialPropertyForSaleDetails(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"response": propertyUtilities.CommercialPropertyForSaleResponse(*UpdatedCommercialPropertyForSale)})
 }
 
+func GetAllCommercialForSaleProperties(c *gin.Context) {
+	commercialPropertiesForSale := commercialRepo.GetAllCommercialPropertiesForSale()
+	responseList := []commercialDtos.CommercialForSalePropertyWithManagerResponseDto{}
+	if len(commercialPropertiesForSale) > 0 {
+		for i := 0; i < len(commercialPropertiesForSale); i++ {
+			responseItem := propertyUtilities.CommercialPropertyForSaleWithManagerResponse(commercialPropertiesForSale[i])
+			responseList = append(responseList, responseItem)
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"response": responseList,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"response": responseList,
+	})
+}
+
 func GetCommercialPropertyForSaleById(c *gin.Context) {
 	commercialPropertyForSale := commercialRepo.GetCommercialPropertyForSaleWithAllAssociationsById(c.Param("id"))
 	if commercialPropertyForSale == nil {
 		c.JSON(http.StatusForbidden, gin.H{"error": "this property does not exist"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"response": propertyUtilities.CommercialPropertyForSaleResponse(*commercialPropertyForSale)})
+	c.JSON(http.StatusOK, gin.H{"response": propertyUtilities.CommercialPropertyForSaleWithManagerResponse(*commercialPropertyForSale)})
 }
 
 func GetManagerCommercialPropertiesForSaleByManagerId(c *gin.Context) {

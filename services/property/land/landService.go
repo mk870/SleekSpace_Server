@@ -4,9 +4,12 @@ import (
 	"net/http"
 
 	landDtos "SleekSpace/dtos/property/land"
+	managerModels "SleekSpace/models/manager"
 	propertyModels "SleekSpace/models/property"
+	managerRepo "SleekSpace/repositories/manager"
 	landRepo "SleekSpace/repositories/property/land"
 	constants "SleekSpace/utilities/constants"
+	generalUtilities "SleekSpace/utilities/funcs/general"
 	propertyUtilities "SleekSpace/utilities/funcs/property"
 
 	"github.com/gin-gonic/gin"
@@ -24,7 +27,13 @@ func CreateLandPropertyForSale(c *gin.Context) {
 		return
 	}
 
-	newLandForSale := propertyModels.LandForSaleProperty{
+	manager := managerRepo.GetManagerWithProfilePictureAndContactsByManagerId(generalUtilities.ConvertIntToString(landDetails.ManagerId))
+	if manager == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": "this manager does not exist"})
+		return
+	}
+
+	newLandForSale := managerModels.LandForSaleProperty{
 		ManagerId:          landDetails.ManagerId,
 		UniqueId:           propertyUtilities.GeneratePropertyUniqueId(),
 		Price:              landDetails.Price,
@@ -35,6 +44,8 @@ func CreateLandPropertyForSale(c *gin.Context) {
 		AreaHasElectricity: landDetails.AreaHasElectricity,
 		HasWater:           landDetails.HasWater,
 		IsNegotiable:       landDetails.IsNegotiable,
+		OtherDetails:       landDetails.OtherDetails,
+		Manager:            *manager,
 		PropertyInsights: propertyModels.PropertyInsights{
 			Views:             0,
 			Shared:            0,
@@ -68,6 +79,24 @@ func CreateLandPropertyForSale(c *gin.Context) {
 
 }
 
+func GetAllLandProperties(c *gin.Context) {
+	landProperties := landRepo.GetAllLandPropertiesForSale()
+	responseList := []landDtos.LandForSalePropertyWithManagerResponseDto{}
+	if len(landProperties) > 0 {
+		for i := 0; i < len(landProperties); i++ {
+			responseItem := propertyUtilities.LandPropertyWithManagerResponse(landProperties[i])
+			responseList = append(responseList, responseItem)
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"response": responseList,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"response": responseList,
+	})
+}
+
 func UpdateLandPropertyDetails(c *gin.Context) {
 	var landUpdates landDtos.LandForSalePropertyUpdateDto
 	validateModelFields := validator.New()
@@ -93,6 +122,7 @@ func UpdateLandPropertyDetails(c *gin.Context) {
 	oldLandData.Type = landUpdates.Type
 	oldLandData.UniqueId = landUpdates.UniqueId
 	oldLandData.IsNegotiable = landUpdates.IsNegotiable
+	oldLandData.OtherDetails = landUpdates.OtherDetails
 
 	isStandUpdated := landRepo.UpdateLandPropertyForSale(oldLandData)
 	if !isStandUpdated {
@@ -108,12 +138,12 @@ func UpdateLandPropertyDetails(c *gin.Context) {
 }
 
 func GetLandPropertyById(c *gin.Context) {
-	stand := landRepo.GetLandPropertyForSaleWithAllAssociationsById(c.Param("id"))
-	if stand == nil {
+	land := landRepo.GetLandPropertyForSaleWithAllAssociationsById(c.Param("id"))
+	if land == nil {
 		c.JSON(http.StatusForbidden, gin.H{"error": "this land does not exist"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"response": propertyUtilities.LandPropertyResponse(*stand)})
+	c.JSON(http.StatusOK, gin.H{"response": propertyUtilities.LandPropertyWithManagerResponse(*land)})
 }
 
 func GetManagerLandPropertiesByManagerId(c *gin.Context) {

@@ -1,6 +1,7 @@
 package land
 
 import (
+	managerDtos "SleekSpace/dtos/manager"
 	insightsDtos "SleekSpace/dtos/property/insights"
 	locationDtos "SleekSpace/dtos/property/location"
 	imageorvideoDtos "SleekSpace/dtos/property/media"
@@ -15,6 +16,7 @@ type LandForSalePropertyCreationDto struct {
 	IsNegotiable       bool                                                               `json:"isNegotiable"`
 	Status             string                                                             `json:"status"`
 	Type               string                                                             `json:"type"`
+	OtherDetails       string                                                             `json:"otherDetails"`
 	SizeDimensions     string                                                             `json:"sizeDimensions"`
 	PropertyLocation   locationDtos.PropertyLocationCreationDto                           `json:"propertyLocation"`
 	Media              []imageorvideoDtos.PropertyImageOrVideoCreationWithNoPropertyIdDto `json:"media"`
@@ -32,9 +34,29 @@ type LandForSalePropertyResponseDto struct {
 	Status             string                                                      `json:"status"`
 	Type               string                                                      `json:"type"`
 	SizeDimensions     string                                                      `json:"sizeDimensions"`
+	OtherDetails       string                                                      `json:"otherDetails"`
 	PropertyLocation   locationDtos.PropertyLocationUpdateAndResponseDto           `json:"propertyLocation"`
 	Insights           insightsDtos.PropertyInsightsUpdateAndResponseDto           `json:"insights"`
 	Media              []imageorvideoDtos.PropertyImageOrVideoUpdateAndResponseDto `json:"media"`
+}
+
+type LandForSalePropertyWithManagerResponseDto struct {
+	Id                 int                                                         `json:"id"`
+	ManagerId          int                                                         `json:"managerId"`
+	UniqueId           int                                                         `json:"uniqueId"`
+	Price              int                                                         `json:"price"`
+	SizeNumber         int                                                         `json:"sizeNumber"`
+	AreaHasElectricity bool                                                        `json:"areaHasElectricity"`
+	IsNegotiable       bool                                                        `json:"isNegotiable"`
+	HasWater           bool                                                        `json:"hasWater"`
+	Status             string                                                      `json:"status"`
+	Type               string                                                      `json:"type"`
+	OtherDetails       string                                                      `json:"otherDetails"`
+	SizeDimensions     string                                                      `json:"sizeDimensions"`
+	PropertyLocation   locationDtos.PropertyLocationUpdateAndResponseDto           `json:"propertyLocation"`
+	Insights           insightsDtos.PropertyInsightsUpdateAndResponseDto           `json:"insights"`
+	Media              []imageorvideoDtos.PropertyImageOrVideoUpdateAndResponseDto `json:"media"`
+	Manager            managerDtos.ManagerResponseDTO                              `json:"manager"`
 }
 
 type LandForSalePropertyUpdateDto struct {
@@ -49,4 +71,5 @@ type LandForSalePropertyUpdateDto struct {
 	Status             string `json:"status"`
 	Type               string `json:"type"`
 	SizeDimensions     string `json:"sizeDimensions"`
+	OtherDetails       string `json:"otherDetails"`
 }

@@ -25,10 +25,10 @@ func GetFavoriteStandProperties(c *gin.Context) {
 		c.JSON(http.StatusForbidden, gin.H{"error": "your don't have stand property favorites"})
 		return
 	}
-	response := []standDtos.StandResponseDTO{}
+	response := []standDtos.StandWithManagerResponseDTO{}
 	if len(properties) > 0 {
 		for i := 0; i < len(properties); i++ {
-			response = append(response, propertyUtilities.PropertyStandResponse(properties[i]))
+			response = append(response, propertyUtilities.PropertyStandWithManagerResponse(properties[i]))
 		}
 	}
 
@@ -72,10 +72,10 @@ func UpdateStandPropertyFavourites(c *gin.Context) {
 		c.JSON(http.StatusForbidden, gin.H{"error": "your don't have stand property favorites"})
 		return
 	}
-	response := []standDtos.StandResponseDTO{}
+	response := []standDtos.StandWithManagerResponseDTO{}
 	if len(properties) > 0 {
 		for i := 0; i < len(properties); i++ {
-			response = append(response, propertyUtilities.PropertyStandResponse(properties[i]))
+			response = append(response, propertyUtilities.PropertyStandWithManagerResponse(properties[i]))
 		}
 	}
 
