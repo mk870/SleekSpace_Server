@@ -10,6 +10,7 @@ import (
 	propertyStandDtos "SleekSpace/dtos/property/stand"
 	managerModels "SleekSpace/models/manager"
 	propertyModels "SleekSpace/models/property"
+	generalUtilities "SleekSpace/utilities/funcs/general"
 	managerUtilities "SleekSpace/utilities/funcs/manager"
 	"math/rand"
 	"time"
@@ -136,6 +137,7 @@ func PropertyStandResponse(standModel managerModels.PropertyStand) propertyStand
 		Level:              standModel.Level,
 		Type:               standModel.Type,
 		OtherDetails:       standModel.OtherDetails,
+		PostedTime:         generalUtilities.GetTimePassed(standModel.CreatedAt),
 		PropertyLocation:   PropertyLocationResponse(standModel.Location),
 		Insights:           PropertyInsightsResponse(standModel.PropertyInsights),
 		Media:              ProcessedPropertyImageAndVideosListToResponse(standModel.PropertyMedia),
@@ -157,6 +159,7 @@ func PropertyStandWithManagerResponse(standModel managerModels.PropertyStand) pr
 		Level:              standModel.Level,
 		Type:               standModel.Type,
 		OtherDetails:       standModel.OtherDetails,
+		PostedTime:         generalUtilities.GetTimePassed(standModel.CreatedAt),
 		PropertyLocation:   PropertyLocationResponse(standModel.Location),
 		Insights:           PropertyInsightsResponse(standModel.PropertyInsights),
 		Media:              ProcessedPropertyImageAndVideosListToResponse(standModel.PropertyMedia),
@@ -187,6 +190,7 @@ func ResidentialRentalPropertyWithManagerResponse(residentialRentalModel manager
 		OtherDetails:     residentialRentalModel.OtherDetails,
 		ExteriorFeatures: residentialRentalModel.ExteriorFeatures,
 		InteriorFeatures: residentialRentalModel.InteriorFeatures,
+		PostedTime:       generalUtilities.GetTimePassed(residentialRentalModel.CreatedAt),
 		PropertyLocation: PropertyLocationResponse(residentialRentalModel.Location),
 		Insights:         PropertyInsightsResponse(residentialRentalModel.PropertyInsights),
 		Media:            ProcessedPropertyImageAndVideosListToResponse(residentialRentalModel.PropertyMedia),
@@ -217,6 +221,7 @@ func ResidentialRentalPropertyResponse(residentialRentalModel managerModels.Resi
 		OtherDetails:     residentialRentalModel.OtherDetails,
 		ExteriorFeatures: residentialRentalModel.ExteriorFeatures,
 		InteriorFeatures: residentialRentalModel.InteriorFeatures,
+		PostedTime:       generalUtilities.GetTimePassed(residentialRentalModel.CreatedAt),
 		PropertyLocation: PropertyLocationResponse(residentialRentalModel.Location),
 		Insights:         PropertyInsightsResponse(residentialRentalModel.PropertyInsights),
 		Media:            ProcessedPropertyImageAndVideosListToResponse(residentialRentalModel.PropertyMedia),
@@ -246,6 +251,7 @@ func ResidentialForSalePropertyWithManagerResponse(residentialForSaleModel manag
 		OtherDetails:     residentialForSaleModel.OtherDetails,
 		ExteriorFeatures: residentialForSaleModel.ExteriorFeatures,
 		InteriorFeatures: residentialForSaleModel.InteriorFeatures,
+		PostedTime:       generalUtilities.GetTimePassed(residentialForSaleModel.CreatedAt),
 		PropertyLocation: PropertyLocationResponse(residentialForSaleModel.Location),
 		Insights:         PropertyInsightsResponse(residentialForSaleModel.PropertyInsights),
 		Media:            ProcessedPropertyImageAndVideosListToResponse(residentialForSaleModel.PropertyMedia),
@@ -276,6 +282,7 @@ func ResidentialForSalePropertyResponse(residentialForSaleModel managerModels.Re
 		OtherDetails:     residentialForSaleModel.OtherDetails,
 		ExteriorFeatures: residentialForSaleModel.ExteriorFeatures,
 		InteriorFeatures: residentialForSaleModel.InteriorFeatures,
+		PostedTime:       generalUtilities.GetTimePassed(residentialForSaleModel.CreatedAt),
 		PropertyLocation: PropertyLocationResponse(residentialForSaleModel.Location),
 		Insights:         PropertyInsightsResponse(residentialForSaleModel.PropertyInsights),
 		Media:            ProcessedPropertyImageAndVideosListToResponse(residentialForSaleModel.PropertyMedia),
@@ -301,6 +308,7 @@ func CommercialPropertyForSaleWithManagerResponse(commercialPropertyForSale mana
 		OtherDetails:     commercialPropertyForSale.OtherDetails,
 		ExteriorFeatures: commercialPropertyForSale.ExteriorFeatures,
 		InteriorFeatures: commercialPropertyForSale.InteriorFeatures,
+		PostedTime:       generalUtilities.GetTimePassed(commercialPropertyForSale.CreatedAt),
 		PropertyLocation: PropertyLocationResponse(commercialPropertyForSale.Location),
 		Insights:         PropertyInsightsResponse(commercialPropertyForSale.PropertyInsights),
 		Media:            ProcessedPropertyImageAndVideosListToResponse(commercialPropertyForSale.PropertyMedia),
@@ -327,6 +335,7 @@ func CommercialPropertyForSaleResponse(commercialPropertyForSale managerModels.C
 		OtherDetails:     commercialPropertyForSale.OtherDetails,
 		ExteriorFeatures: commercialPropertyForSale.ExteriorFeatures,
 		InteriorFeatures: commercialPropertyForSale.InteriorFeatures,
+		PostedTime:       generalUtilities.GetTimePassed(commercialPropertyForSale.CreatedAt),
 		PropertyLocation: PropertyLocationResponse(commercialPropertyForSale.Location),
 		Insights:         PropertyInsightsResponse(commercialPropertyForSale.PropertyInsights),
 		Media:            ProcessedPropertyImageAndVideosListToResponse(commercialPropertyForSale.PropertyMedia),
@@ -352,6 +361,7 @@ func CommercialPropertyForRentResponse(commercialPropertyForRent managerModels.C
 		OtherDetails:     commercialPropertyForRent.OtherDetails,
 		ExteriorFeatures: commercialPropertyForRent.ExteriorFeatures,
 		InteriorFeatures: commercialPropertyForRent.InteriorFeatures,
+		PostedTime:       generalUtilities.GetTimePassed(commercialPropertyForRent.CreatedAt),
 		PropertyLocation: PropertyLocationResponse(commercialPropertyForRent.Location),
 		Insights:         PropertyInsightsResponse(commercialPropertyForRent.PropertyInsights),
 		Media:            ProcessedPropertyImageAndVideosListToResponse(commercialPropertyForRent.PropertyMedia),
@@ -377,6 +387,7 @@ func CommercialPropertyForRentWithManagerResponse(commercialPropertyForRent mana
 		OtherDetails:     commercialPropertyForRent.OtherDetails,
 		ExteriorFeatures: commercialPropertyForRent.ExteriorFeatures,
 		InteriorFeatures: commercialPropertyForRent.InteriorFeatures,
+		PostedTime:       generalUtilities.GetTimePassed(commercialPropertyForRent.CreatedAt),
 		PropertyLocation: PropertyLocationResponse(commercialPropertyForRent.Location),
 		Insights:         PropertyInsightsResponse(commercialPropertyForRent.PropertyInsights),
 		Media:            ProcessedPropertyImageAndVideosListToResponse(commercialPropertyForRent.PropertyMedia),
@@ -398,6 +409,7 @@ func LandPropertyResponse(landPropertyModel managerModels.LandForSaleProperty) l
 		HasWater:           landPropertyModel.HasWater,
 		IsNegotiable:       landPropertyModel.IsNegotiable,
 		OtherDetails:       landPropertyModel.OtherDetails,
+		PostedTime:         generalUtilities.GetTimePassed(landPropertyModel.CreatedAt),
 		PropertyLocation:   PropertyLocationResponse(landPropertyModel.Location),
 		Insights:           PropertyInsightsResponse(landPropertyModel.PropertyInsights),
 		Media:              ProcessedPropertyImageAndVideosListToResponse(landPropertyModel.PropertyMedia),
@@ -418,6 +430,7 @@ func LandPropertyWithManagerResponse(landPropertyModel managerModels.LandForSale
 		HasWater:           landPropertyModel.HasWater,
 		IsNegotiable:       landPropertyModel.IsNegotiable,
 		OtherDetails:       landPropertyModel.OtherDetails,
+		PostedTime:         generalUtilities.GetTimePassed(landPropertyModel.CreatedAt),
 		PropertyLocation:   PropertyLocationResponse(landPropertyModel.Location),
 		Insights:           PropertyInsightsResponse(landPropertyModel.PropertyInsights),
 		Media:              ProcessedPropertyImageAndVideosListToResponse(landPropertyModel.PropertyMedia),

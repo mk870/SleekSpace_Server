@@ -3,8 +3,10 @@ package commercial
 import (
 	"SleekSpace/db"
 	managerModels "SleekSpace/models/manager"
+	pagination "SleekSpace/repositories"
 	"errors"
 
+	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -53,9 +55,9 @@ func GetManagerCommercialPropertiesForSaleByManagerId(managerId string) []manage
 	return manager.CommercialForSaleProperty
 }
 
-func GetAllCommercialPropertiesForSale() []managerModels.CommercialForSaleProperty {
+func GetAllCommercialPropertiesForSale(c *gin.Context) []managerModels.CommercialForSaleProperty {
 	var properties = []managerModels.CommercialForSaleProperty{}
-	err := db.DB.Preload(clause.Associations).Preload("Manager.ProfilePicture").Preload("Manager.ManagerContactNumbers").Find(&properties)
+	err := db.DB.Preload(clause.Associations).Preload("Manager.ProfilePicture").Preload("Manager.ManagerContactNumbers").Scopes(pagination.Paginate(c)).Find(&properties)
 	if err != nil {
 		println(err.Error, err.Name())
 	}

@@ -53,6 +53,7 @@ type ResidentialPropertyForSaleResponseDto struct {
 	InteriorFeatures string                                                      `json:"interiorFeatures"`
 	ExteriorFeatures string                                                      `json:"exteriorFeatures"`
 	OtherDetails     string                                                      `json:"otherDetails"`
+	PostedTime       string                                                      `json:"postedTime"`
 	PropertyLocation locationDtos.PropertyLocationUpdateAndResponseDto           `json:"propertyLocation"`
 	Insights         insightsDtos.PropertyInsightsUpdateAndResponseDto           `json:"insights"`
 	Media            []imageorvideoDtos.PropertyImageOrVideoUpdateAndResponseDto `json:"media"`
@@ -80,6 +81,7 @@ type ResidentialPropertyForSaleWithManagerResponseDto struct {
 	ExteriorFeatures string                                                      `json:"exteriorFeatures"`
 	OtherDetails     string                                                      `json:"otherDetails"`
 	SizeDimensions   string                                                      `json:"sizeDimensions"`
+	PostedTime       string                                                      `json:"postedTime"`
 	PropertyLocation locationDtos.PropertyLocationUpdateAndResponseDto           `json:"propertyLocation"`
 	Insights         insightsDtos.PropertyInsightsUpdateAndResponseDto           `json:"insights"`
 	Media            []imageorvideoDtos.PropertyImageOrVideoUpdateAndResponseDto `json:"media"`
