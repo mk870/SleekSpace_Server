@@ -35,6 +35,7 @@ type LandForSalePropertyResponseDto struct {
 	Type               string                                                      `json:"type"`
 	SizeDimensions     string                                                      `json:"sizeDimensions"`
 	OtherDetails       string                                                      `json:"otherDetails"`
+	PostedTime         string                                                      `json:"postedTime"`
 	PropertyLocation   locationDtos.PropertyLocationUpdateAndResponseDto           `json:"propertyLocation"`
 	Insights           insightsDtos.PropertyInsightsUpdateAndResponseDto           `json:"insights"`
 	Media              []imageorvideoDtos.PropertyImageOrVideoUpdateAndResponseDto `json:"media"`
@@ -53,6 +54,7 @@ type LandForSalePropertyWithManagerResponseDto struct {
 	Type               string                                                      `json:"type"`
 	OtherDetails       string                                                      `json:"otherDetails"`
 	SizeDimensions     string                                                      `json:"sizeDimensions"`
+	PostedTime         string                                                      `json:"postedTime"`
 	PropertyLocation   locationDtos.PropertyLocationUpdateAndResponseDto           `json:"propertyLocation"`
 	Insights           insightsDtos.PropertyInsightsUpdateAndResponseDto           `json:"insights"`
 	Media              []imageorvideoDtos.PropertyImageOrVideoUpdateAndResponseDto `json:"media"`

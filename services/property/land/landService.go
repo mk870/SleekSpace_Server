@@ -80,7 +80,7 @@ func CreateLandPropertyForSale(c *gin.Context) {
 }
 
 func GetAllLandProperties(c *gin.Context) {
-	landProperties := landRepo.GetAllLandPropertiesForSale()
+	landProperties := landRepo.GetAllLandPropertiesForSale(c)
 	responseList := []landDtos.LandForSalePropertyWithManagerResponseDto{}
 	if len(landProperties) > 0 {
 		for i := 0; i < len(landProperties); i++ {
@@ -88,12 +88,14 @@ func GetAllLandProperties(c *gin.Context) {
 			responseList = append(responseList, responseItem)
 		}
 		c.JSON(http.StatusOK, gin.H{
-			"response": responseList,
+			"properties": responseList,
+			"totalPages": c.GetInt("totalPages"),
 		})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"response": responseList,
+		"properties": responseList,
+		"totalPages": c.GetInt("totalPages"),
 	})
 }
 

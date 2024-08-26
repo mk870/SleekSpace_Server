@@ -116,7 +116,7 @@ func GetAllManagers(c *gin.Context) {
 }
 
 func GetAllStands(c *gin.Context) {
-	stands := standRepo.GetAllStands()
+	stands := standRepo.GetAllStands(c)
 	responseList := []standDtos.StandResponseDTO{}
 	if len(stands) > 0 {
 		for i := 0; i < len(stands); i++ {
@@ -124,12 +124,14 @@ func GetAllStands(c *gin.Context) {
 			responseList = append(responseList, responseItem)
 		}
 		c.JSON(http.StatusOK, gin.H{
-			"response": responseList,
+			"properties": responseList,
+			"totalPages": c.GetInt("totalPages"),
 		})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"response": responseList,
+		"properties": responseList,
+		"totalPages": c.GetInt("totalPages"),
 	})
 }
 
@@ -141,7 +143,7 @@ func GetLandWithManager(c *gin.Context) {
 }
 
 func GetAllLandProperties(c *gin.Context) {
-	landProperties := landRepo.GetAllLandPropertiesForSale()
+	landProperties := landRepo.GetAllLandPropertiesForSale(c)
 	responseList := []landDtos.LandForSalePropertyWithManagerResponseDto{}
 	if len(landProperties) > 0 {
 		for i := 0; i < len(landProperties); i++ {
@@ -149,17 +151,19 @@ func GetAllLandProperties(c *gin.Context) {
 			responseList = append(responseList, responseItem)
 		}
 		c.JSON(http.StatusOK, gin.H{
-			"response": responseList,
+			"properties": responseList,
+			"totalPages": c.GetInt("totalPages"),
 		})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"response": responseList,
+		"properties": responseList,
+		"totalPages": c.GetInt("totalPages"),
 	})
 }
 
 func GetAllResidentialForSaleProperties(c *gin.Context) {
-	residentialPropertiesForSale := residentialRepo.GetAllResidentialPropertiesForSale()
+	residentialPropertiesForSale := residentialRepo.GetAllResidentialPropertiesForSale(c)
 	responseList := []residentialDtos.ResidentialPropertyForSaleResponseDto{}
 	if len(residentialPropertiesForSale) > 0 {
 		for i := 0; i < len(residentialPropertiesForSale); i++ {
@@ -167,17 +171,19 @@ func GetAllResidentialForSaleProperties(c *gin.Context) {
 			responseList = append(responseList, responseItem)
 		}
 		c.JSON(http.StatusOK, gin.H{
-			"response": responseList,
+			"properties": responseList,
+			"totalPages": c.GetInt("totalPages"),
 		})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"response": responseList,
+		"properties": responseList,
+		"totalPages": c.GetInt("totalPages"),
 	})
 }
 
 func GetAllResidentialRentalProperties(c *gin.Context) {
-	residentialRentalProperties := residentialRepo.GetAllResidentialRentalProperties()
+	residentialRentalProperties := residentialRepo.GetAllResidentialRentalProperties(c)
 	responseList := []residentialDtos.ResidentialPropertyForRentResponseDto{}
 	if len(residentialRentalProperties) > 0 {
 		for i := 0; i < len(residentialRentalProperties); i++ {
@@ -185,17 +191,19 @@ func GetAllResidentialRentalProperties(c *gin.Context) {
 			responseList = append(responseList, responseItem)
 		}
 		c.JSON(http.StatusOK, gin.H{
-			"response": responseList,
+			"properties": responseList,
+			"totalPages": c.GetInt("totalPages"),
 		})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"response": responseList,
+		"properties": responseList,
+		"totalPages": c.GetInt("totalPages"),
 	})
 }
 
 func GetAllCommercialRentalProperties(c *gin.Context) {
-	commercialRentalProperties := commercialRepo.GetAllCommercialRentalProperties()
+	commercialRentalProperties := commercialRepo.GetAllCommercialRentalProperties(c)
 	responseList := []commercialDtos.CommercialForRentPropertyResponseDto{}
 	if len(commercialRentalProperties) > 0 {
 		for i := 0; i < len(commercialRentalProperties); i++ {
@@ -203,17 +211,19 @@ func GetAllCommercialRentalProperties(c *gin.Context) {
 			responseList = append(responseList, responseItem)
 		}
 		c.JSON(http.StatusOK, gin.H{
-			"response": responseList,
+			"properties": responseList,
+			"totalPages": c.GetInt("totalPages"),
 		})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"response": responseList,
+		"properties": responseList,
+		"totalPages": c.GetInt("totalPages"),
 	})
 }
 
 func GetAllCommercialForSaleProperties(c *gin.Context) {
-	commercialPropertiesForSale := commercialRepo.GetAllCommercialPropertiesForSale()
+	commercialPropertiesForSale := commercialRepo.GetAllCommercialPropertiesForSale(c)
 	responseList := []commercialDtos.CommercialForSalePropertyResponseDto{}
 	if len(commercialPropertiesForSale) > 0 {
 		for i := 0; i < len(commercialPropertiesForSale); i++ {
@@ -221,12 +231,14 @@ func GetAllCommercialForSaleProperties(c *gin.Context) {
 			responseList = append(responseList, responseItem)
 		}
 		c.JSON(http.StatusOK, gin.H{
-			"response": responseList,
+			"properties": responseList,
+			"totalPages": c.GetInt("totalPages"),
 		})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"response": responseList,
+		"properties": responseList,
+		"totalPages": c.GetInt("totalPages"),
 	})
 }
 

@@ -3,8 +3,10 @@ package residential
 import (
 	"SleekSpace/db"
 	managerModels "SleekSpace/models/manager"
+	pagination "SleekSpace/repositories"
 	"errors"
 
+	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -53,9 +55,9 @@ func GetManagerResidentialRentalPropertiesByManagerId(managerId string) []manage
 	return manager.ResidentialRentalProperty
 }
 
-func GetAllResidentialRentalProperties() []managerModels.ResidentialRentalProperty {
+func GetAllResidentialRentalProperties(c *gin.Context) []managerModels.ResidentialRentalProperty {
 	var properties = []managerModels.ResidentialRentalProperty{}
-	err := db.DB.Preload(clause.Associations).Preload("Manager.ProfilePicture").Preload("Manager.ManagerContactNumbers").Find(&properties)
+	err := db.DB.Preload(clause.Associations).Preload("Manager.ProfilePicture").Preload("Manager.ManagerContactNumbers").Scopes(pagination.Paginate(c)).Find(&properties)
 	if err != nil {
 		println(err.Error, err.Name())
 	}

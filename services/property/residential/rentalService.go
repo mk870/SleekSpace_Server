@@ -138,7 +138,7 @@ func UpdateResidentialRentalPropertyDetails(c *gin.Context) {
 }
 
 func GetAllResidentialRentalProperties(c *gin.Context) {
-	residentialRentalProperties := residentialRepo.GetAllResidentialRentalProperties()
+	residentialRentalProperties := residentialRepo.GetAllResidentialRentalProperties(c)
 	responseList := []residentialDtos.ResidentialPropertyForRentWithManagerResponseDto{}
 	if len(residentialRentalProperties) > 0 {
 		for i := 0; i < len(residentialRentalProperties); i++ {
@@ -146,12 +146,14 @@ func GetAllResidentialRentalProperties(c *gin.Context) {
 			responseList = append(responseList, responseItem)
 		}
 		c.JSON(http.StatusOK, gin.H{
-			"response": responseList,
+			"properties": responseList,
+			"totalPages": c.GetInt("totalPages"),
 		})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"response": responseList,
+		"properties": responseList,
+		"totalPages": c.GetInt("totalPages"),
 	})
 }
 

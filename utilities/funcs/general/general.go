@@ -2,6 +2,7 @@ package general
 
 import (
 	//"log"
+	"math"
 
 	"math/rand"
 	"os"
@@ -29,6 +30,58 @@ func ConvertStringToInt(number string) int {
 
 func GenerateVerificationGracePeriod() time.Time {
 	return time.Now().Add(time.Minute * 15)
+}
+
+func GetTimePassed(createdAt time.Time) string {
+	timePassed := time.Since(createdAt)
+
+	seconds := timePassed.Seconds()
+	minutes := timePassed.Minutes()
+	hours := timePassed.Hours()
+	days := hours / 24
+	weeks := days / 7
+	months := days / 30
+	years := days / 365
+
+	if seconds < 60 {
+		return ConvertIntToString(int(math.Floor(seconds))) + " seconds ago"
+	} else if minutes < 60 {
+		if math.Floor(minutes) == 1 {
+			return ConvertIntToString(int(math.Floor(minutes))) + " minute ago"
+		} else {
+			return ConvertIntToString(int(math.Floor(minutes))) + " minutes ago"
+		}
+	} else if math.Floor(hours) < 24 {
+		if math.Floor(hours) == 1 {
+			return ConvertIntToString(int(math.Floor(hours))) + " hour ago"
+		} else {
+			return ConvertIntToString(int(math.Floor(hours))) + " hours ago"
+		}
+	} else if math.Floor(days) < 7 {
+		if math.Floor(days) == 1 {
+			return ConvertIntToString(int(math.Floor(days))) + " day ago"
+		} else {
+			return ConvertIntToString(int(math.Floor(days))) + " days ago"
+		}
+	} else if math.Floor(weeks) < 4 {
+		if math.Floor(weeks) == 1 {
+			return ConvertIntToString(int(math.Floor(weeks))) + " week ago"
+		} else {
+			return ConvertIntToString(int(math.Floor(weeks))) + " weeks ago"
+		}
+	} else if math.Floor(months) < 12 {
+		if math.Floor(months) == 1 {
+			return ConvertIntToString(int(math.Floor(months))) + " month ago"
+		} else {
+			return ConvertIntToString(int(math.Floor(months))) + " months ago"
+		}
+	} else {
+		if math.Floor(years) == 1 {
+			return ConvertIntToString(int(math.Floor(years))) + " year ago"
+		} else {
+			return ConvertIntToString(int(math.Floor(years))) + " years ago"
+		}
+	}
 }
 
 type EnvVariables struct {

@@ -3,8 +3,10 @@ package stand
 import (
 	"SleekSpace/db"
 	managerModels "SleekSpace/models/manager"
+	pagination "SleekSpace/repositories"
 	"errors"
 
+	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -53,9 +55,9 @@ func GetManagerStandsByManagerId(managerId string) []managerModels.PropertyStand
 	return manager.PropertyStand
 }
 
-func GetAllStands() []managerModels.PropertyStand {
+func GetAllStands(c *gin.Context) []managerModels.PropertyStand {
 	var stands = []managerModels.PropertyStand{}
-	err := db.DB.Preload(clause.Associations).Preload("Manager.ProfilePicture").Preload("Manager.ManagerContactNumbers").Find(&stands)
+	err := db.DB.Preload(clause.Associations).Preload("Manager.ProfilePicture").Preload("Manager.ManagerContactNumbers").Scopes(pagination.Paginate(c)).Find(&stands)
 	if err != nil {
 		println(err.Error, err.Name())
 	}

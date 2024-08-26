@@ -81,7 +81,7 @@ func CreateStandForSale(c *gin.Context) {
 }
 
 func GetAllStands(c *gin.Context) {
-	stands := standRepo.GetAllStands()
+	stands := standRepo.GetAllStands(c)
 	responseList := []standDtos.StandWithManagerResponseDTO{}
 	if len(stands) > 0 {
 		for i := 0; i < len(stands); i++ {
@@ -89,12 +89,14 @@ func GetAllStands(c *gin.Context) {
 			responseList = append(responseList, responseItem)
 		}
 		c.JSON(http.StatusOK, gin.H{
-			"response": responseList,
+			"properties": responseList,
+			"totalPages": c.GetInt("totalPages"),
 		})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"response": responseList,
+		"properties": responseList,
+		"totalPages": c.GetInt("totalPages"),
 	})
 }
 

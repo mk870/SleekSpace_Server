@@ -3,8 +3,10 @@ package land
 import (
 	"SleekSpace/db"
 	managerModels "SleekSpace/models/manager"
+	pagination "SleekSpace/repositories"
 	"errors"
 
+	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -65,9 +67,9 @@ func GetManagerLandPropertiesForSaleByManagerId(managerId string) []managerModel
 	return manager.LandForSaleProperty
 }
 
-func GetAllLandPropertiesForSale() []managerModels.LandForSaleProperty {
+func GetAllLandPropertiesForSale(c *gin.Context) []managerModels.LandForSaleProperty {
 	var properties = []managerModels.LandForSaleProperty{}
-	err := db.DB.Preload(clause.Associations).Preload("Manager.ProfilePicture").Preload("Manager.ManagerContactNumbers").Find(&properties)
+	err := db.DB.Preload(clause.Associations).Preload("Manager.ProfilePicture").Preload("Manager.ManagerContactNumbers").Scopes(pagination.Paginate(c)).Find(&properties)
 	if err != nil {
 		println(err.Error, err.Name())
 	}

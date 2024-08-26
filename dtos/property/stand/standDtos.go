@@ -37,6 +37,7 @@ type StandResponseDTO struct {
 	SizeDimensions     string                                                      `json:"sizeDimensions"`
 	Type               string                                                      `json:"type"`
 	OtherDetails       string                                                      `json:"otherDetails"`
+	PostedTime         string                                                      `json:"postedTime"`
 	PropertyLocation   locationDtos.PropertyLocationUpdateAndResponseDto           `json:"propertyLocation"`
 	Insights           insightsDtos.PropertyInsightsUpdateAndResponseDto           `json:"insights"`
 	Media              []imageorvideoDtos.PropertyImageOrVideoUpdateAndResponseDto `json:"media"`
@@ -56,6 +57,7 @@ type StandWithManagerResponseDTO struct {
 	SizeDimensions     string                                                      `json:"sizeDimensions"`
 	Type               string                                                      `json:"type"`
 	OtherDetails       string                                                      `json:"otherDetails"`
+	PostedTime         string                                                      `json:"postedTime"`
 	PropertyLocation   locationDtos.PropertyLocationUpdateAndResponseDto           `json:"propertyLocation"`
 	Insights           insightsDtos.PropertyInsightsUpdateAndResponseDto           `json:"insights"`
 	Media              []imageorvideoDtos.PropertyImageOrVideoUpdateAndResponseDto `json:"media"`
