@@ -1,14 +1,15 @@
 package general
 
 import (
-	//"log"
+	"log"
 	"math"
 
 	"math/rand"
 	"os"
 	"strconv"
 	"time"
-	//"github.com/joho/godotenv"
+
+	"github.com/joho/godotenv"
 )
 
 func GenerateVerificationCode() int {
@@ -92,23 +93,29 @@ type EnvVariables struct {
 	LocationIQToken     string
 	SupabaseApiKey      string
 	SupabaseReferenceId string
+	AWSAcessKey         string
+	AWSSecretKey        string
 }
 
 func GetEnvVariables() EnvVariables {
-	// err := godotenv.Load()
-	// if err != nil {
-	// 	log.Fatalf("Error loading .env file: %s", err)
-	// }
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file: %s", err)
+	}
 	databaseDetails := os.Getenv("DATABASE_DETAILS")
 	email := os.Getenv("EMAIL")
 	emailPassword := os.Getenv("EMAIL_PASSWORD")
 	tokenSecret := os.Getenv("ACCESS_TOKEN_SECRET")
 	locationIQToken := os.Getenv("LOCATION_IQ_ACCESS_TOKEN")
+	awsAccessKey := os.Getenv("AWS_ACCESS_KEY")
+	awsSecretKey := os.Getenv("AWS_SECRET_KEY")
 	return EnvVariables{
 		DatabaseDetails: databaseDetails,
 		Email:           email,
 		EmailPassword:   emailPassword,
 		TokenSecret:     tokenSecret,
 		LocationIQToken: locationIQToken,
+		AWSAcessKey:     awsAccessKey,
+		AWSSecretKey:    awsSecretKey,
 	}
 }

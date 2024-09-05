@@ -11,12 +11,12 @@ type ManagerCreationDTO struct {
 }
 
 type ManagerResponseDTO struct {
-	Id             int                                       `json:"id"`
-	UserId         int                                       `json:"userId"`
-	Name           string                                    `json:"name" validate:"required,min=2,max=50"`
-	Email          string                                    `json:"email"`
-	ProfilePicture ManagerProfilePictureResponseAndUpdateDTO `json:"profilePicture"`
-	Contacts       []ManagerContactNumberDTO                 `json:"contacts"`
+	Id             int                              `json:"id"`
+	UserId         int                              `json:"userId"`
+	Name           string                           `json:"name" validate:"required,min=2,max=50"`
+	Email          string                           `json:"email"`
+	ProfilePicture ManagerProfilePictureResponseDTO `json:"profilePicture"`
+	Contacts       []ManagerContactNumberDTO        `json:"contacts"`
 }
 
 type UpdateManagerNameAndEmailDTO struct {

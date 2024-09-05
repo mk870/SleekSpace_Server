@@ -6,6 +6,7 @@ import (
 	userDtos "SleekSpace/dtos/user"
 	userModels "SleekSpace/models/user"
 	userRepo "SleekSpace/repositories/user"
+	"SleekSpace/storage"
 	constantsUtilities "SleekSpace/utilities/constants"
 	generalUtilities "SleekSpace/utilities/funcs/general"
 	userUtilities "SleekSpace/utilities/funcs/user"
@@ -29,11 +30,11 @@ func CreateUserProfilePicture(c *gin.Context) {
 		c.JSON(http.StatusForbidden, gin.H{"error": constantsUtilities.NoUserError})
 		return
 	}
+	imageUrl := <-storage.UploadBase64File(userProfilePicture.Image, userProfilePicture.Name, c)
 	newProfilePicture := userModels.UserProfilePicture{
 		UserId:      userProfilePicture.UserId,
-		Uri:         userProfilePicture.Uri,
+		Uri:         imageUrl,
 		Name:        userProfilePicture.Name,
-		FullPath:    userProfilePicture.FullPath,
 		FileType:    userProfilePicture.FileType,
 		ContentType: userProfilePicture.ContentType,
 		Size:        userProfilePicture.Size,
@@ -55,20 +56,23 @@ func CreateUserProfilePicture(c *gin.Context) {
 
 func UpdateUserProfilePicture(c *gin.Context) {
 	userId := c.Param("id")
-	var profilePictureUpdate userDtos.UserProfilePictureResponseAndUpdateDTO
+	var profilePictureUpdate userDtos.UserProfilePictureUpdateDTO
+
 	validateModelFields := validator.New()
 	c.BindJSON(&profilePictureUpdate)
 	modelFieldsValidationError := validateModelFields.Struct(profilePictureUpdate)
+
 	if modelFieldsValidationError != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": modelFieldsValidationError.Error()})
 		return
 	}
+
+	imageUrl := <-storage.UploadBase64File(profilePictureUpdate.Image, profilePictureUpdate.Name, c)
 	newProfilePicture := userModels.UserProfilePicture{
 		Id:          profilePictureUpdate.Id,
 		UserId:      profilePictureUpdate.UserId,
-		Uri:         profilePictureUpdate.Uri,
+		Uri:         imageUrl,
 		Name:        profilePictureUpdate.Name,
-		FullPath:    profilePictureUpdate.FullPath,
 		FileType:    profilePictureUpdate.FileType,
 		ContentType: profilePictureUpdate.ContentType,
 		Size:        profilePictureUpdate.Size,

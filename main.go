@@ -15,6 +15,7 @@ import (
 	standsController "SleekSpace/controllers/property/stand"
 	userController "SleekSpace/controllers/user"
 	"SleekSpace/db"
+	"SleekSpace/storage"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -27,6 +28,7 @@ func main() {
 	config.AllowCredentials = true
 	config.AddAllowHeaders("Authorization", "token", "User-Agent", "Accept")
 	router.Use(cors.New(config))
+	storage.InitializeS3()
 	db.Connect()
 
 	userController.UserRoutes(router)

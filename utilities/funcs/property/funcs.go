@@ -16,12 +16,47 @@ import (
 	"time"
 )
 
+type MediaFile struct {
+	FileSrc string
+	Name    string
+}
+
 func GeneratePropertyUniqueId() int {
 	rand.Seed(time.Now().UnixNano())
 	min := 1000000000000000
 	max := 9999999999999999
 	randomInt := rand.Intn(max-min) + min
 	return randomInt
+}
+
+func MediaListWithNoPropertyId(mediaList []propertyMediaDtos.PropertyImageOrVideoCreationWithNoPropertyIdDto) []MediaFile {
+	mediaFiles := []MediaFile{}
+	if len(mediaList) == 0 {
+		return mediaFiles
+	}
+	for i := 0; i < len(mediaList); i++ {
+		file := MediaFile{
+			FileSrc: mediaList[i].File,
+			Name:    mediaList[i].Name,
+		}
+		mediaFiles = append(mediaFiles, file)
+	}
+	return mediaFiles
+}
+
+func MediaListWithPropertyId(mediaList []propertyMediaDtos.PropertyImageOrVideoCreationWithPropertyIdDto) []MediaFile {
+	mediaFiles := []MediaFile{}
+	if len(mediaList) == 0 {
+		return mediaFiles
+	}
+	for i := 0; i < len(mediaList); i++ {
+		file := MediaFile{
+			FileSrc: mediaList[i].File,
+			Name:    mediaList[i].Name,
+		}
+		mediaFiles = append(mediaFiles, file)
+	}
+	return mediaFiles
 }
 
 func ReturnDeletedFavoriteProperties(availableFavoritePropertyIds, allFavoritePropertyIds []int) []int {
@@ -38,17 +73,16 @@ func ReturnDeletedFavoriteProperties(availableFavoritePropertyIds, allFavoritePr
 	return deletedProperties
 }
 
-func ConvertPropertyImagesOrVideosWithNoPropertyIdToModel(propertyMediaList []propertyMediaDtos.PropertyImageOrVideoCreationWithNoPropertyIdDto, propertyType string) []propertyModels.PropertyImageOrVideo {
+func ConvertPropertyImagesOrVideosWithNoPropertyIdToModel(propertyMediaList []propertyMediaDtos.PropertyImageOrVideoCreationWithNoPropertyIdDto, propertyType string, mediaUrls map[string]string) []propertyModels.PropertyImageOrVideo {
 	mediaList := []propertyModels.PropertyImageOrVideo{}
 	if len(propertyMediaList) > 0 {
 		for i := 0; i < len(propertyMediaList); i++ {
 			media := propertyModels.PropertyImageOrVideo{
-				Uri:          propertyMediaList[i].Uri,
+				Uri:          mediaUrls[propertyMediaList[i].Name],
 				FileType:     propertyMediaList[i].FileType,
 				ContentType:  propertyMediaList[i].ContentType,
 				Size:         propertyMediaList[i].Size,
 				Name:         propertyMediaList[i].Name,
-				FullPath:     propertyMediaList[i].FullPath,
 				PropertyType: propertyType,
 			}
 			mediaList = append(mediaList, media)
@@ -57,11 +91,30 @@ func ConvertPropertyImagesOrVideosWithNoPropertyIdToModel(propertyMediaList []pr
 	return mediaList
 }
 
-func ProcessedPropertyImageAndVideosListToResponse(mediaList []propertyModels.PropertyImageOrVideo) []propertyMediaDtos.PropertyImageOrVideoUpdateAndResponseDto {
-	dtoList := []propertyMediaDtos.PropertyImageOrVideoUpdateAndResponseDto{}
+func ConvertPropertyImagesOrVideosWithPropertyIdToModel(propertyMediaList []propertyMediaDtos.PropertyImageOrVideoCreationWithPropertyIdDto, mediaUrls map[string]string) []propertyModels.PropertyImageOrVideo {
+	mediaList := []propertyModels.PropertyImageOrVideo{}
+	if len(propertyMediaList) > 0 {
+		for i := 0; i < len(propertyMediaList); i++ {
+			media := propertyModels.PropertyImageOrVideo{
+				Uri:          mediaUrls[propertyMediaList[i].Name],
+				PropertyId:   propertyMediaList[i].PropertyId,
+				FileType:     propertyMediaList[i].FileType,
+				ContentType:  propertyMediaList[i].ContentType,
+				Size:         propertyMediaList[i].Size,
+				Name:         propertyMediaList[i].Name,
+				PropertyType: propertyMediaList[i].PropertyType,
+			}
+			mediaList = append(mediaList, media)
+		}
+	}
+	return mediaList
+}
+
+func ProcessedPropertyImageAndVideosListToResponse(mediaList []propertyModels.PropertyImageOrVideo) []propertyMediaDtos.PropertyImageOrVideoResponseDto {
+	dtoList := []propertyMediaDtos.PropertyImageOrVideoResponseDto{}
 	if len(mediaList) > 0 {
 		for i := 0; i < len(mediaList); i++ {
-			dto := propertyMediaDtos.PropertyImageOrVideoUpdateAndResponseDto{
+			dto := propertyMediaDtos.PropertyImageOrVideoResponseDto{
 				Id:           mediaList[i].Id,
 				PropertyId:   mediaList[i].PropertyId,
 				Uri:          mediaList[i].Uri,
@@ -69,7 +122,6 @@ func ProcessedPropertyImageAndVideosListToResponse(mediaList []propertyModels.Pr
 				ContentType:  mediaList[i].ContentType,
 				Size:         mediaList[i].Size,
 				Name:         mediaList[i].Name,
-				FullPath:     mediaList[i].FullPath,
 				PropertyType: mediaList[i].PropertyType,
 			}
 			dtoList = append(dtoList, dto)
@@ -78,8 +130,8 @@ func ProcessedPropertyImageAndVideosListToResponse(mediaList []propertyModels.Pr
 	return dtoList
 }
 
-func PropertyImageOrVideoResponse(media propertyModels.PropertyImageOrVideo) propertyMediaDtos.PropertyImageOrVideoUpdateAndResponseDto {
-	return propertyMediaDtos.PropertyImageOrVideoUpdateAndResponseDto{
+func PropertyImageOrVideoResponse(media propertyModels.PropertyImageOrVideo) propertyMediaDtos.PropertyImageOrVideoResponseDto {
+	return propertyMediaDtos.PropertyImageOrVideoResponseDto{
 		Id:           media.Id,
 		PropertyId:   media.PropertyId,
 		Uri:          media.Uri,
@@ -87,7 +139,6 @@ func PropertyImageOrVideoResponse(media propertyModels.PropertyImageOrVideo) pro
 		ContentType:  media.ContentType,
 		Size:         media.Size,
 		Name:         media.Name,
-		FullPath:     media.FullPath,
 		PropertyType: media.PropertyType,
 	}
 }

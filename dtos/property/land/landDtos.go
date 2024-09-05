@@ -23,42 +23,42 @@ type LandForSalePropertyCreationDto struct {
 }
 
 type LandForSalePropertyResponseDto struct {
-	Id                 int                                                         `json:"id"`
-	ManagerId          int                                                         `json:"managerId"`
-	UniqueId           int                                                         `json:"uniqueId"`
-	Price              int                                                         `json:"price"`
-	SizeNumber         int                                                         `json:"sizeNumber"`
-	AreaHasElectricity bool                                                        `json:"areaHasElectricity"`
-	IsNegotiable       bool                                                        `json:"isNegotiable"`
-	HasWater           bool                                                        `json:"hasWater"`
-	Status             string                                                      `json:"status"`
-	Type               string                                                      `json:"type"`
-	SizeDimensions     string                                                      `json:"sizeDimensions"`
-	OtherDetails       string                                                      `json:"otherDetails"`
-	PostedTime         string                                                      `json:"postedTime"`
-	PropertyLocation   locationDtos.PropertyLocationUpdateAndResponseDto           `json:"propertyLocation"`
-	Insights           insightsDtos.PropertyInsightsUpdateAndResponseDto           `json:"insights"`
-	Media              []imageorvideoDtos.PropertyImageOrVideoUpdateAndResponseDto `json:"media"`
+	Id                 int                                                `json:"id"`
+	ManagerId          int                                                `json:"managerId"`
+	UniqueId           int                                                `json:"uniqueId"`
+	Price              int                                                `json:"price"`
+	SizeNumber         int                                                `json:"sizeNumber"`
+	AreaHasElectricity bool                                               `json:"areaHasElectricity"`
+	IsNegotiable       bool                                               `json:"isNegotiable"`
+	HasWater           bool                                               `json:"hasWater"`
+	Status             string                                             `json:"status"`
+	Type               string                                             `json:"type"`
+	SizeDimensions     string                                             `json:"sizeDimensions"`
+	OtherDetails       string                                             `json:"otherDetails"`
+	PostedTime         string                                             `json:"postedTime"`
+	PropertyLocation   locationDtos.PropertyLocationUpdateAndResponseDto  `json:"propertyLocation"`
+	Insights           insightsDtos.PropertyInsightsUpdateAndResponseDto  `json:"insights"`
+	Media              []imageorvideoDtos.PropertyImageOrVideoResponseDto `json:"media"`
 }
 
 type LandForSalePropertyWithManagerResponseDto struct {
-	Id                 int                                                         `json:"id"`
-	ManagerId          int                                                         `json:"managerId"`
-	UniqueId           int                                                         `json:"uniqueId"`
-	Price              int                                                         `json:"price"`
-	SizeNumber         int                                                         `json:"sizeNumber"`
-	AreaHasElectricity bool                                                        `json:"areaHasElectricity"`
-	IsNegotiable       bool                                                        `json:"isNegotiable"`
-	HasWater           bool                                                        `json:"hasWater"`
-	Status             string                                                      `json:"status"`
-	Type               string                                                      `json:"type"`
-	OtherDetails       string                                                      `json:"otherDetails"`
-	SizeDimensions     string                                                      `json:"sizeDimensions"`
-	PostedTime         string                                                      `json:"postedTime"`
-	PropertyLocation   locationDtos.PropertyLocationUpdateAndResponseDto           `json:"propertyLocation"`
-	Insights           insightsDtos.PropertyInsightsUpdateAndResponseDto           `json:"insights"`
-	Media              []imageorvideoDtos.PropertyImageOrVideoUpdateAndResponseDto `json:"media"`
-	Manager            managerDtos.ManagerResponseDTO                              `json:"manager"`
+	Id                 int                                                `json:"id"`
+	ManagerId          int                                                `json:"managerId"`
+	UniqueId           int                                                `json:"uniqueId"`
+	Price              int                                                `json:"price"`
+	SizeNumber         int                                                `json:"sizeNumber"`
+	AreaHasElectricity bool                                               `json:"areaHasElectricity"`
+	IsNegotiable       bool                                               `json:"isNegotiable"`
+	HasWater           bool                                               `json:"hasWater"`
+	Status             string                                             `json:"status"`
+	Type               string                                             `json:"type"`
+	OtherDetails       string                                             `json:"otherDetails"`
+	SizeDimensions     string                                             `json:"sizeDimensions"`
+	PostedTime         string                                             `json:"postedTime"`
+	PropertyLocation   locationDtos.PropertyLocationUpdateAndResponseDto  `json:"propertyLocation"`
+	Insights           insightsDtos.PropertyInsightsUpdateAndResponseDto  `json:"insights"`
+	Media              []imageorvideoDtos.PropertyImageOrVideoResponseDto `json:"media"`
+	Manager            managerDtos.ManagerResponseDTO                     `json:"manager"`
 }
 
 type LandForSalePropertyUpdateDto struct {

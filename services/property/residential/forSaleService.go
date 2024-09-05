@@ -8,6 +8,7 @@ import (
 	propertyModels "SleekSpace/models/property"
 	managerRepo "SleekSpace/repositories/manager"
 	residentialRepo "SleekSpace/repositories/property/residential"
+	"SleekSpace/storage"
 	constants "SleekSpace/utilities/constants"
 	generalUtilities "SleekSpace/utilities/funcs/general"
 	propertyUtilities "SleekSpace/utilities/funcs/property"
@@ -27,11 +28,19 @@ func CreateResidentialPropertyForSale(c *gin.Context) {
 		return
 	}
 
+	if len(residentialPropertyForSaleDetails.Media) > constants.ImagesOrVideosLimitPerProperty {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "you can only upload " + generalUtilities.ConvertIntToString(constants.ImagesOrVideosLimitPerProperty) + " images/videos"})
+		return
+	}
+
 	manager := managerRepo.GetManagerWithProfilePictureAndContactsByManagerId(generalUtilities.ConvertIntToString(residentialPropertyForSaleDetails.ManagerId))
 	if manager == nil {
 		c.JSON(http.StatusForbidden, gin.H{"error": "this manager does not exist"})
 		return
 	}
+
+	mediaList := propertyUtilities.MediaListWithNoPropertyId(residentialPropertyForSaleDetails.Media)
+	mediaUrls := <-storage.UploadBase64Files(mediaList, c)
 
 	newResidentialPropertyForSale := managerModels.ResidentialPropertyForSale{
 		ManagerId:        residentialPropertyForSaleDetails.ManagerId,
@@ -62,7 +71,7 @@ func CreateResidentialPropertyForSale(c *gin.Context) {
 			ContactInfoViews:  0,
 			PropertyType:      constants.ResidentialPropertyForSaleType,
 		},
-		PropertyMedia: propertyUtilities.ConvertPropertyImagesOrVideosWithNoPropertyIdToModel(residentialPropertyForSaleDetails.Media, constants.ResidentialPropertyForSaleType),
+		PropertyMedia: propertyUtilities.ConvertPropertyImagesOrVideosWithNoPropertyIdToModel(residentialPropertyForSaleDetails.Media, constants.ResidentialPropertyForSaleType, mediaUrls),
 		Location: propertyModels.PropertyLocation{
 			Boundingbox:  residentialPropertyForSaleDetails.PropertyLocation.Boundingbox,
 			Lat:          residentialPropertyForSaleDetails.PropertyLocation.Lat,
@@ -178,6 +187,14 @@ func GetManagerResidentialPropertiesForSaleByManagerId(c *gin.Context) {
 }
 
 func DeleteResidentialPropertyForSaleById(c *gin.Context) {
+	residentialPropertiesForSale := residentialRepo.GetResidentialPropertyForSaleWithAllAssociationsById(c.Param("id"))
+	if len(residentialPropertiesForSale.PropertyMedia) > 0 {
+		var fileNames []string
+		for i := 0; i < len(residentialPropertiesForSale.PropertyMedia); i++ {
+			fileNames = append(fileNames, residentialPropertiesForSale.PropertyMedia[i].Name)
+		}
+		<-storage.DeleteFiles(fileNames, c)
+	}
 	isPropertyDeleted := residentialRepo.DeleteResidentialPropertyForSaleById(c.Param("id"))
 	if !isPropertyDeleted {
 		c.JSON(http.StatusForbidden, gin.H{"error": "this property does not exist"})

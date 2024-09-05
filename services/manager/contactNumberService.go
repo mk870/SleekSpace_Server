@@ -1,4 +1,4 @@
-package services
+package manager
 
 import (
 	"net/http"

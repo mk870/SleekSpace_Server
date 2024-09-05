@@ -1,9 +1,8 @@
 package media
 
 type PropertyImageOrVideoCreationWithNoPropertyIdDto struct {
-	Uri         string `json:"uri"`
+	File        string `json:"file"`
 	Name        string `json:"name"`
-	FullPath    string `json:"fullPath"`
 	Size        int    `json:"size"`
 	ContentType string `json:"contentType"`
 	FileType    string `json:"fileType"`
@@ -11,21 +10,33 @@ type PropertyImageOrVideoCreationWithNoPropertyIdDto struct {
 
 type PropertyImageOrVideoCreationWithPropertyIdDto struct {
 	PropertyId   int    `json:"propertyId"`
-	Uri          string `json:"uri"`
+	File         string `json:"file"`
 	Name         string `json:"name"`
-	FullPath     string `json:"fullPath"`
+	Size         int    `json:"size"`
+	ContentType  string `json:"contentType"`
+	FileType     string `json:"fileType"`
+	PropertyType string `json:"propertyType"`
+}
+type PropertyImagesAndVideosDto struct {
+	Files []PropertyImageOrVideoCreationWithPropertyIdDto `json:"files"`
+}
+
+type PropertyImageOrVideoUpdateDto struct {
+	Id           int    `json:"id"`
+	PropertyId   int    `json:"propertyId"`
+	File         string `json:"file"`
+	Name         string `json:"name"`
 	Size         int    `json:"size"`
 	ContentType  string `json:"contentType"`
 	FileType     string `json:"fileType"`
 	PropertyType string `json:"propertyType"`
 }
 
-type PropertyImageOrVideoUpdateAndResponseDto struct {
+type PropertyImageOrVideoResponseDto struct {
 	Id           int    `json:"id"`
 	PropertyId   int    `json:"propertyId"`
 	Uri          string `json:"uri"`
 	Name         string `json:"name"`
-	FullPath     string `json:"fullPath"`
 	Size         int    `json:"size"`
 	ContentType  string `json:"contentType"`
 	FileType     string `json:"fileType"`
