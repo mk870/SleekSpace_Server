@@ -43,12 +43,11 @@ func ManagerResponse(manager *managerModels.Manager) managerDtos.ManagerResponse
 		UserId: manager.UserId,
 		Email:  manager.Email,
 		Name:   manager.Name,
-		ProfilePicture: managerDtos.ManagerProfilePictureResponseAndUpdateDTO{
+		ProfilePicture: managerDtos.ManagerProfilePictureResponseDTO{
 			Id:          manager.ProfilePicture.Id,
 			ManagerId:   manager.ProfilePicture.ManagerId,
 			Uri:         manager.ProfilePicture.Uri,
 			Name:        manager.ProfilePicture.Name,
-			FullPath:    manager.ProfilePicture.FullPath,
 			FileType:    manager.ProfilePicture.FileType,
 			Size:        manager.ProfilePicture.Size,
 			ContentType: manager.ProfilePicture.ContentType,

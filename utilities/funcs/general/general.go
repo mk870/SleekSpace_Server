@@ -92,6 +92,8 @@ type EnvVariables struct {
 	LocationIQToken     string
 	SupabaseApiKey      string
 	SupabaseReferenceId string
+	AWSAcessKey         string
+	AWSSecretKey        string
 }
 
 func GetEnvVariables() EnvVariables {
@@ -104,11 +106,15 @@ func GetEnvVariables() EnvVariables {
 	emailPassword := os.Getenv("EMAIL_PASSWORD")
 	tokenSecret := os.Getenv("ACCESS_TOKEN_SECRET")
 	locationIQToken := os.Getenv("LOCATION_IQ_ACCESS_TOKEN")
+	awsAccessKey := os.Getenv("AWS_ACCESS_KEY")
+	awsSecretKey := os.Getenv("AWS_SECRET_KEY")
 	return EnvVariables{
 		DatabaseDetails: databaseDetails,
 		Email:           email,
 		EmailPassword:   emailPassword,
 		TokenSecret:     tokenSecret,
 		LocationIQToken: locationIQToken,
+		AWSAcessKey:     awsAccessKey,
+		AWSSecretKey:    awsSecretKey,
 	}
 }

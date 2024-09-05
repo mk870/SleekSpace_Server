@@ -20,3 +20,4 @@ var CommercialPropertyForSaleType string = "commercialPropertyForSale"
 var ResidentialPropertyForSaleType string = "residentialPropertyForSale"
 var ResidentialRentalPropertyType = "residentialRentalProperty"
 var PageLimit int = 2
+var ImagesOrVideosLimitPerProperty = 20

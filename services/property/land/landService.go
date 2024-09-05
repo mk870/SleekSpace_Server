@@ -8,6 +8,7 @@ import (
 	propertyModels "SleekSpace/models/property"
 	managerRepo "SleekSpace/repositories/manager"
 	landRepo "SleekSpace/repositories/property/land"
+	"SleekSpace/storage"
 	constants "SleekSpace/utilities/constants"
 	generalUtilities "SleekSpace/utilities/funcs/general"
 	propertyUtilities "SleekSpace/utilities/funcs/property"
@@ -27,11 +28,19 @@ func CreateLandPropertyForSale(c *gin.Context) {
 		return
 	}
 
+	if len(landDetails.Media) > constants.ImagesOrVideosLimitPerProperty {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "you can only upload " + generalUtilities.ConvertIntToString(constants.ImagesOrVideosLimitPerProperty) + " images/videos"})
+		return
+	}
+
 	manager := managerRepo.GetManagerWithProfilePictureAndContactsByManagerId(generalUtilities.ConvertIntToString(landDetails.ManagerId))
 	if manager == nil {
 		c.JSON(http.StatusForbidden, gin.H{"error": "this manager does not exist"})
 		return
 	}
+
+	mediaList := propertyUtilities.MediaListWithNoPropertyId(landDetails.Media)
+	mediaUrls := <-storage.UploadBase64Files(mediaList, c)
 
 	newLandForSale := managerModels.LandForSaleProperty{
 		ManagerId:          landDetails.ManagerId,
@@ -53,7 +62,7 @@ func CreateLandPropertyForSale(c *gin.Context) {
 			ContactInfoViews:  0,
 			PropertyType:      constants.LandPropertyType,
 		},
-		PropertyMedia: propertyUtilities.ConvertPropertyImagesOrVideosWithNoPropertyIdToModel(landDetails.Media, constants.LandPropertyType),
+		PropertyMedia: propertyUtilities.ConvertPropertyImagesOrVideosWithNoPropertyIdToModel(landDetails.Media, constants.LandPropertyType, mediaUrls),
 		Location: propertyModels.PropertyLocation{
 			Boundingbox:  landDetails.PropertyLocation.Boundingbox,
 			Lat:          landDetails.PropertyLocation.Lat,
@@ -161,6 +170,14 @@ func GetManagerLandPropertiesByManagerId(c *gin.Context) {
 }
 
 func DeleteLandPropertyById(c *gin.Context) {
+	landProperty := landRepo.GetLandPropertyForSaleWithAllAssociationsById(c.Param("id"))
+	if len(landProperty.PropertyMedia) > 0 {
+		var fileNames []string
+		for i := 0; i < len(landProperty.PropertyMedia); i++ {
+			fileNames = append(fileNames, landProperty.PropertyMedia[i].Name)
+		}
+		<-storage.DeleteFiles(fileNames, c)
+	}
 	isLandDeleted := landRepo.DeleteLandPropertyForSaleById(c.Param("id"))
 	if !isLandDeleted {
 		c.JSON(http.StatusForbidden, gin.H{"error": "this land does not exist"})

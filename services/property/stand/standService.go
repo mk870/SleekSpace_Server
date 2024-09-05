@@ -8,6 +8,7 @@ import (
 	propertyModels "SleekSpace/models/property"
 	managerRepo "SleekSpace/repositories/manager"
 	standRepo "SleekSpace/repositories/property/stand"
+	"SleekSpace/storage"
 	constants "SleekSpace/utilities/constants"
 	generalUtilities "SleekSpace/utilities/funcs/general"
 	propertyUtilities "SleekSpace/utilities/funcs/property"
@@ -27,11 +28,19 @@ func CreateStandForSale(c *gin.Context) {
 		return
 	}
 
+	if len(standInfo.Media) > constants.ImagesOrVideosLimitPerProperty {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "you can only upload " + generalUtilities.ConvertIntToString(constants.ImagesOrVideosLimitPerProperty) + " images/videos"})
+		return
+	}
+
 	manager := managerRepo.GetManagerWithProfilePictureAndContactsByManagerId(generalUtilities.ConvertIntToString(standInfo.ManagerId))
 	if manager == nil {
 		c.JSON(http.StatusForbidden, gin.H{"error": "this manager does not exist"})
 		return
 	}
+
+	mediaList := propertyUtilities.MediaListWithNoPropertyId(standInfo.Media)
+	mediaUrls := <-storage.UploadBase64Files(mediaList, c)
 
 	newStandForSale := managerModels.PropertyStand{
 		ManagerId:          standInfo.ManagerId,
@@ -54,7 +63,7 @@ func CreateStandForSale(c *gin.Context) {
 			ContactInfoViews:  0,
 			PropertyType:      constants.StandPropertyType,
 		},
-		PropertyMedia: propertyUtilities.ConvertPropertyImagesOrVideosWithNoPropertyIdToModel(standInfo.Media, constants.StandPropertyType),
+		PropertyMedia: propertyUtilities.ConvertPropertyImagesOrVideosWithNoPropertyIdToModel(standInfo.Media, constants.StandPropertyType, mediaUrls),
 		Location: propertyModels.PropertyLocation{
 			Boundingbox:  standInfo.PropertyLocation.Boundingbox,
 			Lat:          standInfo.PropertyLocation.Lat,
@@ -163,6 +172,14 @@ func GetManagerStandsByManagerId(c *gin.Context) {
 }
 
 func DeleteStandById(c *gin.Context) {
+	stand := standRepo.GetStandWithAllAssociationsById(c.Param("id"))
+	if len(stand.PropertyMedia) > 0 {
+		var fileNames []string
+		for i := 0; i < len(stand.PropertyMedia); i++ {
+			fileNames = append(fileNames, stand.PropertyMedia[i].Name)
+		}
+		<-storage.DeleteFiles(fileNames, c)
+	}
 	isStandDeleted := standRepo.DeleteStandById(c.Param("id"))
 	if !isStandDeleted {
 		c.JSON(http.StatusForbidden, gin.H{"error": "this stand does not exist"})

@@ -1,4 +1,4 @@
-package services
+package manager
 
 import (
 	"net/http"
@@ -7,6 +7,7 @@ import (
 	managerModels "SleekSpace/models/manager"
 	managerRepo "SleekSpace/repositories/manager"
 	userRepo "SleekSpace/repositories/user"
+	"SleekSpace/storage"
 	constantsUtilities "SleekSpace/utilities/constants"
 	generalUtilities "SleekSpace/utilities/funcs/general"
 	managerUtilities "SleekSpace/utilities/funcs/manager"
@@ -25,16 +26,18 @@ func CreateManager(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": modelFieldsValidationError.Error()})
 		return
 	}
-
+	var imageUrl string = ""
+	if manager.ProfilePicture.Image != "" {
+		imageUrl = <-storage.UploadBase64File(manager.ProfilePicture.Image, manager.ProfilePicture.Name, c)
+	}
 	newManager := managerModels.Manager{
 		UserId: manager.UserId,
 		Name:   manager.Name,
 		Email:  manager.Email,
 		ProfilePicture: managerModels.ManagerProfilePicture{
 			Name:        manager.ProfilePicture.Name,
-			Uri:         manager.ProfilePicture.Uri,
+			Uri:         imageUrl,
 			ContentType: manager.ProfilePicture.ContentType,
-			FullPath:    manager.ProfilePicture.FullPath,
 			FileType:    manager.ProfilePicture.FileType,
 			Size:        manager.ProfilePicture.Size,
 		},

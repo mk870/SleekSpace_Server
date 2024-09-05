@@ -1,4 +1,4 @@
-package services
+package manager
 
 import (
 	"net/http"
@@ -6,6 +6,7 @@ import (
 	managerDtos "SleekSpace/dtos/manager"
 	managerModels "SleekSpace/models/manager"
 	managerRepo "SleekSpace/repositories/manager"
+	"SleekSpace/storage"
 	constantsUtilities "SleekSpace/utilities/constants"
 	managerUtilities "SleekSpace/utilities/funcs/manager"
 
@@ -15,7 +16,7 @@ import (
 
 func UpdateManagerProfilePicture(c *gin.Context) {
 	managerId := c.Param("id")
-	var profilePictureUpdate managerDtos.ManagerProfilePictureResponseAndUpdateDTO
+	var profilePictureUpdate managerDtos.ManagerProfilePictureUpdateDTO
 	validateModelFields := validator.New()
 	c.BindJSON(&profilePictureUpdate)
 	modelFieldsValidationError := validateModelFields.Struct(profilePictureUpdate)
@@ -23,12 +24,12 @@ func UpdateManagerProfilePicture(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": modelFieldsValidationError.Error()})
 		return
 	}
+	imageUrl := <-storage.UploadBase64File(profilePictureUpdate.Image, profilePictureUpdate.Name, c)
 	newProfilePicture := managerModels.ManagerProfilePicture{
 		Id:          profilePictureUpdate.Id,
 		ManagerId:   profilePictureUpdate.ManagerId,
-		Uri:         profilePictureUpdate.Uri,
+		Uri:         imageUrl,
 		Name:        profilePictureUpdate.Name,
-		FullPath:    profilePictureUpdate.FullPath,
 		FileType:    profilePictureUpdate.FileType,
 		ContentType: profilePictureUpdate.ContentType,
 		Size:        profilePictureUpdate.Size,

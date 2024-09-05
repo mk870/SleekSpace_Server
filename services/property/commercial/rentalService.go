@@ -8,6 +8,7 @@ import (
 	propertyModels "SleekSpace/models/property"
 	managerRepo "SleekSpace/repositories/manager"
 	commercialRepo "SleekSpace/repositories/property/commercial"
+	"SleekSpace/storage"
 	constants "SleekSpace/utilities/constants"
 	generalUtilities "SleekSpace/utilities/funcs/general"
 	propertyUtilities "SleekSpace/utilities/funcs/property"
@@ -27,11 +28,19 @@ func CreateCommercialRentalProperty(c *gin.Context) {
 		return
 	}
 
+	if len(commercialRentalPropertyDetails.Media) > constants.ImagesOrVideosLimitPerProperty {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "you can only upload " + generalUtilities.ConvertIntToString(constants.ImagesOrVideosLimitPerProperty) + " images/videos"})
+		return
+	}
+
 	manager := managerRepo.GetManagerWithProfilePictureAndContactsByManagerId(generalUtilities.ConvertIntToString(commercialRentalPropertyDetails.ManagerId))
 	if manager == nil {
 		c.JSON(http.StatusForbidden, gin.H{"error": "this manager does not exist"})
 		return
 	}
+
+	mediaList := propertyUtilities.MediaListWithNoPropertyId(commercialRentalPropertyDetails.Media)
+	mediaUrls := <-storage.UploadBase64Files(mediaList, c)
 
 	newCommercialRentalProperty := managerModels.CommercialRentalProperty{
 		ManagerId:        commercialRentalPropertyDetails.ManagerId,
@@ -58,7 +67,7 @@ func CreateCommercialRentalProperty(c *gin.Context) {
 			ContactInfoViews:  0,
 			PropertyType:      constants.CommercialRentalPropertyType,
 		},
-		PropertyMedia: propertyUtilities.ConvertPropertyImagesOrVideosWithNoPropertyIdToModel(commercialRentalPropertyDetails.Media, constants.CommercialRentalPropertyType),
+		PropertyMedia: propertyUtilities.ConvertPropertyImagesOrVideosWithNoPropertyIdToModel(commercialRentalPropertyDetails.Media, constants.CommercialRentalPropertyType, mediaUrls),
 		Location: propertyModels.PropertyLocation{
 			Boundingbox:  commercialRentalPropertyDetails.PropertyLocation.Boundingbox,
 			Lat:          commercialRentalPropertyDetails.PropertyLocation.Lat,
@@ -171,6 +180,14 @@ func GetManagerCommercialRentalPropertiesByManagerId(c *gin.Context) {
 }
 
 func DeleteCommercialRentalPropertyById(c *gin.Context) {
+	commercialRentalProperty := commercialRepo.GetCommercialRentalPropertyWithAllAssociationsById(c.Param("id"))
+	if len(commercialRentalProperty.PropertyMedia) > 0 {
+		var fileNames []string
+		for i := 0; i < len(commercialRentalProperty.PropertyMedia); i++ {
+			fileNames = append(fileNames, commercialRentalProperty.PropertyMedia[i].Name)
+		}
+		<-storage.DeleteFiles(fileNames, c)
+	}
 	isPropertyDeleted := commercialRepo.DeleteCommercialRentalPropertyById(c.Param("id"))
 	if !isPropertyDeleted {
 		c.JSON(http.StatusForbidden, gin.H{"error": "this property does not exist"})

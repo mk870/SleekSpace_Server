@@ -36,12 +36,11 @@ func UserResponseMapper(user *userModels.User, accessToken string) userDtos.User
 		FavoriteCommercialRentalProperties:   user.FavoriteCommercialRentalProperties,
 		FavoriteResidentialForSaleProperties: user.FavoriteResidentialForSaleProperties,
 		FavoriteResidentialRentalProperties:  user.FavoriteCommercialRentalProperties,
-		ProfilePicture: userDtos.UserProfilePictureResponseAndUpdateDTO{
+		ProfilePicture: userDtos.UserProfilePictureResponseDTO{
 			Id:          user.ProfilePicture.Id,
 			UserId:      user.ProfilePicture.UserId,
 			Uri:         user.ProfilePicture.Uri,
 			Name:        user.ProfilePicture.Name,
-			FullPath:    user.ProfilePicture.FullPath,
 			FileType:    user.ProfilePicture.FileType,
 			Size:        user.ProfilePicture.Size,
 			ContentType: user.ProfilePicture.ContentType,

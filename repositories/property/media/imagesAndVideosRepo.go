@@ -8,8 +8,8 @@ import (
 	"gorm.io/gorm"
 )
 
-func CreatePropertyImageOrVideo(propertyImageOrVideo *propertyModels.PropertyImageOrVideo) bool {
-	db.DB.Create(propertyImageOrVideo)
+func CreatePropertyImageOrVideo(propertyImagesOrVideos *[]propertyModels.PropertyImageOrVideo) bool {
+	db.DB.Create(propertyImagesOrVideos)
 	return true
 }
 
@@ -29,6 +29,15 @@ func GetPropertyImageOrVideoById(propertyMediaId string) *propertyModels.Propert
 		return nil
 	}
 	return &media
+}
+
+func GetAllPropertyImagesOrVideosByPropertyId(propertyId int) []propertyModels.PropertyImageOrVideo {
+	var mediaList = []propertyModels.PropertyImageOrVideo{}
+	err := db.DB.Where("property_id= ?", propertyId).Find(&mediaList)
+	if err != nil {
+		println(err.Error, err.Name())
+	}
+	return mediaList
 }
 
 func UpdatePropertyImageOrVideo(propertyImageOrVideoUpdate *propertyModels.PropertyImageOrVideo) bool {
