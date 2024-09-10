@@ -56,11 +56,7 @@ func GetAllManagers() []managerModels.Manager {
 	return managers
 }
 
-func DeleteManagerById(id string) bool {
-	manager := GetManagerByManagerId(id)
-	if manager == nil {
-		return false
-	}
+func DeleteManagerById(manager *managerModels.Manager) bool {
 	db.DB.Select(clause.Associations).Unscoped().Delete(&manager)
 	return true
 }

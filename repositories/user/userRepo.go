@@ -4,9 +4,9 @@ import (
 	"errors"
 
 	"SleekSpace/db"
+	"SleekSpace/models/manager"
 	userModels "SleekSpace/models/user"
 	managerRepo "SleekSpace/repositories/manager"
-	generalUtilities "SleekSpace/utilities/funcs/general"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -66,11 +66,15 @@ func SaveUserUpdate(update *userModels.User) bool {
 }
 
 func DeleteUserById(id string) bool {
-	user := GetUserByIdWithManager(id)
-	if user == nil {
-		return false
-	}
-	isManagerDeleted := managerRepo.DeleteManagerById(generalUtilities.ConvertIntToString(user.Manager.Id))
+	var user userModels.User
+	db.DB.First(&user, id)
+	db.DB.Select(clause.Associations).Unscoped().Delete(&user)
+
+	return true
+}
+
+func DeleteUserAndCascadeById(user userModels.User, manager manager.Manager) bool {
+	isManagerDeleted := managerRepo.DeleteManagerById(&manager)
 	if !isManagerDeleted || isManagerDeleted {
 		db.DB.Select(clause.Associations).Unscoped().Delete(&user)
 		return true
@@ -80,7 +84,7 @@ func DeleteUserById(id string) bool {
 
 func GetUserByEmail(email string) *userModels.User {
 	var user userModels.User
-	result := db.DB.Where("email =?", email).Preload("ContactNumbers").Preload("Location").First(&user)
+	result := db.DB.Where("email =?", email).Preload("ContactNumbers").Preload("Location").Preload("ProfilePicture").First(&user)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil
 	} else {
