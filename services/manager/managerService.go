@@ -136,7 +136,15 @@ func UpdateManagerEmailAndName(c *gin.Context) {
 
 func DeleteManager(c *gin.Context) {
 	id := c.Param("id")
-	isManagerDeleted := managerRepo.DeleteManagerById(id)
+	manager := managerRepo.GetManagerByManagerId(id)
+	if manager == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": constantsUtilities.NoManagerAccountError})
+		return
+	}
+	if manager.ProfilePicture.Uri != "" {
+		<-storage.DeleteFile(manager.ProfilePicture.Name, c)
+	}
+	isManagerDeleted := managerRepo.DeleteManagerById(manager)
 	if isManagerDeleted {
 		c.String(http.StatusOK, constantsUtilities.ManagerAccountDeleteSuccess)
 		return

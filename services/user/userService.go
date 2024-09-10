@@ -4,8 +4,11 @@ import (
 	"net/http"
 
 	userModels "SleekSpace/models/user"
+	managerRepo "SleekSpace/repositories/manager"
 	userRepo "SleekSpace/repositories/user"
+	"SleekSpace/storage"
 	constantsUtilities "SleekSpace/utilities/constants"
+	generalUtilities "SleekSpace/utilities/funcs/general"
 	userUtilities "SleekSpace/utilities/funcs/user"
 
 	"github.com/gin-gonic/gin"
@@ -66,7 +69,21 @@ func UpdateUser(c *gin.Context) {
 
 func DeleteUser(c *gin.Context) {
 	id := c.Param("id")
-	isDeleted := userRepo.DeleteUserById(id)
+	user := userRepo.GetUserAndAllAssociationsById(id)
+	if user == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": constantsUtilities.NoUserError})
+		return
+	}
+	if user.Manager.Id > 0 {
+		manager := managerRepo.GetManagerByManagerId(generalUtilities.ConvertIntToString(user.Manager.Id))
+		if manager.ProfilePicture.Uri != "" {
+			<-storage.DeleteFile(manager.ProfilePicture.Name, c)
+		}
+	}
+	if user.ProfilePicture.Uri != "" {
+		<-storage.DeleteFile(user.ProfilePicture.Name, c)
+	}
+	isDeleted := userRepo.DeleteUserAndCascadeById(*user, user.Manager)
 	if isDeleted {
 		c.String(http.StatusOK, constantsUtilities.UserDeletedSuccess)
 		return
