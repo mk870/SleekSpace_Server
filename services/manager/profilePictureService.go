@@ -46,3 +46,36 @@ func UpdateManagerProfilePicture(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"response": managerUtilities.ManagerResponse(updatedManager)})
 }
+
+func DeleteManagerProfilePicture(c *gin.Context) {
+	managerId := c.Param("id")
+	var profilePictureUpdate managerDtos.ManagerProfilePictureUpdateDTO
+	validateModelFields := validator.New()
+	c.BindJSON(&profilePictureUpdate)
+	modelFieldsValidationError := validateModelFields.Struct(profilePictureUpdate)
+	if modelFieldsValidationError != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": modelFieldsValidationError.Error()})
+		return
+	}
+	<-storage.DeleteFile(profilePictureUpdate.Name, c)
+	newProfilePicture := managerModels.ManagerProfilePicture{
+		Id:          profilePictureUpdate.Id,
+		ManagerId:   profilePictureUpdate.ManagerId,
+		Uri:         "",
+		Name:        "",
+		FileType:    "",
+		ContentType: "",
+		Size:        0,
+	}
+	isProfilePictureUpdated := managerRepo.UpdateProfilePicture(&newProfilePicture)
+	if !isProfilePictureUpdated {
+		c.JSON(http.StatusForbidden, gin.H{"error": "profile picture update failed"})
+		return
+	}
+	updatedManager := managerRepo.GetManagerByManagerId(managerId)
+	if updatedManager == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": constantsUtilities.NoManagerAccountError})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"response": managerUtilities.ManagerResponse(updatedManager)})
+}

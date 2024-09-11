@@ -16,6 +16,7 @@ func UserRoutes(router *gin.Engine) {
 		routes.DELETE("/:id", userService.DeleteUser)
 		routes.POST("/profile-picture/:id", middleware.AuthValidator, userService.CreateUserProfilePicture)
 		routes.PUT("/profile-picture/:id", middleware.AuthValidator, userService.UpdateUserProfilePicture)
+		routes.DELETE("/profile-picture/:id", middleware.AuthValidator, userService.DeleteUserProfilePicture)
 		routes.POST("/location", middleware.AuthValidator, userService.CreateLocation)
 		routes.PUT("/location", middleware.AuthValidator, userService.UpdateLocation)
 		routes.POST("/contact-number", middleware.AuthValidator, userService.CreateContactNumber)
