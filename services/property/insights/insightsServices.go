@@ -6,6 +6,7 @@ import (
 	insightsDtos "SleekSpace/dtos/property/insights"
 	propertyModels "SleekSpace/models/property"
 	insightsRepo "SleekSpace/repositories/property/insights"
+	generalServices "SleekSpace/services/property"
 	propertyUtilities "SleekSpace/utilities/funcs/property"
 
 	"github.com/gin-gonic/gin"
@@ -56,5 +57,5 @@ func UpdatePropertyInsights(c *gin.Context) {
 		c.JSON(http.StatusForbidden, gin.H{"error": "failed to update your property insights"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"response": true})
+	generalServices.GetPropertyTypeById(c, insightsUpdateDetails.PropertyType, insightsUpdateDetails.PropertyId)
 }

@@ -11,6 +11,7 @@ import (
 	landsController "SleekSpace/controllers/property/land"
 	locationController "SleekSpace/controllers/property/location"
 	mediaController "SleekSpace/controllers/property/media"
+	reportController "SleekSpace/controllers/property/report"
 	residentialController "SleekSpace/controllers/property/residential"
 	standsController "SleekSpace/controllers/property/stand"
 	userController "SleekSpace/controllers/user"
@@ -46,6 +47,7 @@ func main() {
 	locationController.LocationRoutes(router)
 	insightsController.PropertyInsightsRoutes(router)
 	favoritesController.PropertyFavoritesRoutes(router)
+	reportController.PropertyReportRoutes(router)
 
 	router.Run()
 }
