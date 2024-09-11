@@ -11,6 +11,7 @@ func AdminRoutes(router *gin.Engine) {
 	{
 		routes.GET("/users", adminService.GetAllUsers)
 		routes.GET("/users/location", adminService.GetAllUsersLocations)
+		routes.GET("/users/profile-pictures", adminService.GetAllUsersProfilePictures)
 		routes.GET("/managers/profile-pictures", adminService.GetAllManagersProfilePictures)
 		routes.GET("/sim", adminService.GetInfo)
 		routes.GET("/location/:id", adminService.GetLocationById)

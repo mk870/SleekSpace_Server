@@ -27,5 +27,6 @@ func ManagerRoutes(router *gin.Engine) {
 		routes.DELETE("/:id", middleware.AuthValidator, managerService.DeleteManager)
 		routes.PUT("/contacts/:id", middleware.AuthValidator, managerService.UpdateManagerContactNumbers)
 		routes.PUT("/profile-picture/:id", middleware.AuthValidator, managerService.UpdateManagerProfilePicture)
+		routes.PUT("/profile-picture/remove/:id", middleware.AuthValidator, managerService.DeleteManagerProfilePicture)
 	}
 }

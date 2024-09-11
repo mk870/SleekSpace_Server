@@ -89,3 +89,27 @@ func UpdateUserProfilePicture(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"response": userUtilities.UserResponseMapper(updatedUser, updatedUser.AccessToken)})
 }
+
+func DeleteUserProfilePicture(c *gin.Context) {
+	profilePictureId := c.Param("id")
+
+	client := c.MustGet("user").(*userModels.User)
+	user := userRepo.GetUserByEmail(client.Email)
+	if user == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": constantsUtilities.NoUserError})
+		return
+	}
+
+	<-storage.DeleteFile(user.ProfilePicture.Name, c)
+	isProfilePictureDeleted := userRepo.DeleteUserProfilePicture(profilePictureId)
+	if !isProfilePictureDeleted {
+		c.JSON(http.StatusForbidden, gin.H{"error": "profile picture removal failed"})
+		return
+	}
+	updatedUser := userRepo.GetUserById(generalUtilities.ConvertIntToString(user.Id))
+	if updatedUser == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": constantsUtilities.NoUserError})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"response": userUtilities.UserResponseMapper(updatedUser, updatedUser.AccessToken)})
+}
