@@ -31,5 +31,6 @@ func AdminRoutes(router *gin.Engine) {
 		routes.GET("/property/location", adminService.GetAllPropertiesLocation)
 		routes.GET("/property/insights", adminService.GetAllPropertiesInsights)
 		routes.GET("/sql/:id", adminService.GetLandWithManager)
+		router.GET("/property/reports", adminService.GetAllPropertiesReports)
 	}
 }

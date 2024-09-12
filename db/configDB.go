@@ -19,13 +19,34 @@ func Connect() {
 		panic(err)
 	}
 
-	db.AutoMigrate(&propertyModels.PropertyInsights{}, &propertyModels.PropertyImageOrVideo{}, &propertyModels.PropertyLocation{})
+	db.AutoMigrate(
+		&propertyModels.PropertyInsights{},
+		&propertyModels.PropertyImageOrVideo{},
+		&propertyModels.PropertyLocation{},
+		&propertyModels.PropertyReport{},
+	)
 
-	db.AutoMigrate(&managerModels.CommercialForSaleProperty{}, &managerModels.CommercialRentalProperty{}, &managerModels.LandForSaleProperty{}, &managerModels.ResidentialPropertyForSale{}, &managerModels.ResidentialRentalProperty{}, &managerModels.PropertyStand{})
+	db.AutoMigrate(
+		&managerModels.CommercialForSaleProperty{},
+		&managerModels.CommercialRentalProperty{},
+		&managerModels.LandForSaleProperty{},
+		&managerModels.ResidentialPropertyForSale{},
+		&managerModels.ResidentialRentalProperty{},
+		&managerModels.PropertyStand{},
+	)
 
-	db.AutoMigrate(&managerModels.ManagerContactNumber{}, &managerModels.ManagerProfilePicture{})
+	db.AutoMigrate(
+		&managerModels.ManagerContactNumber{},
+		&managerModels.ManagerProfilePicture{},
+	)
 
-	db.AutoMigrate(&userModels.VerificationCode{}, &userModels.ContactNumber{}, &userModels.Location{}, &managerModels.Manager{}, &userModels.UserProfilePicture{})
+	db.AutoMigrate(
+		&userModels.VerificationCode{},
+		&userModels.ContactNumber{},
+		&userModels.Location{},
+		&managerModels.Manager{},
+		&userModels.UserProfilePicture{},
+	)
 
 	db.AutoMigrate(&userModels.User{})
 
