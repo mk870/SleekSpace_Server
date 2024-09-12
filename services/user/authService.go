@@ -73,5 +73,5 @@ func Login(c *gin.Context) {
 		return
 	}
 	response := userUtilities.UserResponseMapper(user, accessToken)
-	c.JSON(http.StatusOK, gin.H{"response": response})
+	c.JSON(http.StatusOK, gin.H{"response": response, "hasPayWall": constantsUtilities.IsPaywallActive})
 }

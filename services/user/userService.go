@@ -38,7 +38,10 @@ func GetUserByEmail(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"response": userUtilities.UserResponseMapper(user, user.AccessToken)})
+	c.JSON(http.StatusOK, gin.H{
+		"response":   userUtilities.UserResponseMapper(user, user.AccessToken),
+		"hasPayWall": constantsUtilities.IsPaywallActive,
+	})
 }
 
 func UpdateUser(c *gin.Context) {

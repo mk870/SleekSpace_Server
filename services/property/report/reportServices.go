@@ -24,9 +24,10 @@ func CreatePropertyReportById(c *gin.Context) {
 	}
 
 	report := propertyModels.PropertyReport{
-		PropertyId: propertyReportCreationDetails.PropertyId,
-		ManagerId:  propertyReportCreationDetails.ManagerId,
-		Report:     propertyReportCreationDetails.Report,
+		PropertyId:     propertyReportCreationDetails.PropertyId,
+		ManagerId:      propertyReportCreationDetails.ManagerId,
+		ReporterUserId: propertyReportCreationDetails.ReporterUserId,
+		Report:         propertyReportCreationDetails.Report,
 	}
 
 	isReportUpdated := reportRepo.UpdatePropertyReport(&report)
@@ -76,10 +77,11 @@ func UpdatePropertyReportById(c *gin.Context) {
 	}
 
 	reportUpdate := propertyModels.PropertyReport{
-		Id:         propertyReportUpdateDetails.Id,
-		PropertyId: propertyReportUpdateDetails.PropertyId,
-		ManagerId:  propertyReportUpdateDetails.ManagerId,
-		Report:     propertyReportUpdateDetails.Report,
+		Id:             propertyReportUpdateDetails.Id,
+		PropertyId:     propertyReportUpdateDetails.PropertyId,
+		ManagerId:      propertyReportUpdateDetails.ManagerId,
+		ReporterUserId: propertyReportUpdateDetails.ReporterUserId,
+		Report:         propertyReportUpdateDetails.Report,
 	}
 
 	isReportUpdated := reportRepo.UpdatePropertyReport(&reportUpdate)

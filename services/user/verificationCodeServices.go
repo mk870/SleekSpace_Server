@@ -9,6 +9,7 @@ import (
 	userRepo "SleekSpace/repositories/user"
 	emailService "SleekSpace/services/email"
 	"SleekSpace/tokens"
+	constantsUtilities "SleekSpace/utilities/constants"
 	generalUtilities "SleekSpace/utilities/funcs/general"
 	userUtilities "SleekSpace/utilities/funcs/user"
 
@@ -68,7 +69,10 @@ func VerifyCodeForRegistration(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"response": userUtilities.UserResponseMapper(user, accessToken)})
+	c.JSON(http.StatusOK, gin.H{
+		"response":   userUtilities.UserResponseMapper(user, accessToken),
+		"hasPayWall": constantsUtilities.IsPaywallActive,
+	})
 }
 
 func CreateVerificationCode(c *gin.Context) {
@@ -95,7 +99,9 @@ func CreateVerificationCode(c *gin.Context) {
 		})
 		return
 	}
-	isEmailSent := emailService.SendVerificationCodeEmail(user.Email, user.GivenName, generalUtilities.ConvertIntToString(verificationCode.Code))
+	isEmailSent := emailService.SendVerificationCodeEmail(
+		user.Email, user.GivenName, generalUtilities.ConvertIntToString(verificationCode.Code),
+	)
 	if !isEmailSent {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to send verification email"})
 		return
