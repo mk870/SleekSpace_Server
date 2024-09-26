@@ -54,6 +54,8 @@ func CreateLandPropertyForSale(c *gin.Context) {
 		HasWater:           landDetails.HasWater,
 		IsNegotiable:       landDetails.IsNegotiable,
 		OtherDetails:       landDetails.OtherDetails,
+		Currency:           landDetails.Currency,
+		MarketingStatement: landDetails.MarketingStatement,
 		Manager:            *manager,
 		PropertyInsights: propertyModels.PropertyInsights{
 			Views:             0,
@@ -134,6 +136,8 @@ func UpdateLandPropertyDetails(c *gin.Context) {
 	oldLandData.UniqueId = landUpdates.UniqueId
 	oldLandData.IsNegotiable = landUpdates.IsNegotiable
 	oldLandData.OtherDetails = landUpdates.OtherDetails
+	oldLandData.Currency = landUpdates.Currency
+	oldLandData.MarketingStatement = landUpdates.MarketingStatement
 
 	isStandUpdated := landRepo.UpdateLandPropertyForSale(oldLandData)
 	if !isStandUpdated {

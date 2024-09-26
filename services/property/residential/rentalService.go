@@ -43,27 +43,37 @@ func CreateResidentialRentalProperty(c *gin.Context) {
 	mediaUrls := <-storage.UploadBase64Files(mediaList, c)
 
 	newResidentialRentalProperty := managerModels.ResidentialRentalProperty{
-		ManagerId:        residentialRentalPropertyDetails.ManagerId,
-		UniqueId:         propertyUtilities.GeneratePropertyUniqueId(),
-		RentAmount:       residentialRentalPropertyDetails.RentAmount,
-		SizeNumber:       residentialRentalPropertyDetails.SizeNumber,
-		SizeDimensions:   residentialRentalPropertyDetails.SizeDimensions,
-		Status:           residentialRentalPropertyDetails.Status,
-		Type:             residentialRentalPropertyDetails.Type,
-		YearBuilt:        residentialRentalPropertyDetails.YearBuilt,
-		Bedrooms:         residentialRentalPropertyDetails.Bedrooms,
-		Bathrooms:        residentialRentalPropertyDetails.Bathrooms,
-		Stories:          residentialRentalPropertyDetails.Stories,
-		HasElectricity:   residentialRentalPropertyDetails.HasElectricity,
-		HasWater:         residentialRentalPropertyDetails.HasWater,
-		NumberOfRooms:    residentialRentalPropertyDetails.NumberOfRooms,
-		NumberOfGarages:  residentialRentalPropertyDetails.NumberOfGarages,
-		HasSwimmingPool:  residentialRentalPropertyDetails.HasSwimmingPool,
-		IsFullHouse:      residentialRentalPropertyDetails.IsFullHouse,
-		ExteriorFeatures: residentialRentalPropertyDetails.ExteriorFeatures,
-		InteriorFeatures: residentialRentalPropertyDetails.InteriorFeatures,
-		OtherDetails:     residentialRentalPropertyDetails.OtherDetails,
-		Manager:          *manager,
+		ManagerId:              residentialRentalPropertyDetails.ManagerId,
+		UniqueId:               propertyUtilities.GeneratePropertyUniqueId(),
+		RentAmount:             residentialRentalPropertyDetails.RentAmount,
+		SizeNumber:             residentialRentalPropertyDetails.SizeNumber,
+		SizeDimensions:         residentialRentalPropertyDetails.SizeDimensions,
+		Status:                 residentialRentalPropertyDetails.Status,
+		Type:                   residentialRentalPropertyDetails.Type,
+		YearBuilt:              residentialRentalPropertyDetails.YearBuilt,
+		Bedrooms:               residentialRentalPropertyDetails.Bedrooms,
+		Bathrooms:              residentialRentalPropertyDetails.Bathrooms,
+		Stories:                residentialRentalPropertyDetails.Stories,
+		HasElectricity:         residentialRentalPropertyDetails.HasElectricity,
+		HasWater:               residentialRentalPropertyDetails.HasWater,
+		NumberOfRoomsToLet:     residentialRentalPropertyDetails.NumberOfRoomsToLet,
+		NumberOfGarages:        residentialRentalPropertyDetails.NumberOfGarages,
+		HasSwimmingPool:        residentialRentalPropertyDetails.HasSwimmingPool,
+		IsFullHouse:            residentialRentalPropertyDetails.IsFullHouse,
+		OtherExteriorFeatures:  residentialRentalPropertyDetails.OtherExteriorFeatures,
+		OtherInteriorFeatures:  residentialRentalPropertyDetails.OtherInteriorFeatures,
+		Currency:               residentialRentalPropertyDetails.Currency,
+		MarketingStatement:     residentialRentalPropertyDetails.MarketingStatement,
+		IsPaved:                residentialRentalPropertyDetails.IsPaved,
+		IsPlustered:            residentialRentalPropertyDetails.IsPlustered,
+		IsPainted:              residentialRentalPropertyDetails.IsPainted,
+		IsTiled:                residentialRentalPropertyDetails.IsTiled,
+		HasBoreHole:            residentialRentalPropertyDetails.HasBoreHole,
+		HasCeiling:             residentialRentalPropertyDetails.HasCeiling,
+		TotalNumberOfRooms:     residentialRentalPropertyDetails.TotalNumberOfRooms,
+		TypeOfExteriorSecurity: residentialRentalPropertyDetails.TypeOfExteriorSecurity,
+		TenantRequirements:     residentialRentalPropertyDetails.TenantRequirements,
+		Manager:                *manager,
 		PropertyInsights: propertyModels.PropertyInsights{
 			Views:             0,
 			Shared:            0,
@@ -124,14 +134,24 @@ func UpdateResidentialRentalPropertyDetails(c *gin.Context) {
 	oldResidentialRentalPropertyData.HasSwimmingPool = residentialRentalPropertyUpdates.HasSwimmingPool
 	oldResidentialRentalPropertyData.HasWater = residentialRentalPropertyUpdates.HasWater
 	oldResidentialRentalPropertyData.HasElectricity = residentialRentalPropertyUpdates.HasElectricity
-	oldResidentialRentalPropertyData.NumberOfRooms = residentialRentalPropertyUpdates.NumberOfRooms
+	oldResidentialRentalPropertyData.NumberOfRoomsToLet = residentialRentalPropertyUpdates.NumberOfRoomsToLet
 	oldResidentialRentalPropertyData.NumberOfGarages = residentialRentalPropertyUpdates.NumberOfGarages
 	oldResidentialRentalPropertyData.Stories = residentialRentalPropertyUpdates.Stories
 	oldResidentialRentalPropertyData.YearBuilt = residentialRentalPropertyUpdates.YearBuilt
 	oldResidentialRentalPropertyData.UniqueId = residentialRentalPropertyUpdates.UniqueId
-	oldResidentialRentalPropertyData.OtherDetails = residentialRentalPropertyUpdates.OtherDetails
-	oldResidentialRentalPropertyData.InteriorFeatures = residentialRentalPropertyUpdates.InteriorFeatures
-	oldResidentialRentalPropertyData.ExteriorFeatures = residentialRentalPropertyUpdates.ExteriorFeatures
+	oldResidentialRentalPropertyData.OtherInteriorFeatures = residentialRentalPropertyUpdates.OtherInteriorFeatures
+	oldResidentialRentalPropertyData.OtherExteriorFeatures = residentialRentalPropertyUpdates.OtherExteriorFeatures
+	oldResidentialRentalPropertyData.IsPaved = residentialRentalPropertyUpdates.IsPaved
+	oldResidentialRentalPropertyData.IsPlustered = residentialRentalPropertyUpdates.IsPlustered
+	oldResidentialRentalPropertyData.IsPainted = residentialRentalPropertyUpdates.IsPainted
+	oldResidentialRentalPropertyData.IsTiled = residentialRentalPropertyUpdates.IsTiled
+	oldResidentialRentalPropertyData.HasBoreHole = residentialRentalPropertyUpdates.HasBoreHole
+	oldResidentialRentalPropertyData.HasCeiling = residentialRentalPropertyUpdates.HasCeiling
+	oldResidentialRentalPropertyData.TotalNumberOfRooms = residentialRentalPropertyUpdates.TotalNumberOfRooms
+	oldResidentialRentalPropertyData.TypeOfExteriorSecurity = residentialRentalPropertyUpdates.TypeOfExteriorSecurity
+	oldResidentialRentalPropertyData.TenantRequirements = residentialRentalPropertyUpdates.TenantRequirements
+	oldResidentialRentalPropertyData.Currency = residentialRentalPropertyUpdates.Currency
+	oldResidentialRentalPropertyData.MarketingStatement = residentialRentalPropertyUpdates.MarketingStatement
 
 	isResidentialRentalPropertyUpdated := residentialRepo.UpdateResidentialRentalProperty(oldResidentialRentalPropertyData)
 	if !isResidentialRentalPropertyUpdated {
