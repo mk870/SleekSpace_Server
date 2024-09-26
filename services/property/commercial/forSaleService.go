@@ -43,23 +43,25 @@ func CreateCommercialPropertyForSale(c *gin.Context) {
 	mediaUrls := <-storage.UploadBase64Files(mediaList, c)
 
 	newCommercialPropertyForSale := managerModels.CommercialForSaleProperty{
-		ManagerId:        commercialPropertyForSaleDetails.ManagerId,
-		UniqueId:         propertyUtilities.GeneratePropertyUniqueId(),
-		Price:            commercialPropertyForSaleDetails.Price,
-		SizeNumber:       commercialPropertyForSaleDetails.SizeNumber,
-		SizeDimensions:   commercialPropertyForSaleDetails.SizeDimensions,
-		Status:           commercialPropertyForSaleDetails.Status,
-		Type:             commercialPropertyForSaleDetails.Type,
-		YearBuilt:        commercialPropertyForSaleDetails.YearBuilt,
-		Stories:          commercialPropertyForSaleDetails.Stories,
-		HasElectricity:   commercialPropertyForSaleDetails.HasElectricity,
-		HasWater:         commercialPropertyForSaleDetails.HasWater,
-		IsNegotiable:     commercialPropertyForSaleDetails.IsNegotiable,
-		NumberOfRooms:    commercialPropertyForSaleDetails.NumberOfRooms,
-		ExteriorFeatures: commercialPropertyForSaleDetails.ExteriorFeatures,
-		InteriorFeatures: commercialPropertyForSaleDetails.InteriorFeatures,
-		OtherDetails:     commercialPropertyForSaleDetails.OtherDetails,
-		Manager:          *manager,
+		ManagerId:          commercialPropertyForSaleDetails.ManagerId,
+		UniqueId:           propertyUtilities.GeneratePropertyUniqueId(),
+		Price:              commercialPropertyForSaleDetails.Price,
+		SizeNumber:         commercialPropertyForSaleDetails.SizeNumber,
+		SizeDimensions:     commercialPropertyForSaleDetails.SizeDimensions,
+		Status:             commercialPropertyForSaleDetails.Status,
+		Type:               commercialPropertyForSaleDetails.Type,
+		YearBuilt:          commercialPropertyForSaleDetails.YearBuilt,
+		Stories:            commercialPropertyForSaleDetails.Stories,
+		HasElectricity:     commercialPropertyForSaleDetails.HasElectricity,
+		HasWater:           commercialPropertyForSaleDetails.HasWater,
+		IsNegotiable:       commercialPropertyForSaleDetails.IsNegotiable,
+		NumberOfRooms:      commercialPropertyForSaleDetails.NumberOfRooms,
+		ExteriorFeatures:   commercialPropertyForSaleDetails.ExteriorFeatures,
+		InteriorFeatures:   commercialPropertyForSaleDetails.InteriorFeatures,
+		OtherDetails:       commercialPropertyForSaleDetails.OtherDetails,
+		Currency:           commercialPropertyForSaleDetails.Currency,
+		MarketingStatement: commercialPropertyForSaleDetails.MarketingStatement,
+		Manager:            *manager,
 		PropertyInsights: propertyModels.PropertyInsights{
 			Views:             0,
 			Shared:            0,
@@ -124,6 +126,8 @@ func UpdateCommercialPropertyForSaleDetails(c *gin.Context) {
 	oldCommercialPropertyForSaleData.InteriorFeatures = commercialPropertyForSaleUpdates.InteriorFeatures
 	oldCommercialPropertyForSaleData.ExteriorFeatures = commercialPropertyForSaleUpdates.ExteriorFeatures
 	oldCommercialPropertyForSaleData.OtherDetails = commercialPropertyForSaleUpdates.OtherDetails
+	oldCommercialPropertyForSaleData.Currency = commercialPropertyForSaleUpdates.Currency
+	oldCommercialPropertyForSaleData.MarketingStatement = commercialPropertyForSaleUpdates.MarketingStatement
 
 	isCommercialPropertyForSaleUpdated := commercialRepo.UpdateCommercialPropertyForSale(oldCommercialPropertyForSaleData)
 	if !isCommercialPropertyForSaleUpdated {

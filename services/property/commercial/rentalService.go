@@ -43,23 +43,25 @@ func CreateCommercialRentalProperty(c *gin.Context) {
 	mediaUrls := <-storage.UploadBase64Files(mediaList, c)
 
 	newCommercialRentalProperty := managerModels.CommercialRentalProperty{
-		ManagerId:        commercialRentalPropertyDetails.ManagerId,
-		UniqueId:         propertyUtilities.GeneratePropertyUniqueId(),
-		RentAmount:       commercialRentalPropertyDetails.RentAmount,
-		SizeNumber:       commercialRentalPropertyDetails.SizeNumber,
-		SizeDimensions:   commercialRentalPropertyDetails.SizeDimensions,
-		Status:           commercialRentalPropertyDetails.Status,
-		Type:             commercialRentalPropertyDetails.Type,
-		YearBuilt:        commercialRentalPropertyDetails.YearBuilt,
-		Stories:          commercialRentalPropertyDetails.Stories,
-		HasElectricity:   commercialRentalPropertyDetails.HasElectricity,
-		HasWater:         commercialRentalPropertyDetails.HasWater,
-		NumberOfRooms:    commercialRentalPropertyDetails.NumberOfRooms,
-		IsFullSpace:      commercialRentalPropertyDetails.IsFullSpace,
-		ExteriorFeatures: commercialRentalPropertyDetails.ExteriorFeatures,
-		InteriorFeatures: commercialRentalPropertyDetails.InteriorFeatures,
-		OtherDetails:     commercialRentalPropertyDetails.OtherDetails,
-		Manager:          *manager,
+		ManagerId:          commercialRentalPropertyDetails.ManagerId,
+		UniqueId:           propertyUtilities.GeneratePropertyUniqueId(),
+		RentAmount:         commercialRentalPropertyDetails.RentAmount,
+		SizeNumber:         commercialRentalPropertyDetails.SizeNumber,
+		SizeDimensions:     commercialRentalPropertyDetails.SizeDimensions,
+		Status:             commercialRentalPropertyDetails.Status,
+		Type:               commercialRentalPropertyDetails.Type,
+		YearBuilt:          commercialRentalPropertyDetails.YearBuilt,
+		Stories:            commercialRentalPropertyDetails.Stories,
+		HasElectricity:     commercialRentalPropertyDetails.HasElectricity,
+		HasWater:           commercialRentalPropertyDetails.HasWater,
+		NumberOfRooms:      commercialRentalPropertyDetails.NumberOfRooms,
+		IsFullSpace:        commercialRentalPropertyDetails.IsFullSpace,
+		ExteriorFeatures:   commercialRentalPropertyDetails.ExteriorFeatures,
+		InteriorFeatures:   commercialRentalPropertyDetails.InteriorFeatures,
+		OtherDetails:       commercialRentalPropertyDetails.OtherDetails,
+		Currency:           commercialRentalPropertyDetails.Currency,
+		MarketingStatement: commercialRentalPropertyDetails.MarketingStatement,
+		Manager:            *manager,
 		PropertyInsights: propertyModels.PropertyInsights{
 			Views:             0,
 			Shared:            0,
@@ -124,6 +126,8 @@ func UpdateCommercialRentalPropertyDetails(c *gin.Context) {
 	oldCommercialRentalPropertyData.OtherDetails = commercialRentalPropertyUpdates.OtherDetails
 	oldCommercialRentalPropertyData.ExteriorFeatures = commercialRentalPropertyUpdates.ExteriorFeatures
 	oldCommercialRentalPropertyData.InteriorFeatures = commercialRentalPropertyUpdates.InteriorFeatures
+	oldCommercialRentalPropertyData.Currency = commercialRentalPropertyUpdates.Currency
+	oldCommercialRentalPropertyData.MarketingStatement = commercialRentalPropertyUpdates.MarketingStatement
 
 	isCommercialRentalPropertyUpdated := commercialRepo.UpdateCommercialRentalProperty(oldCommercialRentalPropertyData)
 	if !isCommercialRentalPropertyUpdated {

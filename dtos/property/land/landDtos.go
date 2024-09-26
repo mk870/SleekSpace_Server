@@ -15,7 +15,9 @@ type LandForSalePropertyCreationDto struct {
 	HasWater           bool                                                               `json:"hasWater"`
 	IsNegotiable       bool                                                               `json:"isNegotiable"`
 	Status             string                                                             `json:"status"`
+	Currency           string                                                             `json:"currency"`
 	Type               string                                                             `json:"type"`
+	MarketingStatement string                                                             `json:"marketingStatement"`
 	OtherDetails       string                                                             `json:"otherDetails"`
 	SizeDimensions     string                                                             `json:"sizeDimensions"`
 	PropertyLocation   locationDtos.PropertyLocationCreationDto                           `json:"propertyLocation"`
@@ -32,6 +34,8 @@ type LandForSalePropertyResponseDto struct {
 	IsNegotiable       bool                                               `json:"isNegotiable"`
 	HasWater           bool                                               `json:"hasWater"`
 	Status             string                                             `json:"status"`
+	Currency           string                                             `json:"currency"`
+	MarketingStatement string                                             `json:"marketingStatement"`
 	Type               string                                             `json:"type"`
 	SizeDimensions     string                                             `json:"sizeDimensions"`
 	OtherDetails       string                                             `json:"otherDetails"`
@@ -51,6 +55,8 @@ type LandForSalePropertyWithManagerResponseDto struct {
 	IsNegotiable       bool                                               `json:"isNegotiable"`
 	HasWater           bool                                               `json:"hasWater"`
 	Status             string                                             `json:"status"`
+	Currency           string                                             `json:"currency"`
+	MarketingStatement string                                             `json:"marketingStatement"`
 	Type               string                                             `json:"type"`
 	OtherDetails       string                                             `json:"otherDetails"`
 	SizeDimensions     string                                             `json:"sizeDimensions"`
@@ -70,6 +76,8 @@ type LandForSalePropertyUpdateDto struct {
 	AreaHasElectricity bool   `json:"areaHasElectricity"`
 	IsNegotiable       bool   `json:"isNegotiable"`
 	HasWater           bool   `json:"hasWater"`
+	Currency           string `json:"currency"`
+	MarketingStatement string `json:"marketingStatement"`
 	Status             string `json:"status"`
 	Type               string `json:"type"`
 	SizeDimensions     string `json:"sizeDimensions"`

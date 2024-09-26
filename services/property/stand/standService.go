@@ -55,6 +55,8 @@ func CreateStandForSale(c *gin.Context) {
 		Level:              standInfo.Level,
 		Type:               standInfo.Type,
 		OtherDetails:       standInfo.OtherDetails,
+		Currency:           standInfo.Currency,
+		MarketingStatement: standInfo.MarketingStatement,
 		Manager:            *manager,
 		PropertyInsights: propertyModels.PropertyInsights{
 			Views:             0,
@@ -136,6 +138,8 @@ func UpdateStandDetails(c *gin.Context) {
 	oldStandData.Type = standUpdates.Type
 	oldStandData.UniqueId = standUpdates.UniqueId
 	oldStandData.OtherDetails = standUpdates.OtherDetails
+	oldStandData.Currency = standUpdates.Currency
+	oldStandData.MarketingStatement = standUpdates.MarketingStatement
 
 	isStandUpdated := standRepo.UpdateStand(oldStandData)
 	if !isStandUpdated {

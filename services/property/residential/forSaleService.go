@@ -43,27 +43,35 @@ func CreateResidentialPropertyForSale(c *gin.Context) {
 	mediaUrls := <-storage.UploadBase64Files(mediaList, c)
 
 	newResidentialPropertyForSale := managerModels.ResidentialPropertyForSale{
-		ManagerId:        residentialPropertyForSaleDetails.ManagerId,
-		UniqueId:         propertyUtilities.GeneratePropertyUniqueId(),
-		Price:            residentialPropertyForSaleDetails.Price,
-		SizeNumber:       residentialPropertyForSaleDetails.SizeNumber,
-		SizeDimensions:   residentialPropertyForSaleDetails.SizeDimensions,
-		Status:           residentialPropertyForSaleDetails.Status,
-		Type:             residentialPropertyForSaleDetails.Type,
-		YearBuilt:        residentialPropertyForSaleDetails.YearBuilt,
-		Bedrooms:         residentialPropertyForSaleDetails.Bedrooms,
-		Bathrooms:        residentialPropertyForSaleDetails.Bathrooms,
-		Stories:          residentialPropertyForSaleDetails.Stories,
-		HasElectricity:   residentialPropertyForSaleDetails.HasElectricity,
-		HasWater:         residentialPropertyForSaleDetails.HasWater,
-		NumberOfRooms:    residentialPropertyForSaleDetails.NumberOfRooms,
-		NumberOfGarages:  residentialPropertyForSaleDetails.NumberOfGarages,
-		HasSwimmingPool:  residentialPropertyForSaleDetails.HasSwimmingPool,
-		IsNegotiable:     residentialPropertyForSaleDetails.IsNegotiable,
-		ExteriorFeatures: residentialPropertyForSaleDetails.ExteriorFeatures,
-		InteriorFeatures: residentialPropertyForSaleDetails.InteriorFeatures,
-		OtherDetails:     residentialPropertyForSaleDetails.OtherDetails,
-		Manager:          *manager,
+		ManagerId:              residentialPropertyForSaleDetails.ManagerId,
+		UniqueId:               propertyUtilities.GeneratePropertyUniqueId(),
+		Price:                  residentialPropertyForSaleDetails.Price,
+		SizeNumber:             residentialPropertyForSaleDetails.SizeNumber,
+		SizeDimensions:         residentialPropertyForSaleDetails.SizeDimensions,
+		Status:                 residentialPropertyForSaleDetails.Status,
+		Type:                   residentialPropertyForSaleDetails.Type,
+		YearBuilt:              residentialPropertyForSaleDetails.YearBuilt,
+		Bedrooms:               residentialPropertyForSaleDetails.Bedrooms,
+		Bathrooms:              residentialPropertyForSaleDetails.Bathrooms,
+		Stories:                residentialPropertyForSaleDetails.Stories,
+		HasElectricity:         residentialPropertyForSaleDetails.HasElectricity,
+		HasWater:               residentialPropertyForSaleDetails.HasWater,
+		NumberOfRooms:          residentialPropertyForSaleDetails.NumberOfRooms,
+		NumberOfGarages:        residentialPropertyForSaleDetails.NumberOfGarages,
+		HasSwimmingPool:        residentialPropertyForSaleDetails.HasSwimmingPool,
+		IsNegotiable:           residentialPropertyForSaleDetails.IsNegotiable,
+		IsPaved:                residentialPropertyForSaleDetails.IsPaved,
+		IsPlustered:            residentialPropertyForSaleDetails.IsPlustered,
+		IsPainted:              residentialPropertyForSaleDetails.IsPainted,
+		IsTiled:                residentialPropertyForSaleDetails.IsTiled,
+		HasBoreHole:            residentialPropertyForSaleDetails.HasBoreHole,
+		HasCeiling:             residentialPropertyForSaleDetails.HasCeiling,
+		TypeOfExteriorSecurity: residentialPropertyForSaleDetails.TypeOfExteriorSecurity,
+		OtherExteriorFeatures:  residentialPropertyForSaleDetails.OtherExteriorFeatures,
+		OtherInteriorFeatures:  residentialPropertyForSaleDetails.OtherInteriorFeatures,
+		Currency:               residentialPropertyForSaleDetails.Currency,
+		MarketingStatement:     residentialPropertyForSaleDetails.MarketingStatement,
+		Manager:                *manager,
 		PropertyInsights: propertyModels.PropertyInsights{
 			Views:             0,
 			Shared:            0,
@@ -128,9 +136,17 @@ func UpdateResidentialPropertyForSaleDetails(c *gin.Context) {
 	oldResidentialPropertyForSaleData.Stories = residentialPropertyForSaleUpdates.Stories
 	oldResidentialPropertyForSaleData.YearBuilt = residentialPropertyForSaleUpdates.YearBuilt
 	oldResidentialPropertyForSaleData.UniqueId = residentialPropertyForSaleUpdates.UniqueId
-	oldResidentialPropertyForSaleData.OtherDetails = residentialPropertyForSaleUpdates.OtherDetails
-	oldResidentialPropertyForSaleData.InteriorFeatures = residentialPropertyForSaleUpdates.InteriorFeatures
-	oldResidentialPropertyForSaleData.ExteriorFeatures = residentialPropertyForSaleUpdates.ExteriorFeatures
+	oldResidentialPropertyForSaleData.OtherInteriorFeatures = residentialPropertyForSaleUpdates.OtherInteriorFeatures
+	oldResidentialPropertyForSaleData.OtherExteriorFeatures = residentialPropertyForSaleUpdates.OtherExteriorFeatures
+	oldResidentialPropertyForSaleData.Currency = residentialPropertyForSaleUpdates.Currency
+	oldResidentialPropertyForSaleData.MarketingStatement = residentialPropertyForSaleUpdates.MarketingStatement
+	oldResidentialPropertyForSaleData.IsPaved = residentialPropertyForSaleUpdates.IsPaved
+	oldResidentialPropertyForSaleData.IsPlustered = residentialPropertyForSaleUpdates.IsPlustered
+	oldResidentialPropertyForSaleData.IsPainted = residentialPropertyForSaleUpdates.IsPainted
+	oldResidentialPropertyForSaleData.IsTiled = residentialPropertyForSaleUpdates.IsTiled
+	oldResidentialPropertyForSaleData.HasBoreHole = residentialPropertyForSaleUpdates.HasBoreHole
+	oldResidentialPropertyForSaleData.HasCeiling = residentialPropertyForSaleUpdates.HasCeiling
+	oldResidentialPropertyForSaleData.TypeOfExteriorSecurity = residentialPropertyForSaleUpdates.TypeOfExteriorSecurity
 
 	isResidentialPropertyForSaleUpdated := residentialRepo.UpdateResidentialPropertyForSale(oldResidentialPropertyForSaleData)
 	if !isResidentialPropertyForSaleUpdated {

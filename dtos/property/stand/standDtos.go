@@ -14,8 +14,10 @@ type StandCreationDTO struct {
 	AreaHasElectricity bool                                                               `json:"areaHasElectricity"`
 	IsServiced         bool                                                               `json:"isServiced"`
 	IsNegotiable       bool                                                               `json:"isNegotiable"`
+	Currency           string                                                             `json:"currency"`
 	Status             string                                                             `json:"status"`
 	Level              string                                                             `json:"level"`
+	MarketingStatement string                                                             `json:"marketingStatement"`
 	SizeDimensions     string                                                             `json:"sizeDimensions"`
 	Type               string                                                             `json:"type"`
 	OtherDetails       string                                                             `json:"otherDetails"`
@@ -32,9 +34,11 @@ type StandResponseDTO struct {
 	AreaHasElectricity bool                                               `json:"areaHasElectricity"`
 	IsServiced         bool                                               `json:"isServiced"`
 	IsNegotiable       bool                                               `json:"isNegotiable"`
+	Currency           string                                             `json:"currency"`
 	Status             string                                             `json:"status"`
 	Level              string                                             `json:"level"`
 	SizeDimensions     string                                             `json:"sizeDimensions"`
+	MarketingStatement string                                             `json:"marketingStatement"`
 	Type               string                                             `json:"type"`
 	OtherDetails       string                                             `json:"otherDetails"`
 	PostedTime         string                                             `json:"postedTime"`
@@ -52,10 +56,12 @@ type StandWithManagerResponseDTO struct {
 	AreaHasElectricity bool                                               `json:"areaHasElectricity"`
 	IsServiced         bool                                               `json:"isServiced"`
 	IsNegotiable       bool                                               `json:"isNegotiable"`
+	Currency           string                                             `json:"currency"`
 	Status             string                                             `json:"status"`
 	Level              string                                             `json:"level"`
 	SizeDimensions     string                                             `json:"sizeDimensions"`
 	Type               string                                             `json:"type"`
+	MarketingStatement string                                             `json:"marketingStatement"`
 	OtherDetails       string                                             `json:"otherDetails"`
 	PostedTime         string                                             `json:"postedTime"`
 	PropertyLocation   locationDtos.PropertyLocationUpdateAndResponseDto  `json:"propertyLocation"`
@@ -73,6 +79,8 @@ type StandUpdateDTO struct {
 	AreaHasElectricity bool   `json:"areaHasElectricity"`
 	IsServiced         bool   `json:"isServiced"`
 	IsNegotiable       bool   `json:"isNegotiable"`
+	Currency           string `json:"currency"`
+	MarketingStatement string `json:"marketingStatement"`
 	Status             string `json:"status"`
 	Level              string `json:"level"`
 	SizeDimensions     string `json:"sizeDimensions"`
