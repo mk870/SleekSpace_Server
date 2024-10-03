@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"sync"
 
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/credentials"
@@ -22,7 +23,11 @@ var bucketName string = "sleekspace"
 var bucketUrl string = "https://" + bucketName + ".s3.eu-north-1.amazonaws.com/"
 
 func InitializeS3() {
-	customProvider := credentials.NewStaticCredentialsProvider(generalUtilities.GetEnvVariables().AWSAcessKey, generalUtilities.GetEnvVariables().AWSSecretKey, "")
+	customProvider := credentials.NewStaticCredentialsProvider(
+		generalUtilities.GetEnvVariables().AWSAcessKey,
+		generalUtilities.GetEnvVariables().AWSSecretKey,
+		"",
+	)
 	cfg, err := config.LoadDefaultConfig(context.TODO(),
 		config.WithCredentialsProvider(customProvider),
 		config.WithRegion("eu-north-1"),
@@ -34,7 +39,7 @@ func InitializeS3() {
 	S3Client = s3.NewFromConfig(cfg)
 }
 
-func UploadBase64File(base64FileSrc string, name string, c *gin.Context) <-chan string {
+func UploadImageFile(base64FileSrc string, name string, c *gin.Context) <-chan string {
 	result := make(chan string)
 	go func() {
 		defer close(result)
@@ -50,36 +55,6 @@ func UploadBase64File(base64FileSrc string, name string, c *gin.Context) <-chan 
 			c.JSON(http.StatusForbidden, gin.H{"error": "failed to upload file on cloud storage"})
 		}
 		result <- bucketUrl + name
-	}()
-	return result
-}
-
-func UploadBase64Files(base64FilesSrc []propertyUtilities.MediaFile, c *gin.Context) <-chan map[string]string {
-	fileUrlMap := make(map[string]string)
-	result := make(chan map[string]string)
-	go func() {
-		defer close(result)
-		if len(base64FilesSrc) > 0 {
-			for j := 0; j < len(base64FilesSrc); j++ {
-				i := strings.Index(base64FilesSrc[j].FileSrc, ",")
-				decoder := base64.NewDecoder(base64.StdEncoding, strings.NewReader((base64FilesSrc[j].FileSrc[i+1:])))
-				uploader := manager.NewUploader(S3Client)
-				_, err := uploader.Upload(context.TODO(), &s3.PutObjectInput{
-					Bucket: &bucketName,
-					Key:    &base64FilesSrc[j].Name,
-					Body:   decoder,
-				})
-				if err != nil {
-					c.JSON(http.StatusForbidden, gin.H{"error": "failed to upload file on cloud storage"})
-				}
-
-				fileUrlMap[base64FilesSrc[j].Name] = bucketUrl + base64FilesSrc[j].Name
-			}
-			result <- fileUrlMap
-		} else {
-			fileUrlMap[""] = ""
-			result <- fileUrlMap
-		}
 	}()
 	return result
 }
@@ -118,4 +93,51 @@ func DeleteFiles(fileNames []string, c *gin.Context) <-chan bool {
 		result <- true
 	}()
 	return result
+}
+
+func uploadPropertyMediaFile(
+	j int,
+	base64FilesSrc []propertyUtilities.MediaFile,
+	c *gin.Context,
+	wg *sync.WaitGroup,
+	ch chan<- map[string]string,
+) {
+	fileUrlMap := make(map[string]string)
+	defer wg.Done()
+	i := strings.Index(base64FilesSrc[j].FileSrc, ",")
+	decoder := base64.NewDecoder(base64.StdEncoding, strings.NewReader((base64FilesSrc[j].FileSrc[i+1:])))
+	uploader := manager.NewUploader(S3Client)
+	_, err := uploader.Upload(context.TODO(), &s3.PutObjectInput{
+		Bucket: &bucketName,
+		Key:    &base64FilesSrc[j].Name,
+		Body:   decoder,
+	})
+	if err != nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": "failed to upload file on cloud storage"})
+	}
+
+	fileUrlMap[base64FilesSrc[j].Name] = bucketUrl + base64FilesSrc[j].Name
+	ch <- fileUrlMap
+}
+
+func UploadPropertyMediaFiles(base64FilesSrc []propertyUtilities.MediaFile, c *gin.Context) map[string]string {
+	mergedMap := make(map[string]string)
+	resultCh := make(chan map[string]string, len(base64FilesSrc))
+	var wg sync.WaitGroup
+	if len(base64FilesSrc) > 0 {
+		for j := 0; j < len(base64FilesSrc); j++ {
+			wg.Add(1)
+			go uploadPropertyMediaFile(j, base64FilesSrc, c, &wg, resultCh)
+		}
+		go func() {
+			wg.Wait()
+			close(resultCh)
+		}()
+		for m := range resultCh {
+			for name, uri := range m {
+				mergedMap[name] = uri
+			}
+		}
+	}
+	return mergedMap
 }

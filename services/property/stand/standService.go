@@ -40,7 +40,7 @@ func CreateStandForSale(c *gin.Context) {
 	}
 
 	mediaList := propertyUtilities.MediaListWithNoPropertyId(standInfo.Media)
-	mediaUrls := <-storage.UploadBase64Files(mediaList, c)
+	mediaUrls := storage.UploadPropertyMediaFiles(mediaList, c)
 
 	newStandForSale := managerModels.PropertyStand{
 		ManagerId:          standInfo.ManagerId,

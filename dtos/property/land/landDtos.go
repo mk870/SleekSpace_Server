@@ -18,7 +18,7 @@ type LandForSalePropertyCreationDto struct {
 	Currency           string                                                             `json:"currency"`
 	Type               string                                                             `json:"type"`
 	MarketingStatement string                                                             `json:"marketingStatement"`
-	OtherDetails       string                                                             `json:"otherDetails"`
+	OtherDetails       []string                                                           `json:"otherDetails"`
 	SizeDimensions     string                                                             `json:"sizeDimensions"`
 	PropertyLocation   locationDtos.PropertyLocationCreationDto                           `json:"propertyLocation"`
 	Media              []imageorvideoDtos.PropertyImageOrVideoCreationWithNoPropertyIdDto `json:"media"`
@@ -38,7 +38,7 @@ type LandForSalePropertyResponseDto struct {
 	MarketingStatement string                                             `json:"marketingStatement"`
 	Type               string                                             `json:"type"`
 	SizeDimensions     string                                             `json:"sizeDimensions"`
-	OtherDetails       string                                             `json:"otherDetails"`
+	OtherDetails       []string                                           `json:"otherDetails"`
 	PostedTime         string                                             `json:"postedTime"`
 	PropertyLocation   locationDtos.PropertyLocationUpdateAndResponseDto  `json:"propertyLocation"`
 	Insights           insightsDtos.PropertyInsightsUpdateAndResponseDto  `json:"insights"`
@@ -58,7 +58,7 @@ type LandForSalePropertyWithManagerResponseDto struct {
 	Currency           string                                             `json:"currency"`
 	MarketingStatement string                                             `json:"marketingStatement"`
 	Type               string                                             `json:"type"`
-	OtherDetails       string                                             `json:"otherDetails"`
+	OtherDetails       []string                                           `json:"otherDetails"`
 	SizeDimensions     string                                             `json:"sizeDimensions"`
 	PostedTime         string                                             `json:"postedTime"`
 	PropertyLocation   locationDtos.PropertyLocationUpdateAndResponseDto  `json:"propertyLocation"`
@@ -68,18 +68,18 @@ type LandForSalePropertyWithManagerResponseDto struct {
 }
 
 type LandForSalePropertyUpdateDto struct {
-	Id                 int    `json:"id"`
-	ManagerId          int    `json:"managerId"`
-	UniqueId           int    `json:"uniqueId"`
-	Price              int    `json:"price"`
-	SizeNumber         int    `json:"sizeNumber"`
-	AreaHasElectricity bool   `json:"areaHasElectricity"`
-	IsNegotiable       bool   `json:"isNegotiable"`
-	HasWater           bool   `json:"hasWater"`
-	Currency           string `json:"currency"`
-	MarketingStatement string `json:"marketingStatement"`
-	Status             string `json:"status"`
-	Type               string `json:"type"`
-	SizeDimensions     string `json:"sizeDimensions"`
-	OtherDetails       string `json:"otherDetails"`
+	Id                 int      `json:"id"`
+	ManagerId          int      `json:"managerId"`
+	UniqueId           int      `json:"uniqueId"`
+	Price              int      `json:"price"`
+	SizeNumber         int      `json:"sizeNumber"`
+	AreaHasElectricity bool     `json:"areaHasElectricity"`
+	IsNegotiable       bool     `json:"isNegotiable"`
+	HasWater           bool     `json:"hasWater"`
+	Currency           string   `json:"currency"`
+	MarketingStatement string   `json:"marketingStatement"`
+	Status             string   `json:"status"`
+	Type               string   `json:"type"`
+	SizeDimensions     string   `json:"sizeDimensions"`
+	OtherDetails       []string `json:"otherDetails"`
 }

@@ -40,7 +40,7 @@ func CreateResidentialPropertyForSale(c *gin.Context) {
 	}
 
 	mediaList := propertyUtilities.MediaListWithNoPropertyId(residentialPropertyForSaleDetails.Media)
-	mediaUrls := <-storage.UploadBase64Files(mediaList, c)
+	mediaUrls := storage.UploadPropertyMediaFiles(mediaList, c)
 
 	newResidentialPropertyForSale := managerModels.ResidentialPropertyForSale{
 		ManagerId:              residentialPropertyForSaleDetails.ManagerId,
@@ -79,7 +79,10 @@ func CreateResidentialPropertyForSale(c *gin.Context) {
 			ContactInfoViews:  0,
 			PropertyType:      constants.ResidentialPropertyForSaleType,
 		},
-		PropertyMedia: propertyUtilities.ConvertPropertyImagesOrVideosWithNoPropertyIdToModel(residentialPropertyForSaleDetails.Media, constants.ResidentialPropertyForSaleType, mediaUrls),
+		PropertyMedia: propertyUtilities.ConvertPropertyImagesOrVideosWithNoPropertyIdToModel(
+			residentialPropertyForSaleDetails.Media,
+			constants.ResidentialPropertyForSaleType,
+			mediaUrls),
 		Location: propertyModels.PropertyLocation{
 			Boundingbox:  residentialPropertyForSaleDetails.PropertyLocation.Boundingbox,
 			Lat:          residentialPropertyForSaleDetails.PropertyLocation.Lat,

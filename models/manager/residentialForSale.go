@@ -33,9 +33,9 @@ type ResidentialPropertyForSale struct {
 	Type                   string                                `json:"type"`
 	SizeDimensions         string                                `json:"sizeDimensions"`
 	Currency               string                                `json:"currency"`
-	OtherInteriorFeatures  string                                `gorm:"type:text"`
 	MarketingStatement     string                                `gorm:"type:text"`
-	OtherExteriorFeatures  string                                `gorm:"type:text"`
+	OtherInteriorFeatures  []string                              `gorm:"serializer:json"`
+	OtherExteriorFeatures  []string                              `gorm:"serializer:json"`
 	Manager                Manager                               `json:"manager"`
 	Location               propertyModels.PropertyLocation       `gorm:"ForeignKey:PropertyId;references:UniqueId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	PropertyInsights       propertyModels.PropertyInsights       `gorm:"ForeignKey:PropertyId;references:UniqueId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`

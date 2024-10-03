@@ -40,7 +40,7 @@ func CreateLandPropertyForSale(c *gin.Context) {
 	}
 
 	mediaList := propertyUtilities.MediaListWithNoPropertyId(landDetails.Media)
-	mediaUrls := <-storage.UploadBase64Files(mediaList, c)
+	mediaUrls := storage.UploadPropertyMediaFiles(mediaList, c)
 
 	newLandForSale := managerModels.LandForSaleProperty{
 		ManagerId:          landDetails.ManagerId,

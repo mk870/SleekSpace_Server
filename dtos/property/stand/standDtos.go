@@ -20,7 +20,7 @@ type StandCreationDTO struct {
 	MarketingStatement string                                                             `json:"marketingStatement"`
 	SizeDimensions     string                                                             `json:"sizeDimensions"`
 	Type               string                                                             `json:"type"`
-	OtherDetails       string                                                             `json:"otherDetails"`
+	OtherDetails       []string                                                           `json:"otherDetails"`
 	PropertyLocation   locationDtos.PropertyLocationCreationDto                           `json:"propertyLocation"`
 	Media              []imageorvideoDtos.PropertyImageOrVideoCreationWithNoPropertyIdDto `json:"media"`
 }
@@ -40,7 +40,7 @@ type StandResponseDTO struct {
 	SizeDimensions     string                                             `json:"sizeDimensions"`
 	MarketingStatement string                                             `json:"marketingStatement"`
 	Type               string                                             `json:"type"`
-	OtherDetails       string                                             `json:"otherDetails"`
+	OtherDetails       []string                                           `json:"otherDetails"`
 	PostedTime         string                                             `json:"postedTime"`
 	PropertyLocation   locationDtos.PropertyLocationUpdateAndResponseDto  `json:"propertyLocation"`
 	Insights           insightsDtos.PropertyInsightsUpdateAndResponseDto  `json:"insights"`
@@ -62,7 +62,7 @@ type StandWithManagerResponseDTO struct {
 	SizeDimensions     string                                             `json:"sizeDimensions"`
 	Type               string                                             `json:"type"`
 	MarketingStatement string                                             `json:"marketingStatement"`
-	OtherDetails       string                                             `json:"otherDetails"`
+	OtherDetails       []string                                           `json:"otherDetails"`
 	PostedTime         string                                             `json:"postedTime"`
 	PropertyLocation   locationDtos.PropertyLocationUpdateAndResponseDto  `json:"propertyLocation"`
 	Insights           insightsDtos.PropertyInsightsUpdateAndResponseDto  `json:"insights"`
@@ -71,19 +71,19 @@ type StandWithManagerResponseDTO struct {
 }
 
 type StandUpdateDTO struct {
-	Id                 int    `json:"id"`
-	ManagerId          int    `json:"managerId"`
-	UniqueId           int    `json:"uniqueId"`
-	Price              int    `json:"price"`
-	SizeNumber         int    `json:"sizeNumber"`
-	AreaHasElectricity bool   `json:"areaHasElectricity"`
-	IsServiced         bool   `json:"isServiced"`
-	IsNegotiable       bool   `json:"isNegotiable"`
-	Currency           string `json:"currency"`
-	MarketingStatement string `json:"marketingStatement"`
-	Status             string `json:"status"`
-	Level              string `json:"level"`
-	SizeDimensions     string `json:"sizeDimensions"`
-	Type               string `json:"type"`
-	OtherDetails       string `json:"otherDetails"`
+	Id                 int      `json:"id"`
+	ManagerId          int      `json:"managerId"`
+	UniqueId           int      `json:"uniqueId"`
+	Price              int      `json:"price"`
+	SizeNumber         int      `json:"sizeNumber"`
+	AreaHasElectricity bool     `json:"areaHasElectricity"`
+	IsServiced         bool     `json:"isServiced"`
+	IsNegotiable       bool     `json:"isNegotiable"`
+	Currency           string   `json:"currency"`
+	MarketingStatement string   `json:"marketingStatement"`
+	Status             string   `json:"status"`
+	Level              string   `json:"level"`
+	SizeDimensions     string   `json:"sizeDimensions"`
+	Type               string   `json:"type"`
+	OtherDetails       []string `json:"otherDetails"`
 }

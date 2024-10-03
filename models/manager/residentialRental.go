@@ -30,14 +30,14 @@ type ResidentialRentalProperty struct {
 	HasCeiling             bool                                  `json:"hasCeiling"`
 	HasSwimmingPool        bool                                  `json:"hasSwimmingPool"`
 	TypeOfExteriorSecurity string                                `json:"typeOfExteriorSecurity"`
-	TenantRequirements     string                                `json:"tenantRequirements"`
 	Status                 string                                `json:"status"`
 	Type                   string                                `json:"type"`
 	MarketingStatement     string                                `gorm:"type:text"`
 	SizeDimensions         string                                `json:"sizeDimensions"`
 	Currency               string                                `json:"currency"`
-	OtherInteriorFeatures  string                                `gorm:"type:text"`
-	OtherExteriorFeatures  string                                `gorm:"type:text"`
+	TenantRequirements     []string                              `gorm:"serializer:json"`
+	OtherInteriorFeatures  []string                              `gorm:"serializer:json"`
+	OtherExteriorFeatures  []string                              `gorm:"serializer:json"`
 	Manager                Manager                               `json:"manager"`
 	Location               propertyModels.PropertyLocation       `gorm:"ForeignKey:PropertyId;references:UniqueId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	PropertyInsights       propertyModels.PropertyInsights       `gorm:"ForeignKey:PropertyId;references:UniqueId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
