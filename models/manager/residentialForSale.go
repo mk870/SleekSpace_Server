@@ -14,7 +14,7 @@ type ResidentialPropertyForSale struct {
 	Price                  int                                   `json:"price"`
 	NumberOfGarages        int                                   `json:"numberOfGarages"`
 	SizeNumber             int                                   `json:"sizeNumber"`
-	Stories                int                                   `json:"stories"`
+	Storeys                int                                   `json:"storeys"`
 	Bedrooms               int                                   `json:"bedrooms"`
 	Bathrooms              int                                   `json:"bathrooms"`
 	YearBuilt              int                                   `json:"yearBuilt"`

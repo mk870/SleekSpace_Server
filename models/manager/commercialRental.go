@@ -13,7 +13,7 @@ type CommercialRentalProperty struct {
 	NumberOfRooms         int                                   `json:"numberOfRooms"`
 	RentAmount            int                                   `json:"rentAmount"`
 	SizeNumber            int                                   `json:"sizeNumber"`
-	Stories               int                                   `json:"stories"`
+	Storeys               int                                   `json:"storeys"`
 	YearBuilt             int                                   `json:"yearBuilt"`
 	IsFullSpace           bool                                  `json:"isFullSpace"`
 	HasElectricity        bool                                  `json:"hasElectricity"`

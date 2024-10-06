@@ -14,7 +14,7 @@ type CommercialForRentPropertyCreationDto struct {
 	RentAmount            int                                                                `json:"rentAmount"`
 	SizeNumber            int                                                                `json:"sizeNumber"`
 	YearBuilt             int                                                                `json:"yearBuilt"`
-	Stories               int                                                                `json:"stories"`
+	Storeys               int                                                                `json:"storeys"`
 	IsFullSpace           bool                                                               `json:"isFullSpace"`
 	HasElectricity        bool                                                               `json:"hasElectricity"`
 	HasWater              bool                                                               `json:"hasWater"`
@@ -39,7 +39,7 @@ type CommercialForRentPropertyResponseDto struct {
 	RentAmount            int                                                `json:"rentAmount"`
 	SizeNumber            int                                                `json:"sizeNumber"`
 	YearBuilt             int                                                `json:"yearBuilt"`
-	Stories               int                                                `json:"stories"`
+	Storeys               int                                                `json:"storeys"`
 	IsFullSpace           bool                                               `json:"isFullSpace"`
 	HasElectricity        bool                                               `json:"hasElectricity"`
 	HasWater              bool                                               `json:"hasWater"`
@@ -64,7 +64,7 @@ type CommercialForRentPropertyWithManagerResponseDto struct {
 	RentAmount            int                                                `json:"rentAmount"`
 	SizeNumber            int                                                `json:"sizeNumber"`
 	YearBuilt             int                                                `json:"yearBuilt"`
-	Stories               int                                                `json:"stories"`
+	Storeys               int                                                `json:"storeys"`
 	IsFullSpace           bool                                               `json:"isFullSpace"`
 	HasElectricity        bool                                               `json:"hasElectricity"`
 	HasWater              bool                                               `json:"hasWater"`
@@ -91,7 +91,7 @@ type CommercialForRentPropertyUpdateDto struct {
 	RentAmount            int      `json:"rentAmount"`
 	SizeNumber            int      `json:"sizeNumber"`
 	YearBuilt             int      `json:"yearBuilt"`
-	Stories               int      `json:"stories"`
+	Storeys               int      `json:"storeys"`
 	IsFullSpace           bool     `json:"isFullSpace"`
 	HasElectricity        bool     `json:"hasElectricity"`
 	HasWater              bool     `json:"hasWater"`

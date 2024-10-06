@@ -55,7 +55,7 @@ func CreateCommercialRentalProperty(c *gin.Context) {
 		Status:                commercialRentalPropertyDetails.Status,
 		Type:                  commercialRentalPropertyDetails.Type,
 		YearBuilt:             commercialRentalPropertyDetails.YearBuilt,
-		Stories:               commercialRentalPropertyDetails.Stories,
+		Storeys:               commercialRentalPropertyDetails.Storeys,
 		HasElectricity:        commercialRentalPropertyDetails.HasElectricity,
 		HasWater:              commercialRentalPropertyDetails.HasWater,
 		NumberOfRooms:         commercialRentalPropertyDetails.NumberOfRooms,
@@ -123,7 +123,7 @@ func UpdateCommercialRentalPropertyDetails(c *gin.Context) {
 	oldCommercialRentalPropertyData.HasWater = commercialRentalPropertyUpdates.HasWater
 	oldCommercialRentalPropertyData.HasElectricity = commercialRentalPropertyUpdates.HasElectricity
 	oldCommercialRentalPropertyData.NumberOfRooms = commercialRentalPropertyUpdates.NumberOfRooms
-	oldCommercialRentalPropertyData.Stories = commercialRentalPropertyUpdates.Stories
+	oldCommercialRentalPropertyData.Storeys = commercialRentalPropertyUpdates.Storeys
 	oldCommercialRentalPropertyData.YearBuilt = commercialRentalPropertyUpdates.YearBuilt
 	oldCommercialRentalPropertyData.IsFullSpace = commercialRentalPropertyUpdates.IsFullSpace
 	oldCommercialRentalPropertyData.UniqueId = commercialRentalPropertyUpdates.UniqueId

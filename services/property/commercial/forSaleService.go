@@ -51,7 +51,7 @@ func CreateCommercialPropertyForSale(c *gin.Context) {
 		Status:                commercialPropertyForSaleDetails.Status,
 		Type:                  commercialPropertyForSaleDetails.Type,
 		YearBuilt:             commercialPropertyForSaleDetails.YearBuilt,
-		Stories:               commercialPropertyForSaleDetails.Stories,
+		Storeys:               commercialPropertyForSaleDetails.Storeys,
 		HasElectricity:        commercialPropertyForSaleDetails.HasElectricity,
 		HasWater:              commercialPropertyForSaleDetails.HasWater,
 		IsNegotiable:          commercialPropertyForSaleDetails.IsNegotiable,
@@ -118,7 +118,7 @@ func UpdateCommercialPropertyForSaleDetails(c *gin.Context) {
 	oldCommercialPropertyForSaleData.HasWater = commercialPropertyForSaleUpdates.HasWater
 	oldCommercialPropertyForSaleData.HasElectricity = commercialPropertyForSaleUpdates.HasElectricity
 	oldCommercialPropertyForSaleData.NumberOfRooms = commercialPropertyForSaleUpdates.NumberOfRooms
-	oldCommercialPropertyForSaleData.Stories = commercialPropertyForSaleUpdates.Stories
+	oldCommercialPropertyForSaleData.Storeys = commercialPropertyForSaleUpdates.Storeys
 	oldCommercialPropertyForSaleData.YearBuilt = commercialPropertyForSaleUpdates.YearBuilt
 	oldCommercialPropertyForSaleData.UniqueId = commercialPropertyForSaleUpdates.UniqueId
 	oldCommercialPropertyForSaleData.IsNegotiable = commercialPropertyForSaleUpdates.IsNegotiable

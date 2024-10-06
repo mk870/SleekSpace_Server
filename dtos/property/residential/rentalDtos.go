@@ -17,7 +17,7 @@ type ResidentialPropertyForRentCreationDto struct {
 	Bathrooms              int                                                                `json:"bathrooms"`
 	Bedrooms               int                                                                `json:"bedrooms"`
 	YearBuilt              int                                                                `json:"yearBuilt"`
-	Stories                int                                                                `json:"stories"`
+	Storeys                int                                                                `json:"storeys"`
 	IsPaved                bool                                                               `json:"isPaved"`
 	HasBoreHole            bool                                                               `json:"hasBoreHole"`
 	IsPlustered            bool                                                               `json:"isPlustered"`
@@ -51,7 +51,7 @@ type ResidentialPropertyForRentResponseDto struct {
 	NumberOfGarages        int                                                `json:"numberOfGarages"`
 	SizeNumber             int                                                `json:"sizeNumber"`
 	Bathrooms              int                                                `json:"bathrooms"`
-	Stories                int                                                `json:"stories"`
+	Storeys                int                                                `json:"storeys"`
 	Bedrooms               int                                                `json:"bedrooms"`
 	YearBuilt              int                                                `json:"yearBuilt"`
 	IsPaved                bool                                               `json:"isPaved"`
@@ -90,7 +90,7 @@ type ResidentialPropertyForRentWithManagerResponseDto struct {
 	SizeNumber             int                                                `json:"sizeNumber"`
 	Bathrooms              int                                                `json:"bathrooms"`
 	Bedrooms               int                                                `json:"bedrooms"`
-	Stories                int                                                `json:"stories"`
+	Storeys                int                                                `json:"storeys"`
 	YearBuilt              int                                                `json:"yearBuilt"`
 	IsPaved                bool                                               `json:"isPaved"`
 	HasBoreHole            bool                                               `json:"hasBoreHole"`
@@ -129,7 +129,7 @@ type ResidentialPropertyForRentUpdateDto struct {
 	SizeNumber             int      `json:"sizeNumber"`
 	YearBuilt              int      `json:"yearBuilt"`
 	Bathrooms              int      `json:"bathrooms"`
-	Stories                int      `json:"stories"`
+	Storeys                int      `json:"storeys"`
 	Bedrooms               int      `json:"bedrooms"`
 	IsPaved                bool     `json:"isPaved"`
 	HasBoreHole            bool     `json:"hasBoreHole"`

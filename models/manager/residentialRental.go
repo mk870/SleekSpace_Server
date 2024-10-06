@@ -17,7 +17,7 @@ type ResidentialRentalProperty struct {
 	SizeNumber             int                                   `json:"sizeNumber"`
 	Bedrooms               int                                   `json:"bedrooms"`
 	Bathrooms              int                                   `json:"bathrooms"`
-	Stories                int                                   `json:"stories"`
+	Storeys                int                                   `json:"storeys"`
 	YearBuilt              int                                   `json:"yearBuilt"`
 	IsFullHouse            bool                                  `json:"isFullHouse"`
 	HasElectricity         bool                                  `json:"hasElectricity"`

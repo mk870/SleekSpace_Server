@@ -53,7 +53,7 @@ func CreateResidentialPropertyForSale(c *gin.Context) {
 		YearBuilt:              residentialPropertyForSaleDetails.YearBuilt,
 		Bedrooms:               residentialPropertyForSaleDetails.Bedrooms,
 		Bathrooms:              residentialPropertyForSaleDetails.Bathrooms,
-		Stories:                residentialPropertyForSaleDetails.Stories,
+		Storeys:                residentialPropertyForSaleDetails.Storeys,
 		HasElectricity:         residentialPropertyForSaleDetails.HasElectricity,
 		HasWater:               residentialPropertyForSaleDetails.HasWater,
 		NumberOfRooms:          residentialPropertyForSaleDetails.NumberOfRooms,
@@ -136,7 +136,7 @@ func UpdateResidentialPropertyForSaleDetails(c *gin.Context) {
 	oldResidentialPropertyForSaleData.HasElectricity = residentialPropertyForSaleUpdates.HasElectricity
 	oldResidentialPropertyForSaleData.NumberOfRooms = residentialPropertyForSaleUpdates.NumberOfRooms
 	oldResidentialPropertyForSaleData.NumberOfGarages = residentialPropertyForSaleUpdates.NumberOfGarages
-	oldResidentialPropertyForSaleData.Stories = residentialPropertyForSaleUpdates.Stories
+	oldResidentialPropertyForSaleData.Storeys = residentialPropertyForSaleUpdates.Storeys
 	oldResidentialPropertyForSaleData.YearBuilt = residentialPropertyForSaleUpdates.YearBuilt
 	oldResidentialPropertyForSaleData.UniqueId = residentialPropertyForSaleUpdates.UniqueId
 	oldResidentialPropertyForSaleData.OtherInteriorFeatures = residentialPropertyForSaleUpdates.OtherInteriorFeatures

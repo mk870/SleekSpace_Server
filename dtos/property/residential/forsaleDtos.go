@@ -16,7 +16,7 @@ type ResidentialPropertyForSaleCreationDto struct {
 	Bedrooms               int                                                                `json:"bedrooms"`
 	Bathrooms              int                                                                `json:"bathrooms"`
 	YearBuilt              int                                                                `json:"yearBuilt"`
-	Stories                int                                                                `json:"stories"`
+	Storeys                int                                                                `json:"storeys"`
 	HasSwimmingPool        bool                                                               `json:"hasSwimmingPool"`
 	HasElectricity         bool                                                               `json:"hasElectricity"`
 	HasWater               bool                                                               `json:"hasWater"`
@@ -50,7 +50,7 @@ type ResidentialPropertyForSaleResponseDto struct {
 	Bedrooms               int                                                `json:"bedrooms"`
 	Bathrooms              int                                                `json:"bathrooms"`
 	YearBuilt              int                                                `json:"yearBuilt"`
-	Stories                int                                                `json:"stories"`
+	Storeys                int                                                `json:"storeys"`
 	HasSwimmingPool        bool                                               `json:"hasSwimmingPool"`
 	HasElectricity         bool                                               `json:"hasElectricity"`
 	HasWater               bool                                               `json:"hasWater"`
@@ -86,7 +86,7 @@ type ResidentialPropertyForSaleWithManagerResponseDto struct {
 	Bedrooms               int                                                `json:"bedrooms"`
 	Bathrooms              int                                                `json:"bathrooms"`
 	YearBuilt              int                                                `json:"yearBuilt"`
-	Stories                int                                                `json:"stories"`
+	Storeys                int                                                `json:"storeys"`
 	HasSwimmingPool        bool                                               `json:"hasSwimmingPool"`
 	HasElectricity         bool                                               `json:"hasElectricity"`
 	HasWater               bool                                               `json:"hasWater"`
@@ -123,7 +123,7 @@ type ResidentialPropertyForSaleUpdateDto struct {
 	Bedrooms               int      `json:"bedrooms"`
 	Bathrooms              int      `json:"bathrooms"`
 	YearBuilt              int      `json:"yearBuilt"`
-	Stories                int      `json:"stories"`
+	Storeys                int      `json:"storeys"`
 	HasSwimmingPool        bool     `json:"hasSwimmingPool"`
 	HasElectricity         bool     `json:"hasElectricity"`
 	HasWater               bool     `json:"hasWater"`

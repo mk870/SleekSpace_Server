@@ -14,7 +14,7 @@ type CommercialForSalePropertyCreationDto struct {
 	Price                 int                                                                `json:"price"`
 	SizeNumber            int                                                                `json:"sizeNumber"`
 	YearBuilt             int                                                                `json:"yearBuilt"`
-	Stories               int                                                                `json:"stories"`
+	Storeys               int                                                                `json:"storeys"`
 	HasElectricity        bool                                                               `json:"hasElectricity"`
 	HasWater              bool                                                               `json:"hasWater"`
 	IsNegotiable          bool                                                               `json:"isNegotiable"`
@@ -37,7 +37,7 @@ type CommercialForSalePropertyResponseDto struct {
 	Price                 int                                                `json:"price"`
 	SizeNumber            int                                                `json:"sizeNumber"`
 	YearBuilt             int                                                `json:"yearBuilt"`
-	Stories               int                                                `json:"stories"`
+	Storeys               int                                                `json:"storeys"`
 	HasElectricity        bool                                               `json:"hasElectricity"`
 	HasWater              bool                                               `json:"hasWater"`
 	IsNegotiable          bool                                               `json:"isNegotiable"`
@@ -62,7 +62,7 @@ type CommercialForSalePropertyWithManagerResponseDto struct {
 	Price                 int                                                `json:"price"`
 	SizeNumber            int                                                `json:"sizeNumber"`
 	YearBuilt             int                                                `json:"yearBuilt"`
-	Stories               int                                                `json:"stories"`
+	Storeys               int                                                `json:"storeys"`
 	HasElectricity        bool                                               `json:"hasElectricity"`
 	HasWater              bool                                               `json:"hasWater"`
 	IsNegotiable          bool                                               `json:"isNegotiable"`
@@ -88,7 +88,7 @@ type CommercialForSalePropertyUpdateDto struct {
 	Price                 int      `json:"price"`
 	SizeNumber            int      `json:"sizeNumber"`
 	YearBuilt             int      `json:"yearBuilt"`
-	Stories               int      `json:"stories"`
+	Storeys               int      `json:"storeys"`
 	HasElectricity        bool     `json:"hasElectricity"`
 	HasWater              bool     `json:"hasWater"`
 	IsNegotiable          bool     `json:"isNegotiable"`
