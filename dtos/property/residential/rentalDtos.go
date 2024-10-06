@@ -17,7 +17,7 @@ type ResidentialPropertyForRentCreationDto struct {
 	Bathrooms              int                                                                `json:"bathrooms"`
 	Bedrooms               int                                                                `json:"bedrooms"`
 	YearBuilt              int                                                                `json:"yearBuilt"`
-	Stories                int                                                                `json:"stories"`
+	Storeys                int                                                                `json:"storeys"`
 	IsPaved                bool                                                               `json:"isPaved"`
 	HasBoreHole            bool                                                               `json:"hasBoreHole"`
 	IsPlustered            bool                                                               `json:"isPlustered"`
@@ -30,13 +30,13 @@ type ResidentialPropertyForRentCreationDto struct {
 	HasSwimmingPool        bool                                                               `json:"hasSwimmingPool"`
 	Currency               string                                                             `json:"currency"`
 	TypeOfExteriorSecurity string                                                             `json:"typeOfExteriorSecurity"`
-	TenantRequirements     string                                                             `json:"tenantRequirements"`
 	MarketingStatement     string                                                             `json:"marketingStatement"`
 	Status                 string                                                             `json:"status"`
 	Type                   string                                                             `json:"type"`
 	SizeDimensions         string                                                             `json:"sizeDimensions"`
-	OtherInteriorFeatures  string                                                             `json:"otherInteriorFeatures"`
-	OtherExteriorFeatures  string                                                             `json:"otherExteriorFeatures"`
+	TenantRequirements     []string                                                           `json:"tenantRequirements"`
+	OtherInteriorFeatures  []string                                                           `json:"otherInteriorFeatures"`
+	OtherExteriorFeatures  []string                                                           `json:"otherExteriorFeatures"`
 	PropertyLocation       locationDtos.PropertyLocationCreationDto                           `json:"propertyLocation"`
 	Media                  []imageorvideoDtos.PropertyImageOrVideoCreationWithNoPropertyIdDto `json:"media"`
 }
@@ -51,7 +51,7 @@ type ResidentialPropertyForRentResponseDto struct {
 	NumberOfGarages        int                                                `json:"numberOfGarages"`
 	SizeNumber             int                                                `json:"sizeNumber"`
 	Bathrooms              int                                                `json:"bathrooms"`
-	Stories                int                                                `json:"stories"`
+	Storeys                int                                                `json:"storeys"`
 	Bedrooms               int                                                `json:"bedrooms"`
 	YearBuilt              int                                                `json:"yearBuilt"`
 	IsPaved                bool                                               `json:"isPaved"`
@@ -66,13 +66,13 @@ type ResidentialPropertyForRentResponseDto struct {
 	HasSwimmingPool        bool                                               `json:"hasSwimmingPool"`
 	Currency               string                                             `json:"currency"`
 	TypeOfExteriorSecurity string                                             `json:"typeOfExteriorSecurity"`
-	TenantRequirements     string                                             `json:"tenantRequirements"`
 	MarketingStatement     string                                             `json:"marketingStatement"`
 	Status                 string                                             `json:"status"`
 	Type                   string                                             `json:"type"`
 	SizeDimensions         string                                             `json:"sizeDimensions"`
-	OtherInteriorFeatures  string                                             `json:"otherInteriorFeatures"`
-	OtherExteriorFeatures  string                                             `json:"otherExteriorFeatures"`
+	TenantRequirements     []string                                           `json:"tenantRequirements"`
+	OtherInteriorFeatures  []string                                           `json:"otherInteriorFeatures"`
+	OtherExteriorFeatures  []string                                           `json:"otherExteriorFeatures"`
 	PostedTime             string                                             `json:"postedTime"`
 	PropertyLocation       locationDtos.PropertyLocationUpdateAndResponseDto  `json:"propertyLocation"`
 	Insights               insightsDtos.PropertyInsightsUpdateAndResponseDto  `json:"insights"`
@@ -90,7 +90,7 @@ type ResidentialPropertyForRentWithManagerResponseDto struct {
 	SizeNumber             int                                                `json:"sizeNumber"`
 	Bathrooms              int                                                `json:"bathrooms"`
 	Bedrooms               int                                                `json:"bedrooms"`
-	Stories                int                                                `json:"stories"`
+	Storeys                int                                                `json:"storeys"`
 	YearBuilt              int                                                `json:"yearBuilt"`
 	IsPaved                bool                                               `json:"isPaved"`
 	HasBoreHole            bool                                               `json:"hasBoreHole"`
@@ -104,13 +104,13 @@ type ResidentialPropertyForRentWithManagerResponseDto struct {
 	HasSwimmingPool        bool                                               `json:"hasSwimmingPool"`
 	Currency               string                                             `json:"currency"`
 	TypeOfExteriorSecurity string                                             `json:"typeOfExteriorSecurity"`
-	TenantRequirements     string                                             `json:"tenantRequirements"`
 	MarketingStatement     string                                             `json:"marketingStatement"`
 	Status                 string                                             `json:"status"`
 	Type                   string                                             `json:"type"`
 	SizeDimensions         string                                             `json:"sizeDimensions"`
-	OtherInteriorFeatures  string                                             `json:"otherInteriorFeatures"`
-	OtherExteriorFeatures  string                                             `json:"otherExteriorFeatures"`
+	TenantRequirements     []string                                           `json:"tenantRequirements"`
+	OtherInteriorFeatures  []string                                           `json:"otherInteriorFeatures"`
+	OtherExteriorFeatures  []string                                           `json:"otherExteriorFeatures"`
 	PostedTime             string                                             `json:"postedTime"`
 	PropertyLocation       locationDtos.PropertyLocationUpdateAndResponseDto  `json:"propertyLocation"`
 	Insights               insightsDtos.PropertyInsightsUpdateAndResponseDto  `json:"insights"`
@@ -119,35 +119,35 @@ type ResidentialPropertyForRentWithManagerResponseDto struct {
 }
 
 type ResidentialPropertyForRentUpdateDto struct {
-	Id                     int    `json:"id"`
-	ManagerId              int    `json:"managerId"`
-	UniqueId               int    `json:"uniqueId"`
-	NumberOfRoomsToLet     int    `json:"numberOfRoomsToLet"`
-	TotalNumberOfRooms     int    `json:"totalNumberOfRooms"`
-	RentAmount             int    `json:"rentAmount"`
-	NumberOfGarages        int    `json:"numberOfGarages"`
-	SizeNumber             int    `json:"sizeNumber"`
-	YearBuilt              int    `json:"yearBuilt"`
-	Bathrooms              int    `json:"bathrooms"`
-	Stories                int    `json:"stories"`
-	Bedrooms               int    `json:"bedrooms"`
-	IsPaved                bool   `json:"isPaved"`
-	HasBoreHole            bool   `json:"hasBoreHole"`
-	IsPlustered            bool   `json:"isPlustered"`
-	IsPainted              bool   `json:"isPainted"`
-	IsTiled                bool   `json:"isTiled"`
-	HasCeiling             bool   `json:"hasCeiling"`
-	IsFullHouse            bool   `json:"isFullHouse"`
-	HasElectricity         bool   `json:"hasElectricity"`
-	HasWater               bool   `json:"hasWater"`
-	HasSwimmingPool        bool   `json:"hasSwimmingPool"`
-	Currency               string `json:"currency"`
-	TypeOfExteriorSecurity string `json:"typeOfExteriorSecurity"`
-	TenantRequirements     string `json:"tenantRequirements"`
-	MarketingStatement     string `json:"marketingStatement"`
-	Status                 string `json:"status"`
-	Type                   string `json:"type"`
-	SizeDimensions         string `json:"sizeDimensions"`
-	OtherInteriorFeatures  string `json:"otherInteriorFeatures"`
-	OtherExteriorFeatures  string `json:"otherExteriorFeatures"`
+	Id                     int      `json:"id"`
+	ManagerId              int      `json:"managerId"`
+	UniqueId               int      `json:"uniqueId"`
+	NumberOfRoomsToLet     int      `json:"numberOfRoomsToLet"`
+	TotalNumberOfRooms     int      `json:"totalNumberOfRooms"`
+	RentAmount             int      `json:"rentAmount"`
+	NumberOfGarages        int      `json:"numberOfGarages"`
+	SizeNumber             int      `json:"sizeNumber"`
+	YearBuilt              int      `json:"yearBuilt"`
+	Bathrooms              int      `json:"bathrooms"`
+	Storeys                int      `json:"storeys"`
+	Bedrooms               int      `json:"bedrooms"`
+	IsPaved                bool     `json:"isPaved"`
+	HasBoreHole            bool     `json:"hasBoreHole"`
+	IsPlustered            bool     `json:"isPlustered"`
+	IsPainted              bool     `json:"isPainted"`
+	IsTiled                bool     `json:"isTiled"`
+	HasCeiling             bool     `json:"hasCeiling"`
+	IsFullHouse            bool     `json:"isFullHouse"`
+	HasElectricity         bool     `json:"hasElectricity"`
+	HasWater               bool     `json:"hasWater"`
+	HasSwimmingPool        bool     `json:"hasSwimmingPool"`
+	Currency               string   `json:"currency"`
+	TypeOfExteriorSecurity string   `json:"typeOfExteriorSecurity"`
+	MarketingStatement     string   `json:"marketingStatement"`
+	Status                 string   `json:"status"`
+	Type                   string   `json:"type"`
+	SizeDimensions         string   `json:"sizeDimensions"`
+	TenantRequirements     []string `json:"tenantRequirements"`
+	OtherInteriorFeatures  []string `json:"otherInteriorFeatures"`
+	OtherExteriorFeatures  []string `json:"otherExteriorFeatures"`
 }

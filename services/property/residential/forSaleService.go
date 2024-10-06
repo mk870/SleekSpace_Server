@@ -40,7 +40,7 @@ func CreateResidentialPropertyForSale(c *gin.Context) {
 	}
 
 	mediaList := propertyUtilities.MediaListWithNoPropertyId(residentialPropertyForSaleDetails.Media)
-	mediaUrls := <-storage.UploadBase64Files(mediaList, c)
+	mediaUrls := storage.UploadPropertyMediaFiles(mediaList, c)
 
 	newResidentialPropertyForSale := managerModels.ResidentialPropertyForSale{
 		ManagerId:              residentialPropertyForSaleDetails.ManagerId,
@@ -53,7 +53,7 @@ func CreateResidentialPropertyForSale(c *gin.Context) {
 		YearBuilt:              residentialPropertyForSaleDetails.YearBuilt,
 		Bedrooms:               residentialPropertyForSaleDetails.Bedrooms,
 		Bathrooms:              residentialPropertyForSaleDetails.Bathrooms,
-		Stories:                residentialPropertyForSaleDetails.Stories,
+		Storeys:                residentialPropertyForSaleDetails.Storeys,
 		HasElectricity:         residentialPropertyForSaleDetails.HasElectricity,
 		HasWater:               residentialPropertyForSaleDetails.HasWater,
 		NumberOfRooms:          residentialPropertyForSaleDetails.NumberOfRooms,
@@ -79,7 +79,10 @@ func CreateResidentialPropertyForSale(c *gin.Context) {
 			ContactInfoViews:  0,
 			PropertyType:      constants.ResidentialPropertyForSaleType,
 		},
-		PropertyMedia: propertyUtilities.ConvertPropertyImagesOrVideosWithNoPropertyIdToModel(residentialPropertyForSaleDetails.Media, constants.ResidentialPropertyForSaleType, mediaUrls),
+		PropertyMedia: propertyUtilities.ConvertPropertyImagesOrVideosWithNoPropertyIdToModel(
+			residentialPropertyForSaleDetails.Media,
+			constants.ResidentialPropertyForSaleType,
+			mediaUrls),
 		Location: propertyModels.PropertyLocation{
 			Boundingbox:  residentialPropertyForSaleDetails.PropertyLocation.Boundingbox,
 			Lat:          residentialPropertyForSaleDetails.PropertyLocation.Lat,
@@ -133,7 +136,7 @@ func UpdateResidentialPropertyForSaleDetails(c *gin.Context) {
 	oldResidentialPropertyForSaleData.HasElectricity = residentialPropertyForSaleUpdates.HasElectricity
 	oldResidentialPropertyForSaleData.NumberOfRooms = residentialPropertyForSaleUpdates.NumberOfRooms
 	oldResidentialPropertyForSaleData.NumberOfGarages = residentialPropertyForSaleUpdates.NumberOfGarages
-	oldResidentialPropertyForSaleData.Stories = residentialPropertyForSaleUpdates.Stories
+	oldResidentialPropertyForSaleData.Storeys = residentialPropertyForSaleUpdates.Storeys
 	oldResidentialPropertyForSaleData.YearBuilt = residentialPropertyForSaleUpdates.YearBuilt
 	oldResidentialPropertyForSaleData.UniqueId = residentialPropertyForSaleUpdates.UniqueId
 	oldResidentialPropertyForSaleData.OtherInteriorFeatures = residentialPropertyForSaleUpdates.OtherInteriorFeatures

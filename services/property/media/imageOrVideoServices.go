@@ -45,7 +45,7 @@ func CreatePropertyImageOrVideoWithPropertyId(c *gin.Context) {
 	}
 
 	mediaList := propertyUtilities.MediaListWithPropertyId(files.Files)
-	mediaUrls := <-storage.UploadBase64Files(mediaList, c)
+	mediaUrls := storage.UploadPropertyMediaFiles(mediaList, c)
 
 	processedFiles := propertyUtilities.ConvertPropertyImagesOrVideosWithPropertyIdToModel(files.Files, mediaUrls)
 
@@ -77,7 +77,7 @@ func UpdatePropertyImageOrVideo(c *gin.Context) {
 		return
 	}
 
-	fileUrl := <-storage.UploadBase64File(imageOrVideoUpdateDetails.File, imageOrVideoUpdateDetails.Name, c)
+	fileUrl := <-storage.UploadImageFile(imageOrVideoUpdateDetails.File, imageOrVideoUpdateDetails.Name, c)
 
 	imageOrVideoUpdate := propertyModels.PropertyImageOrVideo{
 		Id:           imageOrVideoUpdateDetails.Id,

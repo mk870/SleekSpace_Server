@@ -40,7 +40,11 @@ func MediaListWithPropertyId(mediaList []propertyMediaDtos.PropertyImageOrVideoC
 	return mediaFiles
 }
 
-func ConvertPropertyImagesOrVideosWithNoPropertyIdToModel(propertyMediaList []propertyMediaDtos.PropertyImageOrVideoCreationWithNoPropertyIdDto, propertyType string, mediaUrls map[string]string) []propertyModels.PropertyImageOrVideo {
+func ConvertPropertyImagesOrVideosWithNoPropertyIdToModel(
+	propertyMediaList []propertyMediaDtos.PropertyImageOrVideoCreationWithNoPropertyIdDto,
+	propertyType string,
+	mediaUrls map[string]string,
+) []propertyModels.PropertyImageOrVideo {
 	mediaList := []propertyModels.PropertyImageOrVideo{}
 	if len(propertyMediaList) > 0 {
 		for i := 0; i < len(propertyMediaList); i++ {

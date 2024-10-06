@@ -40,28 +40,27 @@ func CreateCommercialPropertyForSale(c *gin.Context) {
 	}
 
 	mediaList := propertyUtilities.MediaListWithNoPropertyId(commercialPropertyForSaleDetails.Media)
-	mediaUrls := <-storage.UploadBase64Files(mediaList, c)
+	mediaUrls := storage.UploadPropertyMediaFiles(mediaList, c)
 
 	newCommercialPropertyForSale := managerModels.CommercialForSaleProperty{
-		ManagerId:          commercialPropertyForSaleDetails.ManagerId,
-		UniqueId:           propertyUtilities.GeneratePropertyUniqueId(),
-		Price:              commercialPropertyForSaleDetails.Price,
-		SizeNumber:         commercialPropertyForSaleDetails.SizeNumber,
-		SizeDimensions:     commercialPropertyForSaleDetails.SizeDimensions,
-		Status:             commercialPropertyForSaleDetails.Status,
-		Type:               commercialPropertyForSaleDetails.Type,
-		YearBuilt:          commercialPropertyForSaleDetails.YearBuilt,
-		Stories:            commercialPropertyForSaleDetails.Stories,
-		HasElectricity:     commercialPropertyForSaleDetails.HasElectricity,
-		HasWater:           commercialPropertyForSaleDetails.HasWater,
-		IsNegotiable:       commercialPropertyForSaleDetails.IsNegotiable,
-		NumberOfRooms:      commercialPropertyForSaleDetails.NumberOfRooms,
-		ExteriorFeatures:   commercialPropertyForSaleDetails.ExteriorFeatures,
-		InteriorFeatures:   commercialPropertyForSaleDetails.InteriorFeatures,
-		OtherDetails:       commercialPropertyForSaleDetails.OtherDetails,
-		Currency:           commercialPropertyForSaleDetails.Currency,
-		MarketingStatement: commercialPropertyForSaleDetails.MarketingStatement,
-		Manager:            *manager,
+		ManagerId:             commercialPropertyForSaleDetails.ManagerId,
+		UniqueId:              propertyUtilities.GeneratePropertyUniqueId(),
+		Price:                 commercialPropertyForSaleDetails.Price,
+		SizeNumber:            commercialPropertyForSaleDetails.SizeNumber,
+		SizeDimensions:        commercialPropertyForSaleDetails.SizeDimensions,
+		Status:                commercialPropertyForSaleDetails.Status,
+		Type:                  commercialPropertyForSaleDetails.Type,
+		YearBuilt:             commercialPropertyForSaleDetails.YearBuilt,
+		Storeys:               commercialPropertyForSaleDetails.Storeys,
+		HasElectricity:        commercialPropertyForSaleDetails.HasElectricity,
+		HasWater:              commercialPropertyForSaleDetails.HasWater,
+		IsNegotiable:          commercialPropertyForSaleDetails.IsNegotiable,
+		NumberOfRooms:         commercialPropertyForSaleDetails.NumberOfRooms,
+		OtherExteriorFeatures: commercialPropertyForSaleDetails.OtherExteriorFeatures,
+		OtherInteriorFeatures: commercialPropertyForSaleDetails.OtherInteriorFeatures,
+		Currency:              commercialPropertyForSaleDetails.Currency,
+		MarketingStatement:    commercialPropertyForSaleDetails.MarketingStatement,
+		Manager:               *manager,
 		PropertyInsights: propertyModels.PropertyInsights{
 			Views:             0,
 			Shared:            0,
@@ -119,13 +118,12 @@ func UpdateCommercialPropertyForSaleDetails(c *gin.Context) {
 	oldCommercialPropertyForSaleData.HasWater = commercialPropertyForSaleUpdates.HasWater
 	oldCommercialPropertyForSaleData.HasElectricity = commercialPropertyForSaleUpdates.HasElectricity
 	oldCommercialPropertyForSaleData.NumberOfRooms = commercialPropertyForSaleUpdates.NumberOfRooms
-	oldCommercialPropertyForSaleData.Stories = commercialPropertyForSaleUpdates.Stories
+	oldCommercialPropertyForSaleData.Storeys = commercialPropertyForSaleUpdates.Storeys
 	oldCommercialPropertyForSaleData.YearBuilt = commercialPropertyForSaleUpdates.YearBuilt
 	oldCommercialPropertyForSaleData.UniqueId = commercialPropertyForSaleUpdates.UniqueId
 	oldCommercialPropertyForSaleData.IsNegotiable = commercialPropertyForSaleUpdates.IsNegotiable
-	oldCommercialPropertyForSaleData.InteriorFeatures = commercialPropertyForSaleUpdates.InteriorFeatures
-	oldCommercialPropertyForSaleData.ExteriorFeatures = commercialPropertyForSaleUpdates.ExteriorFeatures
-	oldCommercialPropertyForSaleData.OtherDetails = commercialPropertyForSaleUpdates.OtherDetails
+	oldCommercialPropertyForSaleData.OtherInteriorFeatures = commercialPropertyForSaleUpdates.OtherInteriorFeatures
+	oldCommercialPropertyForSaleData.OtherExteriorFeatures = commercialPropertyForSaleUpdates.OtherExteriorFeatures
 	oldCommercialPropertyForSaleData.Currency = commercialPropertyForSaleUpdates.Currency
 	oldCommercialPropertyForSaleData.MarketingStatement = commercialPropertyForSaleUpdates.MarketingStatement
 

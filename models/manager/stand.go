@@ -20,8 +20,8 @@ type PropertyStand struct {
 	SizeDimensions     string                                `json:"sizeDimensions"`
 	Type               string                                `json:"type"`
 	Currency           string                                `json:"currency"`
-	OtherDetails       string                                `gorm:"type:text"`
 	MarketingStatement string                                `gorm:"type:text"`
+	OtherDetails       []string                              `gorm:"serializer:json"`
 	Manager            Manager                               `json:"manager"`
 	Location           propertyModels.PropertyLocation       `gorm:"ForeignKey:PropertyId;references:UniqueId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	PropertyInsights   propertyModels.PropertyInsights       `gorm:"ForeignKey:PropertyId;references:UniqueId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`

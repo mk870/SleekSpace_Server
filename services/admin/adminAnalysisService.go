@@ -3,6 +3,7 @@ package admin
 import (
 	"fmt"
 	"net/http"
+	"sync"
 	"time"
 
 	commercialDtos "SleekSpace/dtos/property/commercial"
@@ -31,20 +32,34 @@ func GetLocationById(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"response": location})
 }
 
-func apiSim() <-chan string {
-	result := make(chan string)
+func apiSim(wg *sync.WaitGroup, ch chan string) {
+	println("waiting for goroutine")
+	defer wg.Done()
+	time.Sleep(time.Second * 5)
+	ch <- "im done"
+}
+
+func processes() string {
+	var wg sync.WaitGroup
+	resultCh := make(chan string)
+	wg.Add(1)
+	go apiSim(&wg, resultCh)
+	fmt.Println("ran aftrer")
 	go func() {
-		defer close(result)
-		time.Sleep(time.Second * 5)
-		result <- "im done"
+		wg.Wait()
+		close(resultCh)
 	}()
+	var result string
+	for v := range resultCh {
+		result = v
+	}
 	return result
 }
 
 func GetInfo(c *gin.Context) {
-	info := <-apiSim()
-	fmt.Println("ran aftrer")
-	c.JSON(http.StatusOK, gin.H{"response": info})
+	_ = processes()
+	fmt.Println("running after range ")
+	c.JSON(http.StatusOK, gin.H{"response": "hie"})
 
 }
 

@@ -29,39 +29,43 @@ func CreateCommercialRentalProperty(c *gin.Context) {
 	}
 
 	if len(commercialRentalPropertyDetails.Media) > constants.ImagesOrVideosLimitPerProperty {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "you can only upload " + generalUtilities.ConvertIntToString(constants.ImagesOrVideosLimitPerProperty) + " images/videos"})
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "you can only upload " +
+				generalUtilities.ConvertIntToString(constants.ImagesOrVideosLimitPerProperty) + " images/videos"})
 		return
 	}
 
-	manager := managerRepo.GetManagerWithProfilePictureAndContactsByManagerId(generalUtilities.ConvertIntToString(commercialRentalPropertyDetails.ManagerId))
+	manager := managerRepo.GetManagerWithProfilePictureAndContactsByManagerId(
+		generalUtilities.ConvertIntToString(commercialRentalPropertyDetails.ManagerId),
+	)
 	if manager == nil {
 		c.JSON(http.StatusForbidden, gin.H{"error": "this manager does not exist"})
 		return
 	}
 
 	mediaList := propertyUtilities.MediaListWithNoPropertyId(commercialRentalPropertyDetails.Media)
-	mediaUrls := <-storage.UploadBase64Files(mediaList, c)
+	mediaUrls := storage.UploadPropertyMediaFiles(mediaList, c)
 
 	newCommercialRentalProperty := managerModels.CommercialRentalProperty{
-		ManagerId:          commercialRentalPropertyDetails.ManagerId,
-		UniqueId:           propertyUtilities.GeneratePropertyUniqueId(),
-		RentAmount:         commercialRentalPropertyDetails.RentAmount,
-		SizeNumber:         commercialRentalPropertyDetails.SizeNumber,
-		SizeDimensions:     commercialRentalPropertyDetails.SizeDimensions,
-		Status:             commercialRentalPropertyDetails.Status,
-		Type:               commercialRentalPropertyDetails.Type,
-		YearBuilt:          commercialRentalPropertyDetails.YearBuilt,
-		Stories:            commercialRentalPropertyDetails.Stories,
-		HasElectricity:     commercialRentalPropertyDetails.HasElectricity,
-		HasWater:           commercialRentalPropertyDetails.HasWater,
-		NumberOfRooms:      commercialRentalPropertyDetails.NumberOfRooms,
-		IsFullSpace:        commercialRentalPropertyDetails.IsFullSpace,
-		ExteriorFeatures:   commercialRentalPropertyDetails.ExteriorFeatures,
-		InteriorFeatures:   commercialRentalPropertyDetails.InteriorFeatures,
-		OtherDetails:       commercialRentalPropertyDetails.OtherDetails,
-		Currency:           commercialRentalPropertyDetails.Currency,
-		MarketingStatement: commercialRentalPropertyDetails.MarketingStatement,
-		Manager:            *manager,
+		ManagerId:             commercialRentalPropertyDetails.ManagerId,
+		UniqueId:              propertyUtilities.GeneratePropertyUniqueId(),
+		RentAmount:            commercialRentalPropertyDetails.RentAmount,
+		SizeNumber:            commercialRentalPropertyDetails.SizeNumber,
+		SizeDimensions:        commercialRentalPropertyDetails.SizeDimensions,
+		Status:                commercialRentalPropertyDetails.Status,
+		Type:                  commercialRentalPropertyDetails.Type,
+		YearBuilt:             commercialRentalPropertyDetails.YearBuilt,
+		Storeys:               commercialRentalPropertyDetails.Storeys,
+		HasElectricity:        commercialRentalPropertyDetails.HasElectricity,
+		HasWater:              commercialRentalPropertyDetails.HasWater,
+		NumberOfRooms:         commercialRentalPropertyDetails.NumberOfRooms,
+		IsFullSpace:           commercialRentalPropertyDetails.IsFullSpace,
+		OtherExteriorFeatures: commercialRentalPropertyDetails.OtherExteriorFeatures,
+		OtherInteriorFeatures: commercialRentalPropertyDetails.OtherInteriorFeatures,
+		TenantRequirements:    commercialRentalPropertyDetails.TenantRequirements,
+		Currency:              commercialRentalPropertyDetails.Currency,
+		MarketingStatement:    commercialRentalPropertyDetails.MarketingStatement,
+		Manager:               *manager,
 		PropertyInsights: propertyModels.PropertyInsights{
 			Views:             0,
 			Shared:            0,
@@ -119,13 +123,13 @@ func UpdateCommercialRentalPropertyDetails(c *gin.Context) {
 	oldCommercialRentalPropertyData.HasWater = commercialRentalPropertyUpdates.HasWater
 	oldCommercialRentalPropertyData.HasElectricity = commercialRentalPropertyUpdates.HasElectricity
 	oldCommercialRentalPropertyData.NumberOfRooms = commercialRentalPropertyUpdates.NumberOfRooms
-	oldCommercialRentalPropertyData.Stories = commercialRentalPropertyUpdates.Stories
+	oldCommercialRentalPropertyData.Storeys = commercialRentalPropertyUpdates.Storeys
 	oldCommercialRentalPropertyData.YearBuilt = commercialRentalPropertyUpdates.YearBuilt
 	oldCommercialRentalPropertyData.IsFullSpace = commercialRentalPropertyUpdates.IsFullSpace
 	oldCommercialRentalPropertyData.UniqueId = commercialRentalPropertyUpdates.UniqueId
-	oldCommercialRentalPropertyData.OtherDetails = commercialRentalPropertyUpdates.OtherDetails
-	oldCommercialRentalPropertyData.ExteriorFeatures = commercialRentalPropertyUpdates.ExteriorFeatures
-	oldCommercialRentalPropertyData.InteriorFeatures = commercialRentalPropertyUpdates.InteriorFeatures
+	oldCommercialRentalPropertyData.TenantRequirements = commercialRentalPropertyUpdates.TenantRequirements
+	oldCommercialRentalPropertyData.OtherExteriorFeatures = commercialRentalPropertyUpdates.OtherExteriorFeatures
+	oldCommercialRentalPropertyData.OtherInteriorFeatures = commercialRentalPropertyUpdates.OtherInteriorFeatures
 	oldCommercialRentalPropertyData.Currency = commercialRentalPropertyUpdates.Currency
 	oldCommercialRentalPropertyData.MarketingStatement = commercialRentalPropertyUpdates.MarketingStatement
 

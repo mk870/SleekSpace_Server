@@ -40,7 +40,7 @@ func CreateResidentialRentalProperty(c *gin.Context) {
 	}
 
 	mediaList := propertyUtilities.MediaListWithNoPropertyId(residentialRentalPropertyDetails.Media)
-	mediaUrls := <-storage.UploadBase64Files(mediaList, c)
+	mediaUrls := storage.UploadPropertyMediaFiles(mediaList, c)
 
 	newResidentialRentalProperty := managerModels.ResidentialRentalProperty{
 		ManagerId:              residentialRentalPropertyDetails.ManagerId,
@@ -53,7 +53,7 @@ func CreateResidentialRentalProperty(c *gin.Context) {
 		YearBuilt:              residentialRentalPropertyDetails.YearBuilt,
 		Bedrooms:               residentialRentalPropertyDetails.Bedrooms,
 		Bathrooms:              residentialRentalPropertyDetails.Bathrooms,
-		Stories:                residentialRentalPropertyDetails.Stories,
+		Storeys:                residentialRentalPropertyDetails.Storeys,
 		HasElectricity:         residentialRentalPropertyDetails.HasElectricity,
 		HasWater:               residentialRentalPropertyDetails.HasWater,
 		NumberOfRoomsToLet:     residentialRentalPropertyDetails.NumberOfRoomsToLet,
@@ -136,7 +136,7 @@ func UpdateResidentialRentalPropertyDetails(c *gin.Context) {
 	oldResidentialRentalPropertyData.HasElectricity = residentialRentalPropertyUpdates.HasElectricity
 	oldResidentialRentalPropertyData.NumberOfRoomsToLet = residentialRentalPropertyUpdates.NumberOfRoomsToLet
 	oldResidentialRentalPropertyData.NumberOfGarages = residentialRentalPropertyUpdates.NumberOfGarages
-	oldResidentialRentalPropertyData.Stories = residentialRentalPropertyUpdates.Stories
+	oldResidentialRentalPropertyData.Storeys = residentialRentalPropertyUpdates.Storeys
 	oldResidentialRentalPropertyData.YearBuilt = residentialRentalPropertyUpdates.YearBuilt
 	oldResidentialRentalPropertyData.UniqueId = residentialRentalPropertyUpdates.UniqueId
 	oldResidentialRentalPropertyData.OtherInteriorFeatures = residentialRentalPropertyUpdates.OtherInteriorFeatures
