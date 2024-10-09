@@ -1,17 +1,13 @@
 package admin
 
 import (
-	"fmt"
 	"net/http"
-	"sync"
-	"time"
 
 	commercialDtos "SleekSpace/dtos/property/commercial"
 	landDtos "SleekSpace/dtos/property/land"
 	propertyLocationDtos "SleekSpace/dtos/property/location"
 	residentialDtos "SleekSpace/dtos/property/residential"
 	standDtos "SleekSpace/dtos/property/stand"
-	managerRepo "SleekSpace/repositories/manager"
 	commercialRepo "SleekSpace/repositories/property/commercial"
 	propertyInsightsRepo "SleekSpace/repositories/property/insights"
 	landRepo "SleekSpace/repositories/property/land"
@@ -19,121 +15,28 @@ import (
 	propertyMediaRepo "SleekSpace/repositories/property/media"
 	residentialRepo "SleekSpace/repositories/property/residential"
 	standRepo "SleekSpace/repositories/property/stand"
-	userRepo "SleekSpace/repositories/user"
-	generalUtilities "SleekSpace/utilities/funcs/general"
 	propertyUtilities "SleekSpace/utilities/funcs/property"
 
 	"github.com/gin-gonic/gin"
 )
 
-func GetLocationById(c *gin.Context) {
-	id := c.Param("id")
-	location := userRepo.GetLocationById(generalUtilities.ConvertStringToInt(id))
-	c.JSON(http.StatusOK, gin.H{"response": location})
-}
-
-func apiSim(wg *sync.WaitGroup, ch chan string) {
-	println("waiting for goroutine")
-	defer wg.Done()
-	time.Sleep(time.Second * 5)
-	ch <- "im done"
-}
-
-func processes() string {
-	var wg sync.WaitGroup
-	resultCh := make(chan string)
-	wg.Add(1)
-	go apiSim(&wg, resultCh)
-	fmt.Println("ran aftrer")
-	go func() {
-		wg.Wait()
-		close(resultCh)
-	}()
-	var result string
-	for v := range resultCh {
-		result = v
-	}
-	return result
-}
-
-func GetInfo(c *gin.Context) {
-	_ = processes()
-	fmt.Println("running after range ")
-	c.JSON(http.StatusOK, gin.H{"response": "hie"})
-
-}
-
-func GetAllUsersLocations(c *gin.Context) {
-	codes := userRepo.GetAllUsersLocations()
-	c.JSON(http.StatusOK, gin.H{
-		"response": codes,
-	})
-}
-
-func GetAllUsers(c *gin.Context) {
-	users := userRepo.GetUsers()
-	c.JSON(http.StatusOK, gin.H{
-		"response": users,
-	})
-}
-
-func GetAllUsersProfilePictures(c *gin.Context) {
-	pictures := userRepo.GetAllUsersProfilePictures()
-	c.JSON(http.StatusOK, gin.H{
-		"response": pictures,
-	})
-}
-
-func GetAllManagersProfilePictures(c *gin.Context) {
-	pictures := managerRepo.GetAllManagersProfilePictures()
-	c.JSON(http.StatusOK, gin.H{
-		"response": pictures,
-	})
-}
-
-func GetVerificationCodeById(c *gin.Context) {
-	id := c.Param("id")
-	code := userRepo.GetVerificationCodeById(id)
-	c.JSON(http.StatusOK, gin.H{
-		"response": code,
-	})
-}
-
-func GetAllVerificationCodes(c *gin.Context) {
-	codes := userRepo.AllVerificationCodes()
-	c.JSON(http.StatusOK, gin.H{
-		"response": codes,
-	})
-}
-
-func DeleteVerificationCode(c *gin.Context) {
-	id := c.Param("id")
-	isDeleted := userRepo.DeleteVerficationCode(generalUtilities.ConvertStringToInt(id))
-	if isDeleted {
+func GetAllResidentialRentalProperties(c *gin.Context) {
+	residentialRentalProperties := residentialRepo.GetAllResidentialRentalProperties(c)
+	responseList := []residentialDtos.ResidentialPropertyForRentResponseDto{}
+	if len(residentialRentalProperties) > 0 {
+		for i := 0; i < len(residentialRentalProperties); i++ {
+			responseItem := propertyUtilities.ResidentialRentalPropertyResponse(residentialRentalProperties[i])
+			responseList = append(responseList, responseItem)
+		}
 		c.JSON(http.StatusOK, gin.H{
-			"response": "code deleted",
+			"properties": responseList,
+			"totalPages": c.GetInt("totalPages"),
 		})
+		return
 	}
-}
-
-func GetUserContacts(c *gin.Context) {
-	numbers := userRepo.GetAllUsersContactNumbers()
 	c.JSON(http.StatusOK, gin.H{
-		"response": numbers,
-	})
-}
-
-func GetAllManagersContacts(c *gin.Context) {
-	numbers := managerRepo.GetAllManagersContacts()
-	c.JSON(http.StatusOK, gin.H{
-		"response": numbers,
-	})
-}
-
-func GetAllManagers(c *gin.Context) {
-	managers := managerRepo.GetAllManagers()
-	c.JSON(http.StatusOK, gin.H{
-		"response": managers,
+		"properties": responseList,
+		"totalPages": c.GetInt("totalPages"),
 	})
 }
 
@@ -190,26 +93,6 @@ func GetAllResidentialForSaleProperties(c *gin.Context) {
 	if len(residentialPropertiesForSale) > 0 {
 		for i := 0; i < len(residentialPropertiesForSale); i++ {
 			responseItem := propertyUtilities.ResidentialForSalePropertyResponse(residentialPropertiesForSale[i])
-			responseList = append(responseList, responseItem)
-		}
-		c.JSON(http.StatusOK, gin.H{
-			"properties": responseList,
-			"totalPages": c.GetInt("totalPages"),
-		})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{
-		"properties": responseList,
-		"totalPages": c.GetInt("totalPages"),
-	})
-}
-
-func GetAllResidentialRentalProperties(c *gin.Context) {
-	residentialRentalProperties := residentialRepo.GetAllResidentialRentalProperties(c)
-	responseList := []residentialDtos.ResidentialPropertyForRentResponseDto{}
-	if len(residentialRentalProperties) > 0 {
-		for i := 0; i < len(residentialRentalProperties); i++ {
-			responseItem := propertyUtilities.ResidentialRentalPropertyResponse(residentialRentalProperties[i])
 			responseList = append(responseList, responseItem)
 		}
 		c.JSON(http.StatusOK, gin.H{
