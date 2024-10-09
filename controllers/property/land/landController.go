@@ -12,7 +12,7 @@ func LandPropertyRoutes(router *gin.Engine) {
 	{
 		routes.POST("", middleware.AuthValidator, landService.CreateLandPropertyForSale)
 		routes.GET("", landService.GetAllLandProperties)
-		routes.GET("/:id", middleware.AuthValidator, landService.GetLandPropertyById)
+		routes.GET("/:id", landService.GetLandPropertyById)
 		routes.PUT("/:id", middleware.AuthValidator, landService.UpdateLandPropertyDetails)
 		routes.DELETE("/:id", middleware.AuthValidator, landService.DeleteLandPropertyById)
 	}

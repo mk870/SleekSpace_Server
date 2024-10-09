@@ -12,7 +12,7 @@ func StandsRoutes(router *gin.Engine) {
 	{
 		routes.POST("", middleware.AuthValidator, standService.CreateStandForSale)
 		routes.GET("", standService.GetAllStands)
-		routes.GET("/:id", middleware.AuthValidator, standService.GetStandById)
+		routes.GET("/:id", standService.GetStandById)
 		routes.PUT("/:id", middleware.AuthValidator, standService.UpdateStandDetails)
 		routes.DELETE("/:id", middleware.AuthValidator, standService.DeleteStandById)
 	}

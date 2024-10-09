@@ -12,7 +12,7 @@ func ResidentialRentalPropertyRoutes(router *gin.Engine) {
 	{
 		routes.POST("", middleware.AuthValidator, residentialService.CreateResidentialRentalProperty)
 		routes.GET("", residentialService.GetAllResidentialRentalProperties)
-		routes.GET("/:id", middleware.AuthValidator, residentialService.GetResidentialRentalPropertyId)
+		routes.GET("/:id", residentialService.GetResidentialRentalPropertyId)
 		routes.PUT("/:id", middleware.AuthValidator, residentialService.UpdateResidentialRentalPropertyDetails)
 		routes.DELETE("/:id", middleware.AuthValidator, residentialService.DeleteResidentialRentalPropertyById)
 	}
