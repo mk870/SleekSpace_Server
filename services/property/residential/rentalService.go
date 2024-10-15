@@ -40,7 +40,7 @@ func CreateResidentialRentalProperty(c *gin.Context) {
 	}
 
 	mediaList := propertyUtilities.MediaListWithNoPropertyId(residentialRentalPropertyDetails.Media)
-	mediaUrls := storage.UploadPropertyMediaFiles(mediaList, c)
+	mediaUrls := storage.UploadFiles(mediaList, c)
 
 	newResidentialRentalProperty := managerModels.ResidentialRentalProperty{
 		ManagerId:              residentialRentalPropertyDetails.ManagerId,

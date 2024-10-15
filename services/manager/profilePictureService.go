@@ -24,7 +24,7 @@ func UpdateManagerProfilePicture(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": modelFieldsValidationError.Error()})
 		return
 	}
-	imageUrl := <-storage.UploadImageFile(profilePictureUpdate.Image, profilePictureUpdate.Name, c)
+	imageUrl := <-storage.UploadFile(profilePictureUpdate.Image, profilePictureUpdate.Name, c)
 	newProfilePicture := managerModels.ManagerProfilePicture{
 		Id:          profilePictureUpdate.Id,
 		ManagerId:   profilePictureUpdate.ManagerId,

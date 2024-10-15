@@ -44,7 +44,7 @@ func CreateCommercialRentalProperty(c *gin.Context) {
 	}
 
 	mediaList := propertyUtilities.MediaListWithNoPropertyId(commercialRentalPropertyDetails.Media)
-	mediaUrls := storage.UploadPropertyMediaFiles(mediaList, c)
+	mediaUrls := storage.UploadFiles(mediaList, c)
 
 	newCommercialRentalProperty := managerModels.CommercialRentalProperty{
 		ManagerId:             commercialRentalPropertyDetails.ManagerId,

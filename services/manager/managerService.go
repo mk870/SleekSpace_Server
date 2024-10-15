@@ -28,7 +28,7 @@ func CreateManager(c *gin.Context) {
 	}
 	var imageUrl string = ""
 	if manager.ProfilePicture.Image != "" {
-		imageUrl = <-storage.UploadImageFile(manager.ProfilePicture.Image, manager.ProfilePicture.Name, c)
+		imageUrl = <-storage.UploadFile(manager.ProfilePicture.Image, manager.ProfilePicture.Name, c)
 	}
 	newManager := managerModels.Manager{
 		UserId: manager.UserId,
