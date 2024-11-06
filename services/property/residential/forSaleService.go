@@ -6,10 +6,13 @@ import (
 	residentialDtos "SleekSpace/dtos/property/residential"
 	managerModels "SleekSpace/models/manager"
 	propertyModels "SleekSpace/models/property"
+	userModels "SleekSpace/models/user"
 	managerRepo "SleekSpace/repositories/manager"
 	residentialRepo "SleekSpace/repositories/property/residential"
+	userRepo "SleekSpace/repositories/user"
 	"SleekSpace/storage"
 	constants "SleekSpace/utilities/constants"
+	favoritesUtilities "SleekSpace/utilities/funcs/favorites"
 	generalUtilities "SleekSpace/utilities/funcs/general"
 	propertyUtilities "SleekSpace/utilities/funcs/property"
 
@@ -164,7 +167,7 @@ func UpdateResidentialPropertyForSaleDetails(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"response": propertyUtilities.ResidentialForSalePropertyResponse(*UpdatedResidentialPropertyForSale)})
 }
 
-func GetAllResidentialForSaleProperties(c *gin.Context) {
+func GetAllResidentialForSalePropertiesForLoggedOutUser(c *gin.Context) {
 	residentialPropertiesForSale := residentialRepo.GetAllResidentialPropertiesForSale(c)
 	responseList := []residentialDtos.ResidentialPropertyForSaleWithManagerResponseDto{}
 	if len(residentialPropertiesForSale) > 0 {
@@ -184,13 +187,60 @@ func GetAllResidentialForSaleProperties(c *gin.Context) {
 	})
 }
 
-func GetResidentialPropertyForSaleById(c *gin.Context) {
+func GetAllResidentialForSalePropertiesForLoggedInUser(c *gin.Context) {
+	residentialPropertiesForSale := residentialRepo.GetAllResidentialPropertiesForSale(c)
+	responseList := []residentialDtos.ResidentialPropertyForSaleWithManagerResponseDto{}
+	if len(residentialPropertiesForSale) > 0 {
+		for i := 0; i < len(residentialPropertiesForSale); i++ {
+			responseItem := propertyUtilities.ResidentialForSalePropertyWithManagerResponse(residentialPropertiesForSale[i])
+			responseList = append(responseList, responseItem)
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"properties": favoritesUtilities.ProcessFavoritesForResidentialForSalePropertyWithManager(responseList, c),
+			"totalPages": c.GetInt("totalPages"),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"properties": responseList,
+		"totalPages": c.GetInt("totalPages"),
+	})
+}
+
+func GetResidentialPropertyForSaleByIdLoggedOutUser(c *gin.Context) {
 	residentialPropertyForSale := residentialRepo.GetResidentialPropertyForSaleWithAllAssociationsById(c.Param("id"))
 	if residentialPropertyForSale == nil {
 		c.JSON(http.StatusForbidden, gin.H{"error": "this property does not exist"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"response": propertyUtilities.ResidentialForSalePropertyWithManagerResponse(*residentialPropertyForSale)})
+	c.JSON(http.StatusOK, gin.H{
+		"response": propertyUtilities.ResidentialForSalePropertyWithManagerResponse(*residentialPropertyForSale),
+	})
+}
+
+func GetResidentialPropertyForSaleByIdLoggedInUser(c *gin.Context) {
+	residentialPropertyForSale := residentialRepo.GetResidentialPropertyForSaleWithAllAssociationsById(c.Param("id"))
+	if residentialPropertyForSale == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": "this property does not exist"})
+		return
+	}
+	property := propertyUtilities.ResidentialForSalePropertyWithManagerResponse(*residentialPropertyForSale)
+	userEmail := c.MustGet("user").(*userModels.User).Email
+	user := userRepo.GetUserByEmail(userEmail)
+	if user == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
+		return
+	}
+	if len(user.FavoriteResidentialForSaleProperties) > 0 {
+		for i := 0; i < len(user.FavoriteResidentialForSaleProperties); i++ {
+			if user.FavoriteResidentialForSaleProperties[i] == property.Id {
+				property.IsFavorite = true
+			}
+		}
+	} else {
+		property.IsFavorite = false
+	}
+	c.JSON(http.StatusOK, gin.H{"response": property})
 }
 
 func GetManagerResidentialPropertiesForSaleByManagerId(c *gin.Context) {
@@ -202,7 +252,11 @@ func GetManagerResidentialPropertiesForSaleByManagerId(c *gin.Context) {
 			propertiesResponse = append(propertiesResponse, propertyResponse)
 		}
 	}
-	c.JSON(http.StatusOK, gin.H{"response": propertiesResponse})
+	c.JSON(http.StatusOK, gin.H{
+		"response": favoritesUtilities.ProcessFavoritesForResidentialForSalePropertyWithoutManager(
+			propertiesResponse, c,
+		),
+	})
 }
 
 func DeleteResidentialPropertyForSaleById(c *gin.Context) {

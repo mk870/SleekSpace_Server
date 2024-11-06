@@ -6,10 +6,13 @@ import (
 	landDtos "SleekSpace/dtos/property/land"
 	managerModels "SleekSpace/models/manager"
 	propertyModels "SleekSpace/models/property"
+	userModels "SleekSpace/models/user"
 	managerRepo "SleekSpace/repositories/manager"
 	landRepo "SleekSpace/repositories/property/land"
+	userRepo "SleekSpace/repositories/user"
 	"SleekSpace/storage"
 	constants "SleekSpace/utilities/constants"
+	favoritesUtilities "SleekSpace/utilities/funcs/favorites"
 	generalUtilities "SleekSpace/utilities/funcs/general"
 	propertyUtilities "SleekSpace/utilities/funcs/property"
 
@@ -90,7 +93,7 @@ func CreateLandPropertyForSale(c *gin.Context) {
 
 }
 
-func GetAllLandProperties(c *gin.Context) {
+func GetAllLandPropertiesForLoggedOutUser(c *gin.Context) {
 	landProperties := landRepo.GetAllLandPropertiesForSale(c)
 	responseList := []landDtos.LandForSalePropertyWithManagerResponseDto{}
 	if len(landProperties) > 0 {
@@ -100,6 +103,26 @@ func GetAllLandProperties(c *gin.Context) {
 		}
 		c.JSON(http.StatusOK, gin.H{
 			"properties": responseList,
+			"totalPages": c.GetInt("totalPages"),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"properties": responseList,
+		"totalPages": c.GetInt("totalPages"),
+	})
+}
+
+func GetAllLandPropertiesForLoggedInUser(c *gin.Context) {
+	landProperties := landRepo.GetAllLandPropertiesForSale(c)
+	responseList := []landDtos.LandForSalePropertyWithManagerResponseDto{}
+	if len(landProperties) > 0 {
+		for i := 0; i < len(landProperties); i++ {
+			responseItem := propertyUtilities.LandPropertyWithManagerResponse(landProperties[i])
+			responseList = append(responseList, responseItem)
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"properties": favoritesUtilities.ProcessFavoritesForLandPropertyWithManager(responseList, c),
 			"totalPages": c.GetInt("totalPages"),
 		})
 		return
@@ -152,13 +175,38 @@ func UpdateLandPropertyDetails(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"response": propertyUtilities.LandPropertyResponse(*updatedLand)})
 }
 
-func GetLandPropertyById(c *gin.Context) {
+func GetLandPropertyByIdForLoggedOutUser(c *gin.Context) {
 	land := landRepo.GetLandPropertyForSaleWithAllAssociationsById(c.Param("id"))
 	if land == nil {
 		c.JSON(http.StatusForbidden, gin.H{"error": "this land does not exist"})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"response": propertyUtilities.LandPropertyWithManagerResponse(*land)})
+}
+
+func GetLandPropertyByIdForLoggedInUser(c *gin.Context) {
+	land := landRepo.GetLandPropertyForSaleWithAllAssociationsById(c.Param("id"))
+	if land == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": "this land does not exist"})
+		return
+	}
+	property := propertyUtilities.LandPropertyWithManagerResponse(*land)
+	userEmail := c.MustGet("user").(*userModels.User).Email
+	user := userRepo.GetUserByEmail(userEmail)
+	if user == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
+		return
+	}
+	if len(user.FavoriteLandProperties) > 0 {
+		for i := 0; i < len(user.FavoriteLandProperties); i++ {
+			if user.FavoriteLandProperties[i] == property.Id {
+				property.IsFavorite = true
+			}
+		}
+	} else {
+		property.IsFavorite = false
+	}
+	c.JSON(http.StatusOK, gin.H{"response": property})
 }
 
 func GetManagerLandPropertiesByManagerId(c *gin.Context) {
@@ -170,7 +218,9 @@ func GetManagerLandPropertiesByManagerId(c *gin.Context) {
 			landPropertiesResponse = append(landPropertiesResponse, landResponse)
 		}
 	}
-	c.JSON(http.StatusOK, gin.H{"response": landPropertiesResponse})
+	c.JSON(http.StatusOK, gin.H{
+		"response": favoritesUtilities.ProcessFavoritesForLandPropertyWithoutManager(landPropertiesResponse, c),
+	})
 }
 
 func DeleteLandPropertyById(c *gin.Context) {

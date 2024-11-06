@@ -6,10 +6,13 @@ import (
 	standDtos "SleekSpace/dtos/property/stand"
 	managerModels "SleekSpace/models/manager"
 	propertyModels "SleekSpace/models/property"
+	userModels "SleekSpace/models/user"
 	managerRepo "SleekSpace/repositories/manager"
 	standRepo "SleekSpace/repositories/property/stand"
+	userRepo "SleekSpace/repositories/user"
 	"SleekSpace/storage"
 	constants "SleekSpace/utilities/constants"
+	favoritesUtilities "SleekSpace/utilities/funcs/favorites"
 	generalUtilities "SleekSpace/utilities/funcs/general"
 	propertyUtilities "SleekSpace/utilities/funcs/property"
 
@@ -91,7 +94,7 @@ func CreateStandForSale(c *gin.Context) {
 
 }
 
-func GetAllStands(c *gin.Context) {
+func GetAllStandsForLoggedOutUser(c *gin.Context) {
 	stands := standRepo.GetAllStands(c)
 	responseList := []standDtos.StandWithManagerResponseDTO{}
 	if len(stands) > 0 {
@@ -101,6 +104,26 @@ func GetAllStands(c *gin.Context) {
 		}
 		c.JSON(http.StatusOK, gin.H{
 			"properties": responseList,
+			"totalPages": c.GetInt("totalPages"),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"properties": responseList,
+		"totalPages": c.GetInt("totalPages"),
+	})
+}
+
+func GetAllStandsForLoggedInUser(c *gin.Context) {
+	stands := standRepo.GetAllStands(c)
+	responseList := []standDtos.StandWithManagerResponseDTO{}
+	if len(stands) > 0 {
+		for i := 0; i < len(stands); i++ {
+			responseItem := propertyUtilities.PropertyStandWithManagerResponse(stands[i])
+			responseList = append(responseList, responseItem)
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"properties": favoritesUtilities.ProcessFavoritesForStandPropertyWithManager(responseList, c),
 			"totalPages": c.GetInt("totalPages"),
 		})
 		return
@@ -154,13 +177,38 @@ func UpdateStandDetails(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"response": propertyUtilities.PropertyStandResponse(*updatedStand)})
 }
 
-func GetStandById(c *gin.Context) {
+func GetStandByIdForLoggedOutUser(c *gin.Context) {
 	stand := standRepo.GetStandWithAllAssociationsById(c.Param("id"))
 	if stand == nil {
 		c.JSON(http.StatusForbidden, gin.H{"error": "this stand does not exist"})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"response": propertyUtilities.PropertyStandWithManagerResponse(*stand)})
+}
+
+func GetStandByIdForLoggedInUser(c *gin.Context) {
+	stand := standRepo.GetStandWithAllAssociationsById(c.Param("id"))
+	if stand == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": "this stand does not exist"})
+		return
+	}
+	property := propertyUtilities.PropertyStandWithManagerResponse(*stand)
+	userEmail := c.MustGet("user").(*userModels.User).Email
+	user := userRepo.GetUserByEmail(userEmail)
+	if user == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
+		return
+	}
+	if len(user.FavoriteStands) > 0 {
+		for i := 0; i < len(user.FavoriteStands); i++ {
+			if user.FavoriteStands[i] == property.Id {
+				property.IsFavorite = true
+			}
+		}
+	} else {
+		property.IsFavorite = false
+	}
+	c.JSON(http.StatusOK, gin.H{"response": property})
 }
 
 func GetManagerStandsByManagerId(c *gin.Context) {

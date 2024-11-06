@@ -6,10 +6,13 @@ import (
 	residentialDtos "SleekSpace/dtos/property/residential"
 	managerModels "SleekSpace/models/manager"
 	propertyModels "SleekSpace/models/property"
+	userModels "SleekSpace/models/user"
 	managerRepo "SleekSpace/repositories/manager"
 	residentialRepo "SleekSpace/repositories/property/residential"
+	userRepo "SleekSpace/repositories/user"
 	"SleekSpace/storage"
 	constants "SleekSpace/utilities/constants"
+	favoritesUtilities "SleekSpace/utilities/funcs/favorites"
 	generalUtilities "SleekSpace/utilities/funcs/general"
 	propertyUtilities "SleekSpace/utilities/funcs/property"
 
@@ -166,7 +169,27 @@ func UpdateResidentialRentalPropertyDetails(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"response": propertyUtilities.ResidentialRentalPropertyResponse(*UpdateResidentialRentalProperty)})
 }
 
-func GetAllResidentialRentalProperties(c *gin.Context) {
+func GetAllResidentialRentalPropertiesForLoggedInUser(c *gin.Context) {
+	residentialRentalProperties := residentialRepo.GetAllResidentialRentalProperties(c)
+	responseList := []residentialDtos.ResidentialPropertyForRentWithManagerResponseDto{}
+	if len(residentialRentalProperties) > 0 {
+		for i := 0; i < len(residentialRentalProperties); i++ {
+			responseItem := propertyUtilities.ResidentialRentalPropertyWithManagerResponse(residentialRentalProperties[i])
+			responseList = append(responseList, responseItem)
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"properties": favoritesUtilities.ProcessFavoritesForResidentialRentalPropertyWithManager(responseList, c),
+			"totalPages": c.GetInt("totalPages"),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"properties": responseList,
+		"totalPages": c.GetInt("totalPages"),
+	})
+}
+
+func GetAllResidentialRentalPropertiesForLoggedOutUser(c *gin.Context) {
 	residentialRentalProperties := residentialRepo.GetAllResidentialRentalProperties(c)
 	responseList := []residentialDtos.ResidentialPropertyForRentWithManagerResponseDto{}
 	if len(residentialRentalProperties) > 0 {
@@ -186,13 +209,40 @@ func GetAllResidentialRentalProperties(c *gin.Context) {
 	})
 }
 
-func GetResidentialRentalPropertyId(c *gin.Context) {
+func GetResidentialRentalPropertyIdForLoggedOutUser(c *gin.Context) {
 	residentialRentalProperty := residentialRepo.GetResidentialRentalPropertyWithAllAssociationsById(c.Param("id"))
 	if residentialRentalProperty == nil {
 		c.JSON(http.StatusForbidden, gin.H{"error": "this property does not exist"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"response": propertyUtilities.ResidentialRentalPropertyWithManagerResponse(*residentialRentalProperty)})
+	c.JSON(http.StatusOK, gin.H{
+		"response": propertyUtilities.ResidentialRentalPropertyWithManagerResponse(*residentialRentalProperty),
+	})
+}
+
+func GetResidentialRentalPropertyIdForLoggedInUser(c *gin.Context) {
+	residentialRentalProperty := residentialRepo.GetResidentialRentalPropertyWithAllAssociationsById(c.Param("id"))
+	if residentialRentalProperty == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": "this property does not exist"})
+		return
+	}
+	property := propertyUtilities.ResidentialRentalPropertyWithManagerResponse(*residentialRentalProperty)
+	userEmail := c.MustGet("user").(*userModels.User).Email
+	user := userRepo.GetUserByEmail(userEmail)
+	if user == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
+		return
+	}
+	if len(user.FavoriteResidentialRentalProperties) > 0 {
+		for i := 0; i < len(user.FavoriteResidentialRentalProperties); i++ {
+			if user.FavoriteResidentialRentalProperties[i] == property.Id {
+				property.IsFavorite = true
+			}
+		}
+	} else {
+		property.IsFavorite = false
+	}
+	c.JSON(http.StatusOK, gin.H{"response": property})
 }
 
 func GetManagerResidentialRentalPropertiesByManagerId(c *gin.Context) {
@@ -204,7 +254,11 @@ func GetManagerResidentialRentalPropertiesByManagerId(c *gin.Context) {
 			propertiesResponse = append(propertiesResponse, propertyResponse)
 		}
 	}
-	c.JSON(http.StatusOK, gin.H{"response": propertiesResponse})
+	c.JSON(http.StatusOK, gin.H{
+		"response": favoritesUtilities.ProcessFavoritesForResidentialRentalPropertyWithoutManager(
+			propertiesResponse, c,
+		),
+	})
 }
 
 func DeleteResidentialRentalPropertyById(c *gin.Context) {

@@ -36,6 +36,7 @@ func Registration(c *gin.Context) {
 		FamilyName:             userRegistartionDTO.FamilyName,
 		Password:               string(hashedPassword),
 		Email:                  userRegistartionDTO.Email,
+		Role:                   "user",
 		IsSocialsAuthenticated: false,
 		RegistrationCode: userModels.VerificationCode{
 			Code:       generalUtilities.GenerateVerificationCode(),

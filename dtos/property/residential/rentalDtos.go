@@ -64,6 +64,7 @@ type ResidentialPropertyForRentResponseDto struct {
 	HasElectricity         bool                                               `json:"hasElectricity"`
 	HasWater               bool                                               `json:"hasWater"`
 	HasSwimmingPool        bool                                               `json:"hasSwimmingPool"`
+	IsFavorite             bool                                               `json:"isFavorite"`
 	Currency               string                                             `json:"currency"`
 	TypeOfExteriorSecurity string                                             `json:"typeOfExteriorSecurity"`
 	MarketingStatement     string                                             `json:"marketingStatement"`
@@ -102,6 +103,7 @@ type ResidentialPropertyForRentWithManagerResponseDto struct {
 	HasElectricity         bool                                               `json:"hasElectricity"`
 	HasWater               bool                                               `json:"hasWater"`
 	HasSwimmingPool        bool                                               `json:"hasSwimmingPool"`
+	IsFavorite             bool                                               `json:"isFavorite"`
 	Currency               string                                             `json:"currency"`
 	TypeOfExteriorSecurity string                                             `json:"typeOfExteriorSecurity"`
 	MarketingStatement     string                                             `json:"marketingStatement"`

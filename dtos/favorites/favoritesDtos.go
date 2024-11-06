@@ -1,5 +1,5 @@
 package favorites
 
-type FavouritesPropertyIds struct {
-	Ids []int `json:"ids"`
+type FavouritePropertyId struct {
+	Id int `json:"id"`
 }

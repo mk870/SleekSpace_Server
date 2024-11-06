@@ -42,6 +42,7 @@ type CommercialForRentPropertyResponseDto struct {
 	Storeys               int                                                `json:"storeys"`
 	IsFullSpace           bool                                               `json:"isFullSpace"`
 	HasElectricity        bool                                               `json:"hasElectricity"`
+	IsFavorite            bool                                               `json:"isFavorite"`
 	HasWater              bool                                               `json:"hasWater"`
 	Currency              string                                             `json:"currency"`
 	SizeDimensions        string                                             `json:"sizeDimensions"`
@@ -68,6 +69,7 @@ type CommercialForRentPropertyWithManagerResponseDto struct {
 	IsFullSpace           bool                                               `json:"isFullSpace"`
 	HasElectricity        bool                                               `json:"hasElectricity"`
 	HasWater              bool                                               `json:"hasWater"`
+	IsFavorite            bool                                               `json:"isFavorite"`
 	Currency              string                                             `json:"currency"`
 	SizeDimensions        string                                             `json:"sizeDimensions"`
 	Status                string                                             `json:"status"`

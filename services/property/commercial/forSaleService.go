@@ -6,10 +6,13 @@ import (
 	commercialDtos "SleekSpace/dtos/property/commercial"
 	managerModels "SleekSpace/models/manager"
 	propertyModels "SleekSpace/models/property"
+	userModels "SleekSpace/models/user"
 	managerRepo "SleekSpace/repositories/manager"
 	commercialRepo "SleekSpace/repositories/property/commercial"
+	userRepo "SleekSpace/repositories/user"
 	"SleekSpace/storage"
 	constants "SleekSpace/utilities/constants"
+	favoritesUtilities "SleekSpace/utilities/funcs/favorites"
 	generalUtilities "SleekSpace/utilities/funcs/general"
 	propertyUtilities "SleekSpace/utilities/funcs/property"
 
@@ -140,7 +143,7 @@ func UpdateCommercialPropertyForSaleDetails(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"response": propertyUtilities.CommercialPropertyForSaleResponse(*UpdatedCommercialPropertyForSale)})
 }
 
-func GetAllCommercialForSaleProperties(c *gin.Context) {
+func GetAllCommercialForSalePropertiesForLoggedOutUser(c *gin.Context) {
 	commercialPropertiesForSale := commercialRepo.GetAllCommercialPropertiesForSale(c)
 	responseList := []commercialDtos.CommercialForSalePropertyWithManagerResponseDto{}
 	if len(commercialPropertiesForSale) > 0 {
@@ -160,13 +163,60 @@ func GetAllCommercialForSaleProperties(c *gin.Context) {
 	})
 }
 
-func GetCommercialPropertyForSaleById(c *gin.Context) {
+func GetAllCommercialForSalePropertiesForLoggedInUser(c *gin.Context) {
+	commercialPropertiesForSale := commercialRepo.GetAllCommercialPropertiesForSale(c)
+	responseList := []commercialDtos.CommercialForSalePropertyWithManagerResponseDto{}
+	if len(commercialPropertiesForSale) > 0 {
+		for i := 0; i < len(commercialPropertiesForSale); i++ {
+			responseItem := propertyUtilities.CommercialPropertyForSaleWithManagerResponse(commercialPropertiesForSale[i])
+			responseList = append(responseList, responseItem)
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"properties": favoritesUtilities.ProcessFavoritesForCommercialForSalePropertyWithManager(responseList, c),
+			"totalPages": c.GetInt("totalPages"),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"properties": responseList,
+		"totalPages": c.GetInt("totalPages"),
+	})
+}
+
+func GetCommercialPropertyForSaleByIdForLoggedOutUser(c *gin.Context) {
 	commercialPropertyForSale := commercialRepo.GetCommercialPropertyForSaleWithAllAssociationsById(c.Param("id"))
 	if commercialPropertyForSale == nil {
 		c.JSON(http.StatusForbidden, gin.H{"error": "this property does not exist"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"response": propertyUtilities.CommercialPropertyForSaleWithManagerResponse(*commercialPropertyForSale)})
+	c.JSON(http.StatusOK, gin.H{
+		"response": propertyUtilities.CommercialPropertyForSaleWithManagerResponse(*commercialPropertyForSale),
+	})
+}
+
+func GetCommercialPropertyForSaleByIdForLoggedInUser(c *gin.Context) {
+	commercialPropertyForSale := commercialRepo.GetCommercialPropertyForSaleWithAllAssociationsById(c.Param("id"))
+	if commercialPropertyForSale == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": "this property does not exist"})
+		return
+	}
+	property := propertyUtilities.CommercialPropertyForSaleWithManagerResponse(*commercialPropertyForSale)
+	userEmail := c.MustGet("user").(*userModels.User).Email
+	user := userRepo.GetUserByEmail(userEmail)
+	if user == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
+		return
+	}
+	if len(user.FavoriteCommercialForSaleProperties) > 0 {
+		for i := 0; i < len(user.FavoriteCommercialForSaleProperties); i++ {
+			if user.FavoriteCommercialForSaleProperties[i] == property.Id {
+				property.IsFavorite = true
+			}
+		}
+	} else {
+		property.IsFavorite = false
+	}
+	c.JSON(http.StatusOK, gin.H{"response": property})
 }
 
 func GetManagerCommercialPropertiesForSaleByManagerId(c *gin.Context) {
@@ -178,7 +228,11 @@ func GetManagerCommercialPropertiesForSaleByManagerId(c *gin.Context) {
 			propertiesResponse = append(propertiesResponse, propertyResponse)
 		}
 	}
-	c.JSON(http.StatusOK, gin.H{"response": propertiesResponse})
+	c.JSON(http.StatusOK, gin.H{
+		"response": favoritesUtilities.ProcessFavoritesForCommercialForSalePropertyWithoutManager(
+			propertiesResponse, c,
+		),
+	})
 }
 
 func DeleteCommercialPropertyForSaleById(c *gin.Context) {

@@ -22,72 +22,143 @@ func GetFavoriteStandProperties(c *gin.Context) {
 	}
 	properties := favoritesRepo.GetFavoriteStandProperties(user.FavoriteStands)
 	if properties == nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": "your don't have stand property favorites"})
+		c.JSON(http.StatusForbidden, gin.H{"error": "you don't have stand property favorites"})
 		return
 	}
-	response := []standDtos.StandWithManagerResponseDTO{}
+	processedProperties := []standDtos.StandWithManagerResponseDTO{}
 	if len(properties) > 0 {
 		for i := 0; i < len(properties); i++ {
-			response = append(response, propertyUtilities.PropertyStandWithManagerResponse(properties[i]))
+			processedProperties = append(
+				processedProperties,
+				propertyUtilities.PropertyStandWithManagerResponse(
+					properties[i],
+				),
+			)
+		}
+	}
+	response := []standDtos.StandWithManagerResponseDTO{}
+	if len(processedProperties) > 0 {
+		for i := 0; i < len(processedProperties); i++ {
+			processedProperties[i].IsFavorite = true
+			response = append(response, processedProperties[i])
 		}
 	}
 
-	presentFavouriteStandProperties := []int{}
-	for i := 0; i < len(response); i++ {
-		presentFavouriteStandProperties = append(presentFavouriteStandProperties, response[i].Id)
-	}
-
-	deletedFavouriteProperties := propertyUtilities.ReturnDeletedFavoriteProperties(presentFavouriteStandProperties, user.FavoriteStands)
-
 	c.JSON(http.StatusOK, gin.H{
-		"deleted":   deletedFavouriteProperties,
-		"available": response,
+		"response": response,
 	})
+
 }
 
-func UpdateStandPropertyFavourites(c *gin.Context) {
-	var standPropertiesIds favoritesDtos.FavouritesPropertyIds
+func AddFavoriteStandForSaleProperty(c *gin.Context) {
+	var standForSalePropertyId favoritesDtos.FavouritePropertyId
 	validateModelFields := validator.New()
-	c.BindJSON(&standPropertiesIds)
+	c.BindJSON(&standForSalePropertyId)
 
-	modelFieldsValidationError := validateModelFields.Struct(standPropertiesIds)
+	modelFieldsValidationError := validateModelFields.Struct(standForSalePropertyId)
 	if modelFieldsValidationError != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": modelFieldsValidationError.Error()})
 		return
 	}
-
 	user := userRepo.GetUserById(c.Param("id"))
 	if user == nil {
 		c.JSON(http.StatusForbidden, gin.H{"error": constantsUtilities.NoUserError})
 		return
 	}
-	user.FavoriteStands = standPropertiesIds.Ids
+	newFavoritesList := append(
+		user.FavoriteStands,
+		standForSalePropertyId.Id,
+	)
+	user.FavoriteStands = newFavoritesList
 	isUpdated := userRepo.SaveUserUpdate(user)
 	if !isUpdated {
-		c.JSON(http.StatusForbidden, gin.H{"error": "failed to update your stand property favorites"})
+		c.JSON(http.StatusForbidden, gin.H{"error": "failed to update your property favorites"})
 		return
 	}
-	properties := favoritesRepo.GetFavoriteStandProperties(standPropertiesIds.Ids)
+	properties := favoritesRepo.GetFavoriteStandProperties(newFavoritesList)
 	if properties == nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": "your don't have stand property favorites"})
+		c.JSON(http.StatusForbidden, gin.H{"error": "you don't have favorite stands"})
 		return
 	}
-	response := []standDtos.StandWithManagerResponseDTO{}
+	processedProperties := []standDtos.StandWithManagerResponseDTO{}
 	if len(properties) > 0 {
 		for i := 0; i < len(properties); i++ {
-			response = append(response, propertyUtilities.PropertyStandWithManagerResponse(properties[i]))
+			processedProperties = append(
+				processedProperties,
+				propertyUtilities.PropertyStandWithManagerResponse(
+					properties[i],
+				),
+			)
 		}
 	}
 
-	presentFavouriteStandProperties := []int{}
-	for i := 0; i < len(response); i++ {
-		presentFavouriteStandProperties = append(presentFavouriteStandProperties, response[i].Id)
+	response := []standDtos.StandWithManagerResponseDTO{}
+	if len(processedProperties) > 0 {
+		for i := 0; i < len(processedProperties); i++ {
+			processedProperties[i].IsFavorite = true
+			response = append(response, processedProperties[i])
+		}
 	}
 
-	deletedFavouriteProperties := propertyUtilities.ReturnDeletedFavoriteProperties(presentFavouriteStandProperties, standPropertiesIds.Ids)
+	c.JSON(http.StatusOK, gin.H{
+		"response": response,
+	})
+}
+
+func RemoveFavoriteStandForSaleProperty(c *gin.Context) {
+	var standForSalePropertyId favoritesDtos.FavouritePropertyId
+	validateModelFields := validator.New()
+	c.BindJSON(&standForSalePropertyId)
+
+	modelFieldsValidationError := validateModelFields.Struct(standForSalePropertyId)
+	if modelFieldsValidationError != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": modelFieldsValidationError.Error()})
+		return
+	}
+	user := userRepo.GetUserById(c.Param("id"))
+	if user == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": constantsUtilities.NoUserError})
+		return
+	}
+	newFavoritesList := []int{}
+	for i := 0; i < len(user.FavoriteStands); i++ {
+		if user.FavoriteStands[i] != standForSalePropertyId.Id {
+			newFavoritesList = append(newFavoritesList, user.FavoriteStands[i])
+		}
+	}
+
+	user.FavoriteStands = newFavoritesList
+	isUpdated := userRepo.SaveUserUpdate(user)
+	if !isUpdated {
+		c.JSON(http.StatusForbidden, gin.H{"error": "failed to update your property favorites"})
+		return
+	}
+	properties := favoritesRepo.GetFavoriteStandProperties(newFavoritesList)
+	if properties == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": "you don't have favorite stands"})
+		return
+	}
+	processedProperties := []standDtos.StandWithManagerResponseDTO{}
+	if len(properties) > 0 {
+		for i := 0; i < len(properties); i++ {
+			processedProperties = append(
+				processedProperties,
+				propertyUtilities.PropertyStandWithManagerResponse(
+					properties[i],
+				),
+			)
+		}
+	}
+
+	response := []standDtos.StandWithManagerResponseDTO{}
+	if len(processedProperties) > 0 {
+		for i := 0; i < len(processedProperties); i++ {
+			processedProperties[i].IsFavorite = true
+			response = append(response, processedProperties[i])
+		}
+	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"deleted":   deletedFavouriteProperties,
-		"available": response,
+		"response": response,
 	})
 }

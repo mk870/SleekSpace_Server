@@ -55,6 +55,7 @@ type ResidentialPropertyForSaleResponseDto struct {
 	HasElectricity         bool                                               `json:"hasElectricity"`
 	HasWater               bool                                               `json:"hasWater"`
 	IsNegotiable           bool                                               `json:"isNegotiable"`
+	IsFavorite             bool                                               `json:"isFavorite"`
 	IsPaved                bool                                               `json:"isPaved"`
 	HasBoreHole            bool                                               `json:"hasBoreHole"`
 	IsPlustered            bool                                               `json:"isPlustered"`
@@ -89,6 +90,7 @@ type ResidentialPropertyForSaleWithManagerResponseDto struct {
 	Storeys                int                                                `json:"storeys"`
 	HasSwimmingPool        bool                                               `json:"hasSwimmingPool"`
 	HasElectricity         bool                                               `json:"hasElectricity"`
+	IsFavorite             bool                                               `json:"isFavorite"`
 	HasWater               bool                                               `json:"hasWater"`
 	IsNegotiable           bool                                               `json:"isNegotiable"`
 	IsPaved                bool                                               `json:"isPaved"`

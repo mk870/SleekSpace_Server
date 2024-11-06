@@ -22,72 +22,142 @@ func GetFavoriteCommercialForSaleProperties(c *gin.Context) {
 	}
 	properties := favoritesRepo.GetFavoriteCommercialPropertiesForSale(user.FavoriteCommercialForSaleProperties)
 	if properties == nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": "your don't have favorite commercial for sale properties"})
+		c.JSON(http.StatusForbidden, gin.H{"error": "you don't have favorite commercial for sale properties"})
 		return
 	}
-	response := []commercialDtos.CommercialForSalePropertyWithManagerResponseDto{}
+	processedProperties := []commercialDtos.CommercialForSalePropertyWithManagerResponseDto{}
 	if len(properties) > 0 {
 		for i := 0; i < len(properties); i++ {
-			response = append(response, propertyUtilities.CommercialPropertyForSaleWithManagerResponse(properties[i]))
+			processedProperties = append(
+				processedProperties,
+				propertyUtilities.CommercialPropertyForSaleWithManagerResponse(
+					properties[i],
+				),
+			)
+		}
+	}
+	response := []commercialDtos.CommercialForSalePropertyWithManagerResponseDto{}
+	if len(processedProperties) > 0 {
+		for i := 0; i < len(processedProperties); i++ {
+			processedProperties[i].IsFavorite = true
+			response = append(response, processedProperties[i])
 		}
 	}
 
-	presentFavouriteCommercialForSaleProperties := []int{}
-	for i := 0; i < len(response); i++ {
-		presentFavouriteCommercialForSaleProperties = append(presentFavouriteCommercialForSaleProperties, response[i].Id)
-	}
-
-	deletedFavouriteProperties := propertyUtilities.ReturnDeletedFavoriteProperties(presentFavouriteCommercialForSaleProperties, user.FavoriteCommercialForSaleProperties)
-
 	c.JSON(http.StatusOK, gin.H{
-		"deleted":   deletedFavouriteProperties,
-		"available": response,
+		"response": response,
 	})
 }
 
-func UpdateFavouritesCommercialForSaleProperties(c *gin.Context) {
-	var commercialForSalePropertiesIds favoritesDtos.FavouritesPropertyIds
+func AddFavoriteCommercialForSaleProperty(c *gin.Context) {
+	var commercialForSalePropertyId favoritesDtos.FavouritePropertyId
 	validateModelFields := validator.New()
-	c.BindJSON(&commercialForSalePropertiesIds)
+	c.BindJSON(&commercialForSalePropertyId)
 
-	modelFieldsValidationError := validateModelFields.Struct(commercialForSalePropertiesIds)
+	modelFieldsValidationError := validateModelFields.Struct(commercialForSalePropertyId)
 	if modelFieldsValidationError != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": modelFieldsValidationError.Error()})
 		return
 	}
-
 	user := userRepo.GetUserById(c.Param("id"))
 	if user == nil {
 		c.JSON(http.StatusForbidden, gin.H{"error": constantsUtilities.NoUserError})
 		return
 	}
-	user.FavoriteCommercialForSaleProperties = commercialForSalePropertiesIds.Ids
+	newFavoritesList := append(
+		user.FavoriteCommercialForSaleProperties,
+		commercialForSalePropertyId.Id,
+	)
+	user.FavoriteCommercialForSaleProperties = newFavoritesList
 	isUpdated := userRepo.SaveUserUpdate(user)
 	if !isUpdated {
 		c.JSON(http.StatusForbidden, gin.H{"error": "failed to update your property favorites"})
 		return
 	}
-	properties := favoritesRepo.GetFavoriteCommercialPropertiesForSale(commercialForSalePropertiesIds.Ids)
+	properties := favoritesRepo.GetFavoriteCommercialPropertiesForSale(newFavoritesList)
 	if properties == nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": "your don't have favorite commercial for sale properties"})
+		c.JSON(http.StatusForbidden, gin.H{"error": "you don't have favorite commercial for sale properties"})
 		return
 	}
-	response := []commercialDtos.CommercialForSalePropertyWithManagerResponseDto{}
+	processedProperties := []commercialDtos.CommercialForSalePropertyWithManagerResponseDto{}
 	if len(properties) > 0 {
 		for i := 0; i < len(properties); i++ {
-			response = append(response, propertyUtilities.CommercialPropertyForSaleWithManagerResponse(properties[i]))
+			processedProperties = append(
+				processedProperties,
+				propertyUtilities.CommercialPropertyForSaleWithManagerResponse(
+					properties[i],
+				),
+			)
 		}
 	}
 
-	presentFavouriteCommercialForSaleProperties := []int{}
-	for i := 0; i < len(response); i++ {
-		presentFavouriteCommercialForSaleProperties = append(presentFavouriteCommercialForSaleProperties, response[i].Id)
+	response := []commercialDtos.CommercialForSalePropertyWithManagerResponseDto{}
+	if len(processedProperties) > 0 {
+		for i := 0; i < len(processedProperties); i++ {
+			processedProperties[i].IsFavorite = true
+			response = append(response, processedProperties[i])
+		}
 	}
 
-	deletedFavouriteProperties := propertyUtilities.ReturnDeletedFavoriteProperties(presentFavouriteCommercialForSaleProperties, commercialForSalePropertiesIds.Ids)
+	c.JSON(http.StatusOK, gin.H{
+		"response": response,
+	})
+}
+
+func RemoveFavoriteCommercialForSaleProperty(c *gin.Context) {
+	var commercialForSalePropertyId favoritesDtos.FavouritePropertyId
+	validateModelFields := validator.New()
+	c.BindJSON(&commercialForSalePropertyId)
+
+	modelFieldsValidationError := validateModelFields.Struct(commercialForSalePropertyId)
+	if modelFieldsValidationError != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": modelFieldsValidationError.Error()})
+		return
+	}
+	user := userRepo.GetUserById(c.Param("id"))
+	if user == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": constantsUtilities.NoUserError})
+		return
+	}
+	newFavoritesList := []int{}
+	for i := 0; i < len(user.FavoriteCommercialForSaleProperties); i++ {
+		if user.FavoriteCommercialForSaleProperties[i] != commercialForSalePropertyId.Id {
+			newFavoritesList = append(newFavoritesList, user.FavoriteCommercialForSaleProperties[i])
+		}
+	}
+
+	user.FavoriteCommercialForSaleProperties = newFavoritesList
+	isUpdated := userRepo.SaveUserUpdate(user)
+	if !isUpdated {
+		c.JSON(http.StatusForbidden, gin.H{"error": "failed to update your property favorites"})
+		return
+	}
+	properties := favoritesRepo.GetFavoriteCommercialPropertiesForSale(newFavoritesList)
+	if properties == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": "you don't have favorite commercial for sale properties"})
+		return
+	}
+	processedProperties := []commercialDtos.CommercialForSalePropertyWithManagerResponseDto{}
+	if len(properties) > 0 {
+		for i := 0; i < len(properties); i++ {
+			processedProperties = append(
+				processedProperties,
+				propertyUtilities.CommercialPropertyForSaleWithManagerResponse(
+					properties[i],
+				),
+			)
+		}
+	}
+
+	response := []commercialDtos.CommercialForSalePropertyWithManagerResponseDto{}
+	if len(processedProperties) > 0 {
+		for i := 0; i < len(processedProperties); i++ {
+			processedProperties[i].IsFavorite = true
+			response = append(response, processedProperties[i])
+		}
+	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"deleted":   deletedFavouriteProperties,
-		"available": response,
+		"response": response,
 	})
 }

@@ -32,6 +32,7 @@ type LandForSalePropertyResponseDto struct {
 	SizeNumber         int                                                `json:"sizeNumber"`
 	AreaHasElectricity bool                                               `json:"areaHasElectricity"`
 	IsNegotiable       bool                                               `json:"isNegotiable"`
+	IsFavorite         bool                                               `json:"isFavorite"`
 	HasWater           bool                                               `json:"hasWater"`
 	Status             string                                             `json:"status"`
 	Currency           string                                             `json:"currency"`
@@ -53,6 +54,7 @@ type LandForSalePropertyWithManagerResponseDto struct {
 	SizeNumber         int                                                `json:"sizeNumber"`
 	AreaHasElectricity bool                                               `json:"areaHasElectricity"`
 	IsNegotiable       bool                                               `json:"isNegotiable"`
+	IsFavorite         bool                                               `json:"isFavorite"`
 	HasWater           bool                                               `json:"hasWater"`
 	Status             string                                             `json:"status"`
 	Currency           string                                             `json:"currency"`
