@@ -12,17 +12,3 @@ func GeneratePropertyUniqueId() int {
 	randomInt := rand.Intn(max-min) + min
 	return randomInt
 }
-
-func ReturnDeletedFavoriteProperties(availableFavoritePropertyIds, allFavoritePropertyIds []int) []int {
-	deletedProperties := []int{}
-	idsMap := make(map[int]bool)
-	for i := 0; i < len(availableFavoritePropertyIds); i++ {
-		idsMap[availableFavoritePropertyIds[i]] = true
-	}
-	for i := 0; i < len(allFavoritePropertyIds); i++ {
-		if !idsMap[allFavoritePropertyIds[i]] {
-			deletedProperties = append(deletedProperties, allFavoritePropertyIds[i])
-		}
-	}
-	return deletedProperties
-}

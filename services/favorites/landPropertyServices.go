@@ -22,72 +22,142 @@ func GetFavoriteLandProperties(c *gin.Context) {
 	}
 	properties := favoritesRepo.GetFavoriteLandProperties(user.FavoriteLandProperties)
 	if properties == nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": "your don't have land property favorites"})
+		c.JSON(http.StatusForbidden, gin.H{"error": "you don't have land property favorites"})
 		return
 	}
-	response := []landDtos.LandForSalePropertyWithManagerResponseDto{}
+	processedProperties := []landDtos.LandForSalePropertyWithManagerResponseDto{}
 	if len(properties) > 0 {
 		for i := 0; i < len(properties); i++ {
-			response = append(response, propertyUtilities.LandPropertyWithManagerResponse(properties[i]))
+			processedProperties = append(
+				processedProperties,
+				propertyUtilities.LandPropertyWithManagerResponse(
+					properties[i],
+				),
+			)
+		}
+	}
+	response := []landDtos.LandForSalePropertyWithManagerResponseDto{}
+	if len(processedProperties) > 0 {
+		for i := 0; i < len(processedProperties); i++ {
+			processedProperties[i].IsFavorite = true
+			response = append(response, processedProperties[i])
 		}
 	}
 
-	presentFavouriteLandProperties := []int{}
-	for i := 0; i < len(response); i++ {
-		presentFavouriteLandProperties = append(presentFavouriteLandProperties, response[i].Id)
-	}
-
-	deletedFavouriteProperties := propertyUtilities.ReturnDeletedFavoriteProperties(presentFavouriteLandProperties, user.FavoriteLandProperties)
-
 	c.JSON(http.StatusOK, gin.H{
-		"deleted":   deletedFavouriteProperties,
-		"available": response,
+		"response": response,
 	})
 }
 
-func UpdateLandPropertyFavourites(c *gin.Context) {
-	var landPropertiesIds favoritesDtos.FavouritesPropertyIds
+func AddFavoriteLandForSaleProperty(c *gin.Context) {
+	var landForSalePropertyId favoritesDtos.FavouritePropertyId
 	validateModelFields := validator.New()
-	c.BindJSON(&landPropertiesIds)
+	c.BindJSON(&landForSalePropertyId)
 
-	modelFieldsValidationError := validateModelFields.Struct(landPropertiesIds)
+	modelFieldsValidationError := validateModelFields.Struct(landForSalePropertyId)
 	if modelFieldsValidationError != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": modelFieldsValidationError.Error()})
 		return
 	}
-
 	user := userRepo.GetUserById(c.Param("id"))
 	if user == nil {
 		c.JSON(http.StatusForbidden, gin.H{"error": constantsUtilities.NoUserError})
 		return
 	}
-	user.FavoriteLandProperties = landPropertiesIds.Ids
+	newFavoritesList := append(
+		user.FavoriteLandProperties,
+		landForSalePropertyId.Id,
+	)
+	user.FavoriteLandProperties = newFavoritesList
 	isUpdated := userRepo.SaveUserUpdate(user)
 	if !isUpdated {
-		c.JSON(http.StatusForbidden, gin.H{"error": "failed to update your land property favorites"})
+		c.JSON(http.StatusForbidden, gin.H{"error": "failed to update your property favorites"})
 		return
 	}
-	properties := favoritesRepo.GetFavoriteLandProperties(landPropertiesIds.Ids)
+	properties := favoritesRepo.GetFavoriteLandProperties(newFavoritesList)
 	if properties == nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": "your don't have land property favorites"})
+		c.JSON(http.StatusForbidden, gin.H{"error": "you don't have favorite land"})
 		return
 	}
-	response := []landDtos.LandForSalePropertyWithManagerResponseDto{}
+	processedProperties := []landDtos.LandForSalePropertyWithManagerResponseDto{}
 	if len(properties) > 0 {
 		for i := 0; i < len(properties); i++ {
-			response = append(response, propertyUtilities.LandPropertyWithManagerResponse(properties[i]))
+			processedProperties = append(
+				processedProperties,
+				propertyUtilities.LandPropertyWithManagerResponse(
+					properties[i],
+				),
+			)
 		}
 	}
 
-	presentFavouriteLandProperties := []int{}
-	for i := 0; i < len(response); i++ {
-		presentFavouriteLandProperties = append(presentFavouriteLandProperties, response[i].Id)
+	response := []landDtos.LandForSalePropertyWithManagerResponseDto{}
+	if len(processedProperties) > 0 {
+		for i := 0; i < len(processedProperties); i++ {
+			processedProperties[i].IsFavorite = true
+			response = append(response, processedProperties[i])
+		}
 	}
 
-	deletedFavouriteProperties := propertyUtilities.ReturnDeletedFavoriteProperties(presentFavouriteLandProperties, landPropertiesIds.Ids)
+	c.JSON(http.StatusOK, gin.H{
+		"response": response,
+	})
+}
+
+func RemoveFavoriteLandForSaleProperty(c *gin.Context) {
+	var landForSalePropertyId favoritesDtos.FavouritePropertyId
+	validateModelFields := validator.New()
+	c.BindJSON(&landForSalePropertyId)
+
+	modelFieldsValidationError := validateModelFields.Struct(landForSalePropertyId)
+	if modelFieldsValidationError != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": modelFieldsValidationError.Error()})
+		return
+	}
+	user := userRepo.GetUserById(c.Param("id"))
+	if user == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": constantsUtilities.NoUserError})
+		return
+	}
+	newFavoritesList := []int{}
+	for i := 0; i < len(user.FavoriteLandProperties); i++ {
+		if user.FavoriteLandProperties[i] != landForSalePropertyId.Id {
+			newFavoritesList = append(newFavoritesList, user.FavoriteLandProperties[i])
+		}
+	}
+
+	user.FavoriteLandProperties = newFavoritesList
+	isUpdated := userRepo.SaveUserUpdate(user)
+	if !isUpdated {
+		c.JSON(http.StatusForbidden, gin.H{"error": "failed to update your property favorites"})
+		return
+	}
+	properties := favoritesRepo.GetFavoriteLandProperties(newFavoritesList)
+	if properties == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": "you don't have favorite lands"})
+		return
+	}
+	processedProperties := []landDtos.LandForSalePropertyWithManagerResponseDto{}
+	if len(properties) > 0 {
+		for i := 0; i < len(properties); i++ {
+			processedProperties = append(
+				processedProperties,
+				propertyUtilities.LandPropertyWithManagerResponse(
+					properties[i],
+				),
+			)
+		}
+	}
+
+	response := []landDtos.LandForSalePropertyWithManagerResponseDto{}
+	if len(processedProperties) > 0 {
+		for i := 0; i < len(processedProperties); i++ {
+			processedProperties[i].IsFavorite = true
+			response = append(response, processedProperties[i])
+		}
+	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"deleted":   deletedFavouriteProperties,
-		"available": response,
+		"response": response,
 	})
 }

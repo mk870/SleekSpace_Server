@@ -39,7 +39,7 @@ func InitializeS3() {
 	S3Client = s3.NewFromConfig(cfg)
 }
 
-func UploadImageFile(base64FileSrc string, name string, c *gin.Context) <-chan string {
+func UploadFile(base64FileSrc string, name string, c *gin.Context) <-chan string {
 	result := make(chan string)
 	go func() {
 		defer close(result)
@@ -95,7 +95,7 @@ func DeleteFiles(fileNames []string, c *gin.Context) <-chan bool {
 	return result
 }
 
-func uploadPropertyMediaFile(
+func uploadFileFromAList(
 	j int,
 	base64FilesSrc []propertyUtilities.MediaFile,
 	c *gin.Context,
@@ -120,14 +120,14 @@ func uploadPropertyMediaFile(
 	ch <- fileUrlMap
 }
 
-func UploadPropertyMediaFiles(base64FilesSrc []propertyUtilities.MediaFile, c *gin.Context) map[string]string {
+func UploadFiles(base64FilesSrc []propertyUtilities.MediaFile, c *gin.Context) map[string]string {
 	mergedMap := make(map[string]string)
 	resultCh := make(chan map[string]string, len(base64FilesSrc))
 	var wg sync.WaitGroup
 	if len(base64FilesSrc) > 0 {
 		for j := 0; j < len(base64FilesSrc); j++ {
 			wg.Add(1)
-			go uploadPropertyMediaFile(j, base64FilesSrc, c, &wg, resultCh)
+			go uploadFileFromAList(j, base64FilesSrc, c, &wg, resultCh)
 		}
 		go func() {
 			wg.Wait()

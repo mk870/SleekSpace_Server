@@ -30,7 +30,7 @@ func CreateUserProfilePicture(c *gin.Context) {
 		c.JSON(http.StatusForbidden, gin.H{"error": constantsUtilities.NoUserError})
 		return
 	}
-	imageUrl := <-storage.UploadImageFile(userProfilePicture.Image, userProfilePicture.Name, c)
+	imageUrl := <-storage.UploadFile(userProfilePicture.Image, userProfilePicture.Name, c)
 	newProfilePicture := userModels.UserProfilePicture{
 		UserId:      userProfilePicture.UserId,
 		Uri:         imageUrl,
@@ -67,7 +67,7 @@ func UpdateUserProfilePicture(c *gin.Context) {
 		return
 	}
 
-	imageUrl := <-storage.UploadImageFile(profilePictureUpdate.Image, profilePictureUpdate.Name, c)
+	imageUrl := <-storage.UploadFile(profilePictureUpdate.Image, profilePictureUpdate.Name, c)
 	newProfilePicture := userModels.UserProfilePicture{
 		Id:          profilePictureUpdate.Id,
 		UserId:      profilePictureUpdate.UserId,

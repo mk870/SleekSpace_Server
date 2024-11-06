@@ -41,6 +41,7 @@ type CommercialForSalePropertyResponseDto struct {
 	HasElectricity        bool                                               `json:"hasElectricity"`
 	HasWater              bool                                               `json:"hasWater"`
 	IsNegotiable          bool                                               `json:"isNegotiable"`
+	IsFavorite            bool                                               `json:"isFavorite"`
 	Currency              string                                             `json:"currency"`
 	Status                string                                             `json:"status"`
 	Type                  string                                             `json:"type"`
@@ -66,6 +67,7 @@ type CommercialForSalePropertyWithManagerResponseDto struct {
 	HasElectricity        bool                                               `json:"hasElectricity"`
 	HasWater              bool                                               `json:"hasWater"`
 	IsNegotiable          bool                                               `json:"isNegotiable"`
+	IsFavorite            bool                                               `json:"isFavorite"`
 	PostedTime            string                                             `json:"postedTime"`
 	Currency              string                                             `json:"currency"`
 	Status                string                                             `json:"status"`

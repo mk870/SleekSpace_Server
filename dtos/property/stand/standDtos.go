@@ -33,6 +33,7 @@ type StandResponseDTO struct {
 	SizeNumber         int                                                `json:"sizeNumber"`
 	AreaHasElectricity bool                                               `json:"areaHasElectricity"`
 	IsServiced         bool                                               `json:"isServiced"`
+	IsFavorite         bool                                               `json:"isFavorite"`
 	IsNegotiable       bool                                               `json:"isNegotiable"`
 	Currency           string                                             `json:"currency"`
 	Status             string                                             `json:"status"`
@@ -56,6 +57,7 @@ type StandWithManagerResponseDTO struct {
 	AreaHasElectricity bool                                               `json:"areaHasElectricity"`
 	IsServiced         bool                                               `json:"isServiced"`
 	IsNegotiable       bool                                               `json:"isNegotiable"`
+	IsFavorite         bool                                               `json:"isFavorite"`
 	Currency           string                                             `json:"currency"`
 	Status             string                                             `json:"status"`
 	Level              string                                             `json:"level"`

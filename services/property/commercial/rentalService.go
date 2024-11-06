@@ -6,10 +6,13 @@ import (
 	commercialDtos "SleekSpace/dtos/property/commercial"
 	managerModels "SleekSpace/models/manager"
 	propertyModels "SleekSpace/models/property"
+	userModels "SleekSpace/models/user"
 	managerRepo "SleekSpace/repositories/manager"
 	commercialRepo "SleekSpace/repositories/property/commercial"
+	userRepo "SleekSpace/repositories/user"
 	"SleekSpace/storage"
 	constants "SleekSpace/utilities/constants"
+	favoritesUtilities "SleekSpace/utilities/funcs/favorites"
 	generalUtilities "SleekSpace/utilities/funcs/general"
 	propertyUtilities "SleekSpace/utilities/funcs/property"
 
@@ -44,7 +47,7 @@ func CreateCommercialRentalProperty(c *gin.Context) {
 	}
 
 	mediaList := propertyUtilities.MediaListWithNoPropertyId(commercialRentalPropertyDetails.Media)
-	mediaUrls := storage.UploadPropertyMediaFiles(mediaList, c)
+	mediaUrls := storage.UploadFiles(mediaList, c)
 
 	newCommercialRentalProperty := managerModels.CommercialRentalProperty{
 		ManagerId:             commercialRentalPropertyDetails.ManagerId,
@@ -146,7 +149,32 @@ func UpdateCommercialRentalPropertyDetails(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"response": propertyUtilities.CommercialPropertyForRentResponse(*UpdateCommercialRentalProperty)})
 }
 
-func GetCommercialRentalPropertyId(c *gin.Context) {
+func GetCommercialRentalPropertyIdForLoggedInUser(c *gin.Context) {
+	commercialRentalProperty := commercialRepo.GetCommercialRentalPropertyWithAllAssociationsById(c.Param("id"))
+	if commercialRentalProperty == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": "this property does not exist"})
+		return
+	}
+	property := propertyUtilities.CommercialPropertyForRentWithManagerResponse(*commercialRentalProperty)
+	userEmail := c.MustGet("user").(*userModels.User).Email
+	user := userRepo.GetUserByEmail(userEmail)
+	if user == nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": "this user does not exist"})
+		return
+	}
+	if len(user.FavoriteCommercialRentalProperties) > 0 {
+		for i := 0; i < len(user.FavoriteCommercialRentalProperties); i++ {
+			if user.FavoriteCommercialRentalProperties[i] == property.Id {
+				property.IsFavorite = true
+			}
+		}
+	} else {
+		property.IsFavorite = false
+	}
+	c.JSON(http.StatusOK, gin.H{"response": property})
+}
+
+func GetCommercialRentalPropertyIdForLoggedOutUser(c *gin.Context) {
 	commercialRentalProperty := commercialRepo.GetCommercialRentalPropertyWithAllAssociationsById(c.Param("id"))
 	if commercialRentalProperty == nil {
 		c.JSON(http.StatusForbidden, gin.H{"error": "this property does not exist"})
@@ -155,7 +183,27 @@ func GetCommercialRentalPropertyId(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"response": propertyUtilities.CommercialPropertyForRentWithManagerResponse(*commercialRentalProperty)})
 }
 
-func GetAllCommercialRentalProperties(c *gin.Context) {
+func GetAllCommercialRentalPropertiesForLoggedInUser(c *gin.Context) {
+	commercialRentalProperties := commercialRepo.GetAllCommercialRentalProperties(c)
+	responseList := []commercialDtos.CommercialForRentPropertyWithManagerResponseDto{}
+	if len(commercialRentalProperties) > 0 {
+		for i := 0; i < len(commercialRentalProperties); i++ {
+			responseItem := propertyUtilities.CommercialPropertyForRentWithManagerResponse(commercialRentalProperties[i])
+			responseList = append(responseList, responseItem)
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"properties": favoritesUtilities.ProcessFavoritesForCommercialRentalPropertyWithManager(responseList, c),
+			"totalPages": c.GetInt("totalPages"),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"properties": responseList,
+		"totalPages": c.GetInt("totalPages"),
+	})
+}
+
+func GetAllCommercialRentalPropertiesForLoggedOutUser(c *gin.Context) {
 	commercialRentalProperties := commercialRepo.GetAllCommercialRentalProperties(c)
 	responseList := []commercialDtos.CommercialForRentPropertyWithManagerResponseDto{}
 	if len(commercialRentalProperties) > 0 {
@@ -184,7 +232,11 @@ func GetManagerCommercialRentalPropertiesByManagerId(c *gin.Context) {
 			propertiesResponse = append(propertiesResponse, propertyResponse)
 		}
 	}
-	c.JSON(http.StatusOK, gin.H{"response": propertiesResponse})
+	c.JSON(http.StatusOK, gin.H{
+		"response": favoritesUtilities.ProcessFavoritesForCommercialRentalPropertyWithoutManager(
+			propertiesResponse, c,
+		),
+	})
 }
 
 func DeleteCommercialRentalPropertyById(c *gin.Context) {
